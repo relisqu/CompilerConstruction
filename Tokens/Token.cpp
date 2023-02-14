@@ -5,6 +5,9 @@
 #include "Token.h"
 
 
-Token::Token(Span span, int code) {
+
+
+Token::Token(Span _span, int code)
+{
 
 }
