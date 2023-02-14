@@ -40,7 +40,7 @@ cmake-build-*/
 .idea/**/libraries
 
 # Clion Local Settings
-.idea/workspace.xml
+.idea/
 
 .vscode/*
 
