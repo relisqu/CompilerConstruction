@@ -39,6 +39,8 @@ cmake-build-*/
 .idea/**/gradle.xml
 .idea/**/libraries
 
+# Clion Local Settings
+.idea/workspace.xml
 
 .vscode/*
 
