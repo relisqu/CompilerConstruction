@@ -86,35 +86,43 @@ void CreateToken(std::string buffer,TokenState token_code, Span span){
     Token();
 }
 
-std::string Parser::RemoveComments(std::string textProgram) {
-    // remove single-line comments
-    std::string::size_type pos = textProgram.find("//");
-    while (pos != std::string::npos) {
-        std::string::size_type eol = textProgram.find_first_of("\n", pos);
-        if (eol == std::string::npos) {
-            textProgram.erase(pos);
-            break;
+std::string RemoveSingleLineComments(std::string textProgram) {
+    std::string buffer = "";
+    bool isComment = false;
+    for ( int i = 1; i < textProgram.length(); i++) {
+        if(textProgram[i] == '/' && textProgram[i - 1] == '/'){
+            isComment = true;
         }
-        else {
-            textProgram.erase(pos, eol - pos);
+        if(textProgram[i]=='\n'){
+            isComment = false;
         }
-        pos = textProgram.find("//", pos);
+        if(!isComment){
+            buffer.push_back(textProgram[i]);
+        }
     }
+    return buffer;
+}
 
-    // remove multi-line comments
-    pos = textProgram.find("/*");
-    while (pos != std::string::npos) {
-        std::string::size_type eol = textProgram.find("*/", pos);
-        if (eol == std::string::npos) {
-            textProgram.erase(pos);
-            break;
+std::string RemoveMultiLineComments(std::string textProgram) {
+    std::string buffer = "";
+    bool isComment = false;
+    for (int i = 1; i < textProgram.length(); i++) {
+        if (textProgram[i - 1] == '/' && textProgram[i] == '*') {
+            isComment = true;
         }
-        else {
-            textProgram.erase(pos, eol - pos + 2);
+        if (textProgram[i - 1] == '*' && textProgram[i] == '/') {
+            isComment = false;
         }
-        pos = textProgram.find("/*", pos);
+        if (!isComment) {
+            buffer.push_back(textProgram[i]);
+        }
     }
-    
+    return buffer;
+}
+
+std::string Parser::RemoveComments(std::string textProgram) {
+    textProgram = RemoveSingleLineComments(textProgram);
+    textProgram = RemoveMultiLineComments(textProgram);
     return textProgram;
 }
 
