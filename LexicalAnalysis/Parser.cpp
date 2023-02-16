@@ -87,7 +87,34 @@ void CreateToken(std::string buffer,TokenState token_code, Span span){
 }
 
 std::string Parser::RemoveComments(std::string textProgram) {
-    // TODO: decide comments type and add preprocessing stage
+    // remove single-line comments
+    std::string::size_type pos = textProgram.find("//");
+    while (pos != std::string::npos) {
+        std::string::size_type eol = textProgram.find_first_of("\n", pos);
+        if (eol == std::string::npos) {
+            textProgram.erase(pos);
+            break;
+        }
+        else {
+            textProgram.erase(pos, eol - pos);
+        }
+        pos = textProgram.find("//", pos);
+    }
+
+    // remove multi-line comments
+    pos = textProgram.find("/*");
+    while (pos != std::string::npos) {
+        std::string::size_type eol = textProgram.find("*/", pos);
+        if (eol == std::string::npos) {
+            textProgram.erase(pos);
+            break;
+        }
+        else {
+            textProgram.erase(pos, eol - pos + 2);
+        }
+        pos = textProgram.find("/*", pos);
+    }
+    
     return textProgram;
 }
 
