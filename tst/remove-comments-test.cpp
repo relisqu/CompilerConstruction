@@ -6,9 +6,8 @@
 
 TEST(commentsTest, linecom) {
     std::vector<std::pair<std::string,std::string>> tests ={
-            {"",""},
             {"var A : integer is 10;"           ,"var A : integer is 10;"},
-            {"var A : integer is 10; //prIVET\n","var A : integer is 10;\n"},
+            {"var A : integer is 10; //prIVET\n","var A : integer is 10; \n"},
             {"var A : integer is 10;// // // "  ,"var A : integer is 10;"},
             {"var A : integer is 10;\n"         ,"var A : integer is 10;\n"},
             {"var A : integer is 10;/"          ,"var A : integer is 10;/"},

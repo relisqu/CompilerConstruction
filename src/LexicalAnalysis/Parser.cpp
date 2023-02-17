@@ -89,6 +89,7 @@ void CreateToken(std::string buffer,TokenState token_code, Span span){
 std::string Parser::RemoveSingleLineComments(std::string textProgram) {
     std::string buffer = "";
     bool isComment = false;
+    if (textProgram[0] != '/') buffer.push_back(textProgram[0]);
     for ( int i = 1; i < textProgram.length(); i++) {
         if(textProgram[i] == '/' && textProgram[i - 1] == '/'){
             isComment = true;
