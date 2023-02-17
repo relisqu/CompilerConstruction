@@ -86,8 +86,60 @@ void CreateToken(std::string buffer,TokenState token_code, Span span){
     Token();
 }
 
+std::string Parser::RemoveSingleLineComments(std::string textProgram) {
+    std::string buffer = "";
+    bool isComment = false;
+    for ( int i = 1; i < textProgram.length(); i++) {
+        if(textProgram[i] == '/' && textProgram[i - 1] == '/'){
+            isComment = true;
+        }
+        if(textProgram[i]=='\n'){
+            isComment = false;
+        }
+        if(!isComment){
+            buffer.push_back(textProgram[i]);
+        }
+    }
+    return buffer;
+}
+
+std::string Parser::RemoveMultiLineComments(std::string textProgram) {
+
+    std::string buffer = "";
+    int isComment = 0;
+    int currentLine = 0;
+
+    if (textProgram[0] == '\n') {
+        currentLine++;
+    }
+
+    int currentSymbol = 0;
+
+    for (int i = 1; i < textProgram.length(); i++) {
+        currentSymbol++;        
+        if (textProgram[i] == '\n') {
+            currentLine++;
+            currentSymbol = 0;
+        }
+        if (textProgram[i - 1] == '/' && textProgram[i] == '*') {
+            isComment++;
+        }
+        if (textProgram[i - 1] == '*' && textProgram[i] == '/') {
+            isComment--;
+        }
+        if (isComment > 0) {
+            buffer.push_back(textProgram[i]);
+        }
+        if (isComment < 0) {
+            this -> ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
+        }
+    }
+    return buffer;
+}
+
 std::string Parser::RemoveComments(std::string textProgram) {
-    // TODO: decide comments type and add preprocessing stage
+    textProgram = this -> RemoveMultiLineComments(textProgram);
+    textProgram = this -> RemoveSingleLineComments(textProgram);
     return textProgram;
 }
 
