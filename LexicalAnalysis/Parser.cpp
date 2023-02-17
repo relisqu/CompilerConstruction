@@ -104,8 +104,8 @@ std::string Parser::RemoveSingleLineComments(std::string textProgram) {
 }
 
 std::string Parser::RemoveMultiLineComments(std::string textProgram) {
+
     std::string buffer = "";
-    // Nested comments are supported as well.
     int isComment = 0;
     int currentLine = 0;
 
