@@ -3,4 +3,8 @@ project(CompilerConstruction)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(CompilerConstruction main.cpp Tokens/Span.h Tokens/Identifier.h Tokens/Integer.h Tokens/Real.h LexicalAnalysis/Parser.h LexicalAnalysis/Parser.cpp Tokens/Span.cpp "Tokens/Token.cpp")
+include_directories(src)
+
+add_subdirectory(src)
+add_subdirectory(tst)
+add_subdirectory(lib/googletest)
