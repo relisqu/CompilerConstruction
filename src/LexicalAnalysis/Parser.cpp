@@ -89,9 +89,8 @@ void CreateToken(std::string buffer,TokenState token_code, Span span){
 std::string Parser::RemoveSingleLineComments(std::string textProgram) {
     std::string buffer = "";
     bool isComment = false;
-    if (textProgram[0] != '/') buffer.push_back(textProgram[0]);
-    for ( int i = 1; i < textProgram.length(); i++) {
-        if(textProgram[i] == '/' && textProgram[i - 1] == '/'){
+    for (int i = 0; i < textProgram.length(); i++) {
+        if(i != textProgram.length() - 1 && textProgram[i] == '/' && textProgram[i + 1] == '/'){
             isComment = true;
         }
         if(textProgram[i]=='\n'){
@@ -116,19 +115,21 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
 
     int currentSymbol = 0;
 
-    for (int i = 1; i < textProgram.length(); i++) {
+    for (int i = 0; i < textProgram.length(); i++) {
         currentSymbol++;        
         if (textProgram[i] == '\n') {
             currentLine++;
             currentSymbol = 0;
         }
-        if (textProgram[i - 1] == '/' && textProgram[i] == '*') {
-            isComment++;
+        if (textProgram.size() - 1 != i) {
+            if (textProgram[i] == '/' && textProgram[i + 1] == '*') {
+                isComment++;
+            }
+            if (textProgram[i] == '*' && textProgram[i + 1] == '/') {
+                isComment--;
+            }
         }
-        if (textProgram[i - 1] == '*' && textProgram[i] == '/') {
-            isComment--;
-        }
-        if (isComment > 0) {
+        if (isComment == 0) {
             buffer.push_back(textProgram[i]);
         }
         if (isComment < 0) {
