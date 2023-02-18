@@ -2,73 +2,60 @@
 // Created by kopko on 13.02.2023.
 //
 #include "Parser.h"
+#include "../ErrorHandler.h"
+#include "../Tokens/PreprocessedToken.h"
 
 enum class SymbolState {
     Number,
-    Literal,
-    Other,
-    Empty
+    Literal
 };
 
-enum class TokenState {
-    Identifier,
-    IntConstant,
-    Error,
-    Other
-};
 
-void CreateToken(std::string buffer,TokenState token_code, Span span);
 
-std::vector<Token> Parser::ParseText(std::string textProgram){
+PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol,SymbolState currentSymbol, Span currentSpan){
+    switch (firstSymbol) {
+        case SymbolState::Number:
+
+            switch (currentSymbol) {
+                case SymbolState::Number:
+                    return PreprocessedToken::TokenState::IntConstant;
+                case SymbolState::Literal:
+                    ErrorHandler::ThrowError("Expected unqualified-id", currentSpan);
+                    break;
+            }
+
+            break;
+
+        case SymbolState::Literal:
+            return PreprocessedToken::TokenState::Identifier;
+    }
+}
+
+
+void Parser::ParseText(const std::string& textProgram){
+
     std::string buffer;
     SymbolState firstSymbolState;
-    TokenState currentBufferStatus;
+    SymbolState currentSymbolState;
+    PreprocessedToken::TokenState currentBufferStatus;
     int wordLength = 0;
     int symbolCurrentPosition = 0;
     int currentLinePosition = 0;
     Span currentSpan{0, 0, 0};
 
-    for ( int i=0; i<textProgram.length(); i++) { //wtf is this if, need to fix tomorrow
-        char symbol = textProgram[i];
+    for (char symbol : textProgram) {
+
         if(std::isdigit(symbol)){
-            if(wordLength==0){
-                firstSymbolState= SymbolState::Number;
-                currentSpan.posBegin=symbolCurrentPosition;
-            }else{
-                switch (firstSymbolState) {
-                    case SymbolState::Number:
-                        currentBufferStatus= TokenState::IntConstant;
-                        break;
-                    case SymbolState::Literal:
-                        currentBufferStatus= TokenState::Identifier;
-                        break;
-                }
-            }
-            buffer.push_back(symbol);
-            wordLength+=1;
+            currentSymbolState= SymbolState::Number;
         }
         else if(std::isalpha(symbol)){
-            if(wordLength==0){
-                firstSymbolState= SymbolState::Literal;
-                currentSpan.posBegin=symbolCurrentPosition;
-            }else{
-                switch (firstSymbolState) {
-                    case SymbolState::Number:
-                        ThrowError("Expected unqualified-id", currentSpan);
-                        break;
-                    case SymbolState::Literal:
-                        currentBufferStatus= TokenState::Identifier;
-                        break;
-                }
-            }
-            buffer.push_back(symbol);
-            wordLength+=1;
+            currentSymbolState= SymbolState::Literal;
         }
         else{
-            CreateToken(buffer, currentBufferStatus, currentSpan);
+            tokens.emplace_back(buffer, currentBufferStatus, currentSpan);
             currentSpan.posBegin=symbolCurrentPosition;
             currentSpan.posEnd=symbolCurrentPosition;
-            CreateToken(std::to_string(symbol), TokenState::Other, currentSpan);
+            tokens.emplace_back(std::to_string(symbol), PreprocessedToken::TokenState::Other, currentSpan);
             wordLength=0;
             symbolCurrentPosition++;
             if(symbol=='\n'){
@@ -76,21 +63,29 @@ std::vector<Token> Parser::ParseText(std::string textProgram){
                 symbolCurrentPosition = 0;
                 currentSpan.MoveSpanToNewLine();
             }
-
+            continue;
         }
+
+        if(wordLength==0){
+            firstSymbolState= currentSymbolState;
+            currentSpan.posBegin=symbolCurrentPosition;
+
+        }else{
+            currentBufferStatus= GetTokenState(firstSymbolState,currentSymbolState, currentSpan);
+        }
+        buffer.push_back(symbol);
+        wordLength+=1;
     }
 }
-std::vector<Token> tokens;
 
-void CreateToken(std::string buffer,TokenState token_code, Span span){
-    Token();
-}
+
+
 
 std::string Parser::RemoveSingleLineComments(std::string textProgram) {
-    std::string buffer = "";
+    std::string buffer;
     bool isComment = false;
-    for ( int i = 1; i < textProgram.length(); i++) {
-        if(textProgram[i] == '/' && textProgram[i - 1] == '/'){
+    for ( int i = 0; i < textProgram.length()-1; i++) {
+        if(textProgram[i] == '/' && textProgram[i + 1] == '/'){
             isComment = true;
         }
         if(textProgram[i]=='\n'){
@@ -105,7 +100,7 @@ std::string Parser::RemoveSingleLineComments(std::string textProgram) {
 
 std::string Parser::RemoveMultiLineComments(std::string textProgram) {
 
-    std::string buffer = "";
+    std::string buffer;
     int isComment = 0;
     int currentLine = 0;
 
@@ -131,7 +126,7 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
             buffer.push_back(textProgram[i]);
         }
         if (isComment < 0) {
-            this -> ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
+            ErrorHandler::ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
         }
     }
     return buffer;
@@ -143,7 +138,3 @@ std::string Parser::RemoveComments(std::string textProgram) {
     return textProgram;
 }
 
-void Parser::ThrowError(std::string errorMessage, Span errorSpan) {
-    std::cout<<errorMessage;
-    exit( -1 );
-}
