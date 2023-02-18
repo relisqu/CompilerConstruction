@@ -10,9 +10,9 @@
 class Parser{
     std::vector<PreprocessedToken> tokens;
 
-    std::string RemoveSingleLineComments(std::string textProgram);
-    std::string RemoveMultiLineComments(std::string textProgram);
-
+public:
+    static std::string RemoveSingleLineComments(std::string textProgram);
+    static std::string RemoveMultiLineComments(std::string textProgram);
     std::string RemoveComments(std::string textProgram);
     void ParseText(const std::string& textProgram);
 };
