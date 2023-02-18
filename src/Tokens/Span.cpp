@@ -5,18 +5,18 @@
 #include "Span.h"
 
 void Span::ClearSpanPosition() {
-    posEnd=0;
-    posBegin=0;
-    lineNum=0;
+    this->posEnd=0;
+    this->posBegin=0;
+    this->lineNum=0;
 }
 void Span::MoveSpanToNewLine() {
-    posEnd=0;
-    posBegin=0;
-    lineNum++;
+    this->posEnd=0;
+    this->posBegin=0;
+    this->lineNum++;
 }
 
 Span::Span(int lineNum, int posBegin, int posEnd) {
-  lineNum=lineNum;
-  posBegin=posBegin;
-  posEnd=posEnd;
+  this->lineNum=lineNum;
+  this->posBegin=posBegin;
+  this->posEnd=posEnd;
 }

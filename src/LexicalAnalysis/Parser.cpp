@@ -144,7 +144,7 @@ std::string Parser::RemoveComments(std::string textProgram) {
 }
 
 void Parser::PrintPreprocessedTokens() {
-    for ( auto ppToken: tokens) {
+    for ( const auto& ppToken: tokens) {
         std::cout<<ppToken.toString();
     }
 }
