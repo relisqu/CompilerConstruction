@@ -15,7 +15,7 @@ void Span::MoveSpanToNewLine() {
     lineNum++;
 }
 
-Span::Span(long lineNum, int posBegin, int posEnd) {
+Span::Span(int lineNum, int posBegin, int posEnd) {
   lineNum=lineNum;
   posBegin=posBegin;
   posEnd=posEnd;

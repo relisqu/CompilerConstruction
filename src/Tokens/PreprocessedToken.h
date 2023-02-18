@@ -18,6 +18,11 @@ public:
         this->text=std::move(text);
         this->state=state;
     };
+
+    std::string PreprocessedToken::toString() const {
+        return text;
+    }
+
 private:
     std::string text;
     Span span;

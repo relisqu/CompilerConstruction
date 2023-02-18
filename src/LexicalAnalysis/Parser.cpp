@@ -42,9 +42,10 @@ void Parser::ParseText(const std::string& textProgram){
     int symbolCurrentPosition = 0;
     int currentLinePosition = 0;
     Span currentSpan{0, 0, 0};
-
+    currentSpan.lineNum=0;
     for (char symbol : textProgram) {
 
+        symbolCurrentPosition++;
         if(std::isdigit(symbol)){
             currentSymbolState= SymbolState::Number;
         }
@@ -52,15 +53,16 @@ void Parser::ParseText(const std::string& textProgram){
             currentSymbolState= SymbolState::Literal;
         }
         else{
-            tokens.emplace_back(buffer, currentBufferStatus, currentSpan);
+            if(!buffer.empty()) tokens.emplace_back(buffer, currentBufferStatus, currentSpan);
             currentSpan.posBegin=symbolCurrentPosition;
             currentSpan.posEnd=symbolCurrentPosition;
-            tokens.emplace_back(std::to_string(symbol), PreprocessedToken::TokenState::Other, currentSpan);
+            std::string string(1, symbol);
+            tokens.emplace_back(string, PreprocessedToken::TokenState::Other, currentSpan);
             wordLength=0;
-            symbolCurrentPosition++;
+            buffer="";
+            currentBufferStatus= PreprocessedToken::TokenState::Other;
             if(symbol=='\n'){
-                currentLinePosition++;
-                symbolCurrentPosition = 0;
+                currentLinePosition+=1;
                 currentSpan.MoveSpanToNewLine();
             }
             continue;
@@ -72,6 +74,7 @@ void Parser::ParseText(const std::string& textProgram){
 
         }else{
             currentBufferStatus= GetTokenState(firstSymbolState,currentSymbolState, currentSpan);
+            currentSpan.posEnd=symbolCurrentPosition;
         }
         buffer.push_back(symbol);
         wordLength+=1;
@@ -138,5 +141,11 @@ std::string Parser::RemoveComments(std::string textProgram) {
     textProgram = this -> RemoveMultiLineComments(textProgram);
     textProgram = this -> RemoveSingleLineComments(textProgram);
     return textProgram;
+}
+
+void Parser::PrintPreprocessedTokens() {
+    for ( auto ppToken: tokens) {
+        std::cout<<ppToken.toString();
+    }
 }
 

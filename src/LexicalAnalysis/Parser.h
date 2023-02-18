@@ -15,4 +15,6 @@ public:
     static std::string RemoveMultiLineComments(std::string textProgram);
     std::string RemoveComments(std::string textProgram);
     void ParseText(const std::string& textProgram);
+
+    void PrintPreprocessedTokens();
 };

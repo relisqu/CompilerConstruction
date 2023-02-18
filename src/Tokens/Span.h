@@ -1,17 +1,25 @@
 #pragma once
 
+#include <string>
+
 //If we use classes, we WILL use them everywhere, Ana
 class Span {
 public:
-    long lineNum;
+    int lineNum;
     int posBegin, posEnd;
 
-    Span(long lineNum, int posBegin, int posEnd);
+public:
+    Span(int lineNum, int posBegin, int posEnd);
 
     Span() = default;
 
     void ClearSpanPosition();
 
     void MoveSpanToNewLine();
+
+
+    std::string Span::toString() const {
+        return std::to_string( lineNum) +std::to_string(posBegin);
+    }
 };
 
