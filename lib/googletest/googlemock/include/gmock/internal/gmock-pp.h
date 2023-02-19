@@ -48,7 +48,7 @@
   GMOCK_PP_IDENTITY(                        \
       GMOCK_PP_CAT(_Macro, GMOCK_PP_NARG(__VA_ARGS__))(__VA_ARGS__))
 
-// If the arguments after expansion have no tokens, evaluates to `1`. Otherwise
+// If the arguments after expansion have no preprocessedTokens, evaluates to `1`. Otherwise
 // evaluates to `0`.
 //
 // Requires: * the number of arguments after expansion is at most 15.
@@ -161,7 +161,7 @@
 
 // Because of MSVC treating a token with a comma in it as a single token when
 // passed to another macro, we need to force it to evaluate it as multiple
-// tokens. We do that by using a "IDENTITY(MACRO PARENTHESIZED_ARGS)" macro. We
+// preprocessedTokens. We do that by using a "IDENTITY(MACRO PARENTHESIZED_ARGS)" macro. We
 // define one per possible macro that relies on this behavior. Note "_Args" must
 // be parenthesized.
 #define GMOCK_PP_INTERNAL_INTERNAL_16TH(_1, _2, _3, _4, _5, _6, _7, _8, _9, \

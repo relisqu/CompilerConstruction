@@ -73,7 +73,7 @@
 #include "gtest/internal/gtest-type-util.h"
 
 // Due to C++ preprocessor weirdness, we need double indirection to
-// concatenate two tokens when one of them is __LINE__.  Writing
+// concatenate two preprocessedTokens when one of them is __LINE__.  Writing
 //
 //   foo ## __LINE__
 //

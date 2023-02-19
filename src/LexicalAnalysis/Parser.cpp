@@ -4,6 +4,7 @@
 #include "Parser.h"
 #include "../ErrorHandler.h"
 #include "../Tokens/PreprocessedToken.h"
+#include "Tokens/TokenMap.h"
 
 enum class SymbolState {
     Number,
@@ -52,11 +53,11 @@ void Parser::ParseText(const std::string& textProgram){
             currentSymbolState= SymbolState::Literal;
         }
         else{
-            if(!buffer.empty()) tokens.emplace_back(buffer, currentBufferStatus, currentSpan);
+            if(!buffer.empty()) preprocessedTokens.emplace_back(buffer, currentBufferStatus, currentSpan);
             currentSpan.posBegin=symbolCurrentPosition-1;
             currentSpan.posEnd=symbolCurrentPosition;
             std::string string(1, symbol);
-            tokens.emplace_back(string, PreprocessedToken::TokenState::Other, currentSpan);
+            preprocessedTokens.emplace_back(string, PreprocessedToken::TokenState::Other, currentSpan);
             wordLength=0;
             buffer="";
             currentBufferStatus= PreprocessedToken::TokenState::Other;
@@ -144,8 +145,31 @@ std::string Parser::RemoveComments(std::string textProgram) {
 }
 
 void Parser::PrintPreprocessedTokens() {
-    for ( const auto& ppToken: tokens) {
+    for ( const auto& ppToken: preprocessedTokens) {
         std::cout<<ppToken.toString();
     }
+}
+
+std::vector<Token> Parser::GetTokens() {
+    TokenMap::GenerateMap(); // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
+    // суть как пользоваться- вот тут https://stackoverflow.com/questions/3019153/how-do-i-use-an-enum-value-in-a-switch-statement-in-c/3019194#3019194
+    std::vector<Token> tokens;
+
+    /* обработать токены - сверить identifier c ключевыми словами по типу integer, присвоить им
+     токенкод из енама кодов.
+
+     Сначала всё обходим и приравниваем токены, где может. Потом возможно придется объединять некоторые по правилам в один
+     Проверить некоторые случаи - если у нас две точки подряд - это один токен .., в таком случае спаны (координаты этого элемента) нужно объединить
+     Если у нас встречается integer- точка - integer, это real число, надо объединить их, создать token real, совместить их спаны
+
+     проверять и объединять одиночные токены по типу <  = друг в друга - по дефолту они будут в разных токенах, но они обозначают один
+
+     если у нас identifier между двумя кавычками - это строчный элемент.
+
+     все это можно проверять по документу i language, на выходе будет массив готовых токенов.
+     Комплексити - O(n). Можно для удобства прогонять проверку токенов несколько раз - например сначала отсортировать ключевые слова и т.д., главное чтобы не было циклом в цикле
+
+     */
+
 }
 

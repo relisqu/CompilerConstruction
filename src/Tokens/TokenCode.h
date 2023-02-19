@@ -15,6 +15,7 @@ enum class TokenCode{
     tkArray,
     tkType,
     tkRecord,
+    tkIdentifier,
 
     //booleans
     tkBoolAnd,
@@ -48,9 +49,12 @@ enum class TokenCode{
     tkFor,
     tkIn,
     tkLoop,
+    tkReverse,
     tkDOT_DOT,
     tkWhile,
     tkReturn,
+    tkContinue,
+    tkBreak,
 
     //Other
     tkColon,
@@ -59,11 +63,13 @@ enum class TokenCode{
     tkSemiColon,
     tkCOLON_EQUALS,
     tkNewLine,
+    tkQuote,
     tkSQUARE_BRACKET_START,
     tkSQUARE_BRACKET_END,
     tkROUND_BRACKET_START,
     tkROUND_BRACKET_END,
     tkCURLY_BRACKET_START,
-    tkCURLY_BRACKET_END
-
+    tkCURLY_BRACKET_END,
+    tkBackSlash,
+    tkSpace
 };
