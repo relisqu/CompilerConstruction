@@ -4,7 +4,7 @@
 
 #include "Token.h"
 
-Token::Token(Span currentSpan, int code)
-{
-
+Token::Token(Span span, TokenCode code) {
+    this->span=span;
+    this->code=code;
 }

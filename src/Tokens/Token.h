@@ -1,11 +1,15 @@
 #include <iostream>
 #include "Span.h"
+#include "TokenCode.h"
+
 #pragma once
+
 class Token {
 
     Span span;
-    unsigned int code;
+    TokenCode code;
 public:
-    Token(Span span, int code);
+    Token(Span span, TokenCode code);
     Token() = default;
+
 };

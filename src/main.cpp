@@ -8,6 +8,6 @@ int main(int argc, char *argv[]) {
         std::cout << fileText <<"\n";
         Parser parser= Parser();
         parser.ParseText(fileText);
-        parser.PrintPreprocessedTokens();
+       // parser.PrintPreprocessedTokens();
     return 0;
 }

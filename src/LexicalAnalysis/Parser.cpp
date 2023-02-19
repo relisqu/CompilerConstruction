@@ -25,7 +25,6 @@ PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol,SymbolState 
             }
 
             break;
-
         case SymbolState::Literal:
             return PreprocessedToken::TokenState::Identifier;
     }
@@ -54,7 +53,7 @@ void Parser::ParseText(const std::string& textProgram){
         }
         else{
             if(!buffer.empty()) tokens.emplace_back(buffer, currentBufferStatus, currentSpan);
-            currentSpan.posBegin=symbolCurrentPosition;
+            currentSpan.posBegin=symbolCurrentPosition-1;
             currentSpan.posEnd=symbolCurrentPosition;
             std::string string(1, symbol);
             tokens.emplace_back(string, PreprocessedToken::TokenState::Other, currentSpan);
@@ -62,8 +61,9 @@ void Parser::ParseText(const std::string& textProgram){
             buffer="";
             currentBufferStatus= PreprocessedToken::TokenState::Other;
             if(symbol=='\n'){
-                currentLinePosition+=1;
                 currentSpan.MoveSpanToNewLine();
+                symbolCurrentPosition=0;
+                symbolCurrentPosition=0;
             }
             continue;
         }

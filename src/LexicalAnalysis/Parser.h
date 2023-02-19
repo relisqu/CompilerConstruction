@@ -8,6 +8,7 @@
 #include <string>
 
 class Parser{
+    
     std::vector<PreprocessedToken> tokens;
 
 public:
