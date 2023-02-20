@@ -1,5 +1,5 @@
-
 #pragma once
+
 #include <string>
 #include <utility>
 #include "Span.h"
@@ -11,15 +11,12 @@ public:
         IntConstant,
         Other
     };
-    PreprocessedToken() =default;
 
-    inline PreprocessedToken(std::string text, TokenState state, Span span){
-        this->span=span;
-        this->text=std::move(text);
-        this->state=state;
-    };
+    PreprocessedToken() = default;
 
-    std::string PreprocessedToken::toString() const {
+    PreprocessedToken(std::string text, TokenState state, Span span) : text(std::move(text)), state(state), span(span) {}
+
+    std::string toString() const {
         return text;
     }
 
@@ -27,6 +24,5 @@ private:
     std::string text;
     Span span;
     TokenState state;
-
 };
 

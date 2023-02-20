@@ -6,10 +6,10 @@
 
 class Token {
 
-    Span span;
-    TokenCode code;
+    Span span{};
+    TokenCode code{};
 public:
-    Token(Span span, TokenCode code);
     Token() = default;
 
+    Token(Span span, TokenCode code);
 };

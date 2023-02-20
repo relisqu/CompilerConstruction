@@ -1,10 +1,6 @@
-//
-// Created by kopko on 19.02.2023.
-//
-
 #pragma once
 
-enum class TokenCode{
+enum class TokenCode {
 
     //types
     tkInt,

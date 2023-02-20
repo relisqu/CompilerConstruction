@@ -1,7 +1,3 @@
-//
-// Created by kopko on 19.02.2023.
-//
-
 #pragma once
 
 #include <string>
@@ -11,8 +7,7 @@
 class TokenMap {
 
 public:
-    static std::map<std::string, TokenCode> TokenMap;
+    static std::map<std::string, TokenCode> tokenMap;
+
     static void GenerateMap();
 };
-
-

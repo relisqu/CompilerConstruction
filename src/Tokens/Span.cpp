@@ -1,22 +1,15 @@
-//
-// Created by kopko on 14.02.2023.
-//
-
 #include "Span.h"
 
+Span::Span(int lineNum, int posBegin, int posEnd) : lineNum(lineNum), posBegin(posBegin), posEnd(posEnd) {}
+
 void Span::ClearSpanPosition() {
-    this->posEnd=0;
-    this->posBegin=0;
-    this->lineNum=0;
-}
-void Span::MoveSpanToNewLine() {
-    this->posEnd=0;
-    this->posBegin=0;
-    this->lineNum++;
+    posEnd = 0;
+    posBegin = 0;
+    lineNum = 0;
 }
 
-Span::Span(int lineNum, int posBegin, int posEnd) {
-  this->lineNum=lineNum;
-  this->posBegin=posBegin;
-  this->posEnd=posEnd;
+void Span::MoveSpanToNewLine() {
+    posEnd = 0;
+    posBegin = 0;
+    ++lineNum;
 }
