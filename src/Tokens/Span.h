@@ -9,13 +9,13 @@ public:
 
     Span() = default;
 
-    Span(int lineNum, int posBegin, int posEnd);
+    Span(int lineNum, int posBegin, int posEnd) : lineNum(lineNum), posBegin(posBegin), posEnd(posEnd) {}
+
+    Span(const Span& other) = default;
 
     void ClearSpanPosition();
 
     void MoveSpanToNewLine();
 
-    std::string toString() const {
-        return std::to_string(lineNum) + std::to_string(posBegin);
-    }
+    std::string toString() const;
 };

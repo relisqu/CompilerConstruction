@@ -14,15 +14,16 @@ public:
 
     PreprocessedToken() = default;
 
-    PreprocessedToken(std::string text, TokenState state, Span span) : text(std::move(text)), state(state), span(span) {}
+    PreprocessedToken(std::string value, TokenState state, Span span) : value(std::move(value)), state(state),
+                                                                       span(span) {}
 
-    std::string toString() const {
-        return text;
-    }
+    std::string toString() const;
 
 private:
-    std::string text;
+    std::string value;
     Span span;
     TokenState state;
+
+    friend class Parser;
 };
 

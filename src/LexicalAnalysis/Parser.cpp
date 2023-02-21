@@ -9,10 +9,16 @@ enum class SymbolState {
 };
 
 
+Span MakeNewSpan(const Span& span1, const Span& span2) {
+    if (span1.lineNum == span2.lineNum) {
+        return {span1.lineNum, span1.posBegin, span2.posEnd};
+    }
+}
+
+
 PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState currentSymbol, Span currentSpan) {
     switch (firstSymbol) {
         case SymbolState::Number:
-
             switch (currentSymbol) {
                 case SymbolState::Number:
                     return PreprocessedToken::TokenState::IntConstant;
@@ -20,7 +26,6 @@ PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState
                     ErrorHandler::ThrowError("Expected unqualified-id", currentSpan);
                     break;
             }
-
             break;
         case SymbolState::Literal:
             return PreprocessedToken::TokenState::Identifier;
@@ -39,8 +44,7 @@ void Parser::ParseText(const std::string &textProgram) {
     Span currentSpan{0, 0, 0};
     currentSpan.lineNum = 0;
     for (char symbol: textProgram) {
-
-        symbolCurrentPosition++;
+        ++symbolCurrentPosition;
         if (std::isdigit(symbol)) {
             currentSymbolState = SymbolState::Number;
         } else if (std::isalpha(symbol)) {
@@ -100,23 +104,23 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
     int currentLine = 0;
 
     if (textProgram[0] == '\n') {
-        currentLine++;
+        ++currentLine;
     }
 
     int currentSymbol = 0;
 
     for (int i = 0; i < textProgram.length(); ++i) {
-        currentSymbol++;
+        ++currentSymbol;
         if (textProgram[i] == '\n') {
-            currentLine++;
+            ++currentLine;
             currentSymbol = 0;
         }
         if (textProgram.size() - 1 != i) {
             if (textProgram[i] == '/' && textProgram[i + 1] == '*') {
-                isComment++;
+                ++isComment;
             }
             if (textProgram[i] == '*' && textProgram[i + 1] == '/') {
-                isComment--;
+                --isComment;
             }
         }
         if (isComment == 0) {
@@ -130,8 +134,8 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
 }
 
 std::string Parser::RemoveComments(std::string textProgram) {
-    textProgram = this->RemoveMultiLineComments(textProgram);
-    textProgram = this->RemoveSingleLineComments(textProgram);
+    textProgram = RemoveMultiLineComments(textProgram);
+    textProgram = RemoveSingleLineComments(textProgram);
     return textProgram;
 }
 
@@ -142,26 +146,93 @@ void Parser::PrintPreprocessedTokens() {
 }
 
 std::vector<Token> Parser::GetTokens() {
-    TokenMap& map = TokenMap::getInstance();
-    // Теперь в map есть поле tokenMap // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
-    // суть как пользоваться- вот тут https://stackoverflow.com/questions/3019153/how-do-i-use-an-enum-value-in-a-switch-statement-in-c/3019194#3019194
+    TokenMap &map = TokenMap::getInstance();
+
     std::vector<Token> tokens;
+    std::vector<bool> used_preprocessed_tokens(preprocessedTokens.size(), false);
 
-    /* обработать токены - сверить identifier c ключевыми словами по типу integer, присвоить им
-     токенкод из енама кодов.
+    for (int i = 0; i < preprocessedTokens.size(); ++i) {
+        if (map.tokenMap.find(preprocessedTokens[i].value) != map.tokenMap.end()) {
+            switch (map.tokenMap[preprocessedTokens[i].value]) {
+                case TokenCode::tkTrue:
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, true);
+                    used_preprocessed_tokens[i] = true;
+                    break;
+                case TokenCode::tkFalse:
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, false);
+                    used_preprocessed_tokens[i] = true;
+                    break;
 
-     Сначала всё обходим и приравниваем токены, где может. Потом возможно придется объединять некоторые по правилам в один
-     Проверить некоторые случаи - если у нас две точки подряд - это один токен .., в таком случае спаны (координаты этого элемента) нужно объединить
-     Если у нас встречается integer- точка - integer, это real число, надо объединить их, создать token real, совместить их спаны
+                default:
+                    tokens.emplace_back(preprocessedTokens[i].span, map.tokenMap[preprocessedTokens[i].value], preprocessedTokens[i].value);
+                    used_preprocessed_tokens[i] = true;
+                    break;
+            }
+        }
+    }
 
-     проверять и объединять одиночные токены по типу <  = друг в друга - по дефолту они будут в разных токенах, но они обозначают один
+    for (int i = 1; i < preprocessedTokens.size() - 1; ++i) {
+        if (!used_preprocessed_tokens[i]) {
+            if (preprocessedTokens[i].value == "=") {
+                if (preprocessedTokens[i - 1].value == ">") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkGreaterEquals, ">=");
+                } else if (preprocessedTokens[i - 1].value == "<") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkLessEquals, "<=");
+                } else if (preprocessedTokens[i - 1].value == "/") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkNotEquals, "/=");
+                } else if (preprocessedTokens[i - 1].value == ":") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkCOLON_EQUALS, ":=");
+                } else {
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEquals, preprocessedTokens[i].value);
+                }
+            } else if (preprocessedTokens[i].value == ".") {
+                if (preprocessedTokens[i - 1].state == PreprocessedToken::TokenState::IntConstant and
+                        preprocessedTokens[i + 1].state == PreprocessedToken::TokenState::IntConstant) {
+                        used_preprocessed_tokens[i - 1] = true;
+                        used_preprocessed_tokens[i] = true;
+                        used_preprocessed_tokens[i + 1] = true;
+                        std::string real_str = preprocessedTokens[i - 1].value + preprocessedTokens[i].value + preprocessedTokens[i + 1].value;
+                        long double real_value = std::stold(real_str);
+                        tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i + 1].span), TokenCode::tkConstReal, real_str, 0,real_value);
+                } else if (preprocessedTokens[i + 1].value == ".") {
+                    used_preprocessed_tokens[i + 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
+                }
+            }
+        }
+    }
 
-     если у нас identifier между двумя кавычками - это строчный элемент.
+    for (int i = 0; i < preprocessedTokens.size(); ++i) {
+        if (!used_preprocessed_tokens[i]) {
+            if (preprocessedTokens[i].value == "<") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkLess, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].value == ">") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkGreater, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].value == "/") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDivide, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::IntConstant) {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstInt, preprocessedTokens[i].value, std::stoi(preprocessedTokens[i].value));
+            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::Identifier) {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIdentifier, preprocessedTokens[i].value);
+            }
+        }
+    }
 
-     все это можно проверять по документу i language, на выходе будет массив готовых токенов.
-     Комплексити - O(n). Можно для удобства прогонять проверку токенов несколько раз - например сначала отсортировать ключевые слова и т.д., главное чтобы не было циклом в цикле
-
-     */
-
+    return tokens;
 }
 

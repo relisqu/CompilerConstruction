@@ -2,6 +2,11 @@
 
 enum class TokenCode {
 
+    //values
+    tkConstInt,
+    tkConstReal,
+    tkConstBoolean,
+
     //types
     tkInt,
     tkReal,
@@ -11,6 +16,7 @@ enum class TokenCode {
     tkArray,
     tkType,
     tkRecord,
+    tkRoutine,
     tkIdentifier,
 
     //booleans
@@ -24,8 +30,8 @@ enum class TokenCode {
     //conditions
     tkLess,
     tkLessEquals,
-    tkBigger,
-    tkBiggerEquals,
+    tkGreater,
+    tkGreaterEquals,
     tkEquals,
     tkNotEquals,
 
@@ -67,5 +73,6 @@ enum class TokenCode {
     tkCURLY_BRACKET_START,
     tkCURLY_BRACKET_END,
     tkBackSlash,
+    tkSlash,
     tkSpace
 };
