@@ -142,7 +142,8 @@ void Parser::PrintPreprocessedTokens() {
 }
 
 std::vector<Token> Parser::GetTokens() {
-    TokenMap::GenerateMap(); // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
+    TokenMap& map = TokenMap::getInstance();
+    // Теперь в map есть поле tokenMap // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
     // суть как пользоваться- вот тут https://stackoverflow.com/questions/3019153/how-do-i-use-an-enum-value-in-a-switch-statement-in-c/3019194#3019194
     std::vector<Token> tokens;
 

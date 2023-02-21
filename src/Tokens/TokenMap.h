@@ -5,9 +5,15 @@
 #include "TokenCode.h"
 
 class TokenMap {
-
+private:
+    TokenMap(){GenerateMap();};
+    TokenMap( const TokenMap&);
+    TokenMap& operator=( TokenMap& );
 public:
-    static std::map<std::string, TokenCode> tokenMap;
-
-    static void GenerateMap();
+    static TokenMap& getInstance() {
+        static TokenMap  instance;
+        return instance;
+    }
+    std::map<std::string, TokenCode> tokenMap;
+    void GenerateMap();
 };
