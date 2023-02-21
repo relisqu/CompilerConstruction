@@ -14,8 +14,7 @@ static bool tokenComparator(Token a, Token b) {
     return spanComparator(a.getSpan(), b.getSpan());
 }
 
-void Demonstration::DemonstrateLexer(Parser parser) {
-    std::vector<Token> tokens = parser.GetTokens();
+void Demonstration::DemonstrateLexer(std::vector<Token> tokens) {
 
     std::sort(tokens.begin(), tokens.end(), tokenComparator);
 
@@ -45,6 +44,15 @@ void Demonstration::DemonstrateLexer(Parser parser) {
                 break;
             case TokenCode::tkNewLine:
                 std::cout << '\n';
+                break;
+            case TokenCode::tkConstInt:
+                std::cout << token.getIntValue();
+                break;
+            case TokenCode::tkConstReal:
+                std::cout << token.getRealValue();
+                break;
+            case TokenCode::tkConstBoolean:
+                std::cout << token.getBoolValue();
                 break;
             default:
                 std::cout << tokenNameMap.tokenMap[token.getTokenCode()];

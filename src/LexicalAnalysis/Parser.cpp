@@ -1,4 +1,6 @@
 #include "Parser.h"
+
+#include <utility>
 #include "Error/ErrorHandler.h"
 #include "../Tokens/PreprocessedToken.h"
 #include "Tokens/TokenMap.h"
@@ -51,13 +53,13 @@ void Parser::ParseText(const std::string &textProgram) {
         } else {
             if (!buffer.empty()) preprocessedTokens.emplace_back(buffer, currentBufferStatus, currentSpan);
 
+            buffer = "";
 
             currentSpan.posBegin = symbolCurrentPosition - 1;
             currentSpan.posEnd = symbolCurrentPosition;
             std::string string(1, symbol);
             preprocessedTokens.emplace_back(string, PreprocessedToken::TokenState::Other, currentSpan);
             wordLength = 0;
-            buffer = "";
             currentBufferStatus = PreprocessedToken::TokenState::Other;
             if (symbol == '\n') {
                 currentSpan.MoveSpanToNewLine();
@@ -69,7 +71,8 @@ void Parser::ParseText(const std::string &textProgram) {
         if (wordLength == 0) {
             firstSymbolState = currentSymbolState;
             currentBufferStatus =  GetTokenState(firstSymbolState, firstSymbolState, currentSpan);
-            currentSpan.posBegin = symbolCurrentPosition;
+            currentSpan.posBegin = symbolCurrentPosition-1;
+            currentSpan.posEnd=symbolCurrentPosition;
 
         } else {
             currentBufferStatus = GetTokenState(firstSymbolState, currentSymbolState, currentSpan);
@@ -257,4 +260,10 @@ std::vector<Token> Parser::GetTokens() {
     }
 
     return tokens;
+}
+
+std::vector<Token> Parser::GetLexicalAnalysisTokens(std::string textProgram) {
+    std::string text= RemoveComments(std::move(textProgram));
+    ParseText(text);
+    return GetTokens();
 }

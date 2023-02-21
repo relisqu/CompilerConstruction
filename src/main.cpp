@@ -7,10 +7,9 @@ int main(int argc, char *argv[]) {
 
     std::string fileText = FileReader::ReadFile(
             R"(../../ILanguageCodeSnippets/ArraySum.i)");
-    std::cout << fileText << "\n";
+    std::cout << fileText << "\n\n";
+
     Parser parser = Parser();
-    parser.ParseText(fileText);
-    parser.PrintPreprocessedTokensStates();
-    Demonstration::DemonstrateLexer(parser);
+    Demonstration::DemonstrateLexer(parser.GetLexicalAnalysisTokens(fileText));
     return 0;
 }

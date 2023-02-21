@@ -5,5 +5,5 @@ class Demonstration {
 public:
     Demonstration() = default;
 
-    static void DemonstrateLexer(Parser parser);
+    static void DemonstrateLexer(std::vector<Token> tokens);
 };

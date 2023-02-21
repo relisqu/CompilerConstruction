@@ -20,7 +20,7 @@ public:
     void PrintPreprocessedTokensValues();
     void PrintPreprocessedTokensStates();
 
-
+    std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
 private:
     std::vector<PreprocessedToken> preprocessedTokens;
 };
