@@ -12,4 +12,9 @@ void TokenNameMap::GenerateMap() {
     TokenNameMap::tokenMap[TokenCode::tkSpace] = "space";
     TokenNameMap::tokenMap[TokenCode::tkDOT_DOT] = "..";
     TokenNameMap::tokenMap[TokenCode::tkCOLON_EQUALS] = ":=";
+    TokenNameMap::tokenMap[TokenCode::tkLessEquals] = "<=";
+    TokenNameMap::tokenMap[TokenCode::tkGreaterEquals] = ">=";
+    TokenNameMap::tokenMap[TokenCode::tkColon] = ":";
+    TokenNameMap::tokenMap[TokenCode::tkDot] = ".";
+    TokenNameMap::tokenMap[TokenCode::tkEquals] = "=";
 };

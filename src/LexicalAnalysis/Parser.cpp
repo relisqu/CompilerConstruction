@@ -224,6 +224,9 @@ std::vector<Token> Parser::GetTokens() {
                     used_preprocessed_tokens[i + 1] = true;
                     used_preprocessed_tokens[i] = true;
                     tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
+                } else {
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDot, ".");
                 }
             }
         }
@@ -240,6 +243,9 @@ std::vector<Token> Parser::GetTokens() {
             } else if (preprocessedTokens[i].value == "/") {
                 used_preprocessed_tokens[i] = true;
                 tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDivide, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].value == ":") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkColon, preprocessedTokens[i].value);
             } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::IntConstant) {
                 used_preprocessed_tokens[i] = true;
                 tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstInt, preprocessedTokens[i].value, std::stoi(preprocessedTokens[i].value));
@@ -252,4 +258,3 @@ std::vector<Token> Parser::GetTokens() {
 
     return tokens;
 }
-

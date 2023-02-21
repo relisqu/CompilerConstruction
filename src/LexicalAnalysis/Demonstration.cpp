@@ -19,18 +19,16 @@ void Demonstration::DemonstrateLexer(Parser parser) {
 
     std::sort(tokens.begin(), tokens.end(), tokenComparator);
 
-    TokenNameMap& tokenNameMap = TokenNameMap::getInstance();
+    TokenNameMap &tokenNameMap = TokenNameMap::getInstance();
 
     // Printing info on each token:
-    for (auto & token : tokens) {
+    for (auto &token: tokens) {
         Span span = token.getSpan();
         TokenCode tokenCode = token.getTokenCode();
         std::string tokenString = tokenNameMap.tokenMap[tokenCode];
         if (tokenString.length() > 0) {
             std::cout << "TokenCode: " << tokenString << '\n';
-        }
-        else
-        {
+        } else {
             std::cout << "ERROR: no token -> string mapping\n";
         }
         std::cout << "ID: " << static_cast<int>(tokenCode) << '\n';
@@ -40,7 +38,7 @@ void Demonstration::DemonstrateLexer(Parser parser) {
     }
 
     // Printing the tokenized program:
-    for (auto & token : tokens) {
+    for (auto &token: tokens) {
         switch (token.getTokenCode()) {
             case TokenCode::tkSpace:
                 std::cout << ' ';
