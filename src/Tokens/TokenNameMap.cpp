@@ -10,4 +10,6 @@ void TokenNameMap::GenerateMap() {
     TokenNameMap::tokenMap[TokenCode::tkIdentifier] = "identifier";
     TokenNameMap::tokenMap[TokenCode::tkNewLine] = "newline";
     TokenNameMap::tokenMap[TokenCode::tkSpace] = "space";
+    TokenNameMap::tokenMap[TokenCode::tkDOT_DOT] = "..";
+    TokenNameMap::tokenMap[TokenCode::tkCOLON_EQUALS] = ":=";
 };

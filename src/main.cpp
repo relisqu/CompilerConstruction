@@ -11,6 +11,6 @@ int main(int argc, char *argv[]) {
     Parser parser = Parser();
     parser.ParseText(fileText);
     //parser.PrintPreprocessedTokensStates();
-    //Demonstration::DemonstrateLexer(parser);
+    Demonstration::DemonstrateLexer(parser);
     return 0;
 }

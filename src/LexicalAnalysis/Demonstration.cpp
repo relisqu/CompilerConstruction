@@ -25,9 +25,16 @@ void Demonstration::DemonstrateLexer(Parser parser) {
     for (auto & token : tokens) {
         Span span = token.getSpan();
         TokenCode tokenCode = token.getTokenCode();
-        std::cout << "TokenCode: " << tokenNameMap.tokenMap[tokenCode] << '\n';
+        std::string tokenString = tokenNameMap.tokenMap[tokenCode];
+        if (tokenString.length() > 0) {
+            std::cout << "TokenCode: " << tokenString << '\n';
+        }
+        else
+        {
+            std::cout << "ERROR: no token -> string mapping\n";
+        }
         std::cout << "ID: " << static_cast<int>(tokenCode) << '\n';
-        std::cout << "Token line: " << span.lineNum << '\n';
+        std::cout << "Token line: " << span.lineNum + 1 << '\n';
         std::cout << "Token symbol range: " << span.posBegin << " - " << span.posEnd << '\n';
         std::cout << "----------------------------" << '\n';
     }
