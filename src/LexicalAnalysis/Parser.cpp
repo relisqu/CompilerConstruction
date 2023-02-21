@@ -40,7 +40,6 @@ void Parser::ParseText(const std::string &textProgram) {
     PreprocessedToken::TokenState currentBufferStatus;
     int wordLength = 0;
     int symbolCurrentPosition = 0;
-    int currentLinePosition = 0;
     Span currentSpan{0, 0, 0};
     currentSpan.lineNum = 0;
     for (char symbol: textProgram) {
@@ -51,6 +50,8 @@ void Parser::ParseText(const std::string &textProgram) {
             currentSymbolState = SymbolState::Literal;
         } else {
             if (!buffer.empty()) preprocessedTokens.emplace_back(buffer, currentBufferStatus, currentSpan);
+
+
             currentSpan.posBegin = symbolCurrentPosition - 1;
             currentSpan.posEnd = symbolCurrentPosition;
             std::string string(1, symbol);
@@ -61,13 +62,13 @@ void Parser::ParseText(const std::string &textProgram) {
             if (symbol == '\n') {
                 currentSpan.MoveSpanToNewLine();
                 symbolCurrentPosition = 0;
-                symbolCurrentPosition = 0;
             }
             continue;
         }
 
         if (wordLength == 0) {
             firstSymbolState = currentSymbolState;
+            currentBufferStatus =  GetTokenState(firstSymbolState, firstSymbolState, currentSpan);
             currentSpan.posBegin = symbolCurrentPosition;
 
         } else {
@@ -179,7 +180,6 @@ std::vector<Token> Parser::GetTokens() {
                     tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, false);
                     used_preprocessed_tokens[i] = true;
                     break;
-
                 default:
                     tokens.emplace_back(preprocessedTokens[i].span, map.tokenMap[preprocessedTokens[i].value], preprocessedTokens[i].value);
                     used_preprocessed_tokens[i] = true;
