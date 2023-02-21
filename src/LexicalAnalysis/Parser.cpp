@@ -123,7 +123,7 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
             buffer.push_back(textProgram[i]);
         }
         if (isComment < 0) {
-            //this -> ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
+            ErrorHandler::ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
         }
     }
     return buffer;
