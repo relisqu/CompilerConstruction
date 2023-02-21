@@ -170,6 +170,25 @@ std::vector<Token> Parser::GetTokens() {
     std::vector<bool> used_preprocessed_tokens(preprocessedTokens.size(), false);
 
     for (int i = 0; i < preprocessedTokens.size(); ++i) {
+        if (map.tokenMap.find(preprocessedTokens[i].value) != map.tokenMap.end()) {
+            switch (map.tokenMap[preprocessedTokens[i].value]) {
+                case TokenCode::tkTrue:
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, true);
+                    used_preprocessed_tokens[i] = true;
+                    break;
+                case TokenCode::tkFalse:
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, false);
+                    used_preprocessed_tokens[i] = true;
+                    break;
+
+                default:
+                    tokens.emplace_back(preprocessedTokens[i].span, map.tokenMap[preprocessedTokens[i].value], preprocessedTokens[i].value);
+                    used_preprocessed_tokens[i] = true;
+                    break;
+            }
+        }
+
+        /*
         switch (map.tokenMap[preprocessedTokens[i].value]) {
             case TokenCode::tkInt:
                 tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkInt, preprocessedTokens[i].value);
@@ -347,7 +366,7 @@ std::vector<Token> Parser::GetTokens() {
                 break;
             default:
                 break;
-        }
+                */
     }
 
     // are the boundaries okay?
@@ -357,7 +376,7 @@ std::vector<Token> Parser::GetTokens() {
                 if (preprocessedTokens[i - 1].value == ">") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkBiggerEquals, ">=");
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkGreaterEquals, ">=");
                 } else if (preprocessedTokens[i - 1].value == "<") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
@@ -372,7 +391,7 @@ std::vector<Token> Parser::GetTokens() {
                     tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkCOLON_EQUALS, ":=");
                 } else {
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEquals, "=");
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEquals, preprocessedTokens[i].value);
                 }
             } else if (preprocessedTokens[i].value == ".") {
                 if (preprocessedTokens[i - 1].state == PreprocessedToken::TokenState::IntConstant and
@@ -383,20 +402,37 @@ std::vector<Token> Parser::GetTokens() {
                         std::string real_str = preprocessedTokens[i - 1].value + preprocessedTokens[i].value + preprocessedTokens[i + 1].value;
                         long double real_value = std::stold(real_str);
                         Span tmp_span = MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i].span);
-                        tokens.emplace_back(MakeNewSpan(tmp_span, preprocessedTokens[i + 1].span), TokenCode::tkFloatConstant, real_value);
-                } else if (preprocessedTokens[i - 1].value == "." or preprocessedTokens[i + 1].value == ".") {
-                        if (preprocessedTokens[i - 1].value == ".") {
-                            used_preprocessed_tokens[i - 1] = true;
-                            used_preprocessed_tokens[i] = true;
-                            tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i].span), TokenCode::tkDOT_DOT, "..");
-                        } else {
-                            used_preprocessed_tokens[i + 1] = true;
-                            used_preprocessed_tokens[i] = true;
-                            tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
-                        }
+                        tokens.emplace_back(MakeNewSpan(tmp_span, preprocessedTokens[i + 1].span), TokenCode::tkConstReal, real_str, 0,real_value);
+                } else if (preprocessedTokens[i + 1].value == ".") {
+                    used_preprocessed_tokens[i + 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
                 }
             }
         }
     }
+
+    for (int i = 0; i < preprocessedTokens.size(); ++i) {
+        if (!used_preprocessed_tokens[i]) {
+            if (preprocessedTokens[i].value == "<") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkLess, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].value == ">") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkGreater, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].value == "/") {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDivide, preprocessedTokens[i].value);
+            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::IntConstant) {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstInt, preprocessedTokens[i].value, std::stoi(preprocessedTokens[i].value));
+            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::Identifier) {
+                used_preprocessed_tokens[i] = true;
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIdentifier, preprocessedTokens[i].value);
+            }
+        }
+    }
+
+    return tokens;
 }
 

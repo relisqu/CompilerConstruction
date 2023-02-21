@@ -2,6 +2,11 @@
 
 enum class TokenCode {
 
+    //values
+    tkConstInt,
+    tkConstReal,
+    tkConstBoolean,
+
     //types
     tkInt,
     tkReal,
@@ -25,8 +30,8 @@ enum class TokenCode {
     //conditions
     tkLess,
     tkLessEquals,
-    tkBigger,
-    tkBiggerEquals,
+    tkGreater,
+    tkGreaterEquals,
     tkEquals,
     tkNotEquals,
 
