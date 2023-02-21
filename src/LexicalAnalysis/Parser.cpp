@@ -143,12 +143,6 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
             ++currentLine;
             currentSymbol = 0;
         }
-        if (textProgram.size() - 1 != i) {
-            if (textProgram[i] == '/' && textProgram[i + 1] == '*') {
-                ++isComment;
-            }
-            if (textProgram[i] == '*' && textProgram[i + 1] == '/') {
-                --isComment;
         if (textProgram.size() - 1 != i && textProgram[i] == '/' && textProgram[i + 1] == '*') {
             isComment++;
             last_start = Span(currentLine, currentSymbol, currentSymbol + 2);
@@ -172,6 +166,7 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
     }
     return buffer;
 }
+
 /**
  * Remove all types of comments from textProgram
  * @param textProgram : Input string
