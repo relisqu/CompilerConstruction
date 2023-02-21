@@ -116,11 +116,15 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
             isComment++;
             last_start = Span(currentLine, currentSymbol, currentSymbol + 2);
         }
-        if (i >= 2 && textProgram[i - 2] == '*' && textProgram[i - 1] == '/') {
-            isComment--;
+        if (i >= 1 && textProgram[i - 1] == '*' && textProgram[i] == '/') {
+            if (last_start.lineNum != currentLine || last_start.posBegin != currentSymbol - 2) {
+                isComment--;
+                i++;
+            }
         }
         if (isComment == 0) {
-            buffer.push_back(textProgram[i]);
+            if (i < textProgram.length())
+                buffer.push_back(textProgram[i]);
         }
         if (isComment < 0) {
             ErrorHandler::ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
