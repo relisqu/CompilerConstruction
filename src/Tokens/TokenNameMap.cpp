@@ -17,4 +17,9 @@ void TokenNameMap::GenerateMap() {
     TokenNameMap::tokenMap[TokenCode::tkColon] = ":";
     TokenNameMap::tokenMap[TokenCode::tkDot] = ".";
     TokenNameMap::tokenMap[TokenCode::tkEquals] = "=";
+
+    TokenNameMap::tokenMap[TokenCode::tkConstInt] = "constinteger";
+    TokenNameMap::tokenMap[TokenCode::tkConstBoolean] = "constboolean";
+    TokenNameMap::tokenMap[TokenCode::tkConstReal] = "constreal";
+
 };

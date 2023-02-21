@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
-
+/**
+ * Class Span is class which stores position of tokens.
+ * Stores \b lineNum, \b posBegin and \b posEnd
+ */
 class Span {
 public:
     int lineNum{};
@@ -16,6 +19,4 @@ public:
     void ClearSpanPosition();
 
     void MoveSpanToNewLine();
-
-    std::string toString() const;
 };

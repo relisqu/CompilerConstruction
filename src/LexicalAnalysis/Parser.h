@@ -7,6 +7,9 @@
 
 class Parser {
 public:
+    std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
+
+private:
     static std::string RemoveSingleLineComments(std::string textProgram);
 
     static std::string RemoveMultiLineComments(std::string textProgram);
@@ -16,11 +19,5 @@ public:
     void ParseText(const std::string &textProgram);
 
     std::vector<Token> GetTokens();
-
-    void PrintPreprocessedTokensValues();
-    void PrintPreprocessedTokensStates();
-
-    std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
-private:
     std::vector<PreprocessedToken> preprocessedTokens;
 };
