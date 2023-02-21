@@ -2,7 +2,7 @@
 #include "Demonstration.h"
 #include "../Tokens/TokenNameMap.h"
 
-bool spanComparator(Span a, Span b) {
+static bool spanComparator(Span a, Span b) {
     if (a.lineNum != b.lineNum) {
         return a.lineNum < b.lineNum;
     } else {
@@ -10,7 +10,7 @@ bool spanComparator(Span a, Span b) {
     }
 }
 
-bool tokenComparator(Token a, Token b) {
+static bool tokenComparator(Token a, Token b) {
     return spanComparator(a.getSpan(), b.getSpan());
 }
 

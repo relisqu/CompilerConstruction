@@ -17,7 +17,9 @@ public:
 
     std::vector<Token> GetTokens();
 
-    void PrintPreprocessedTokens();
+    void PrintPreprocessedTokensValues();
+    void PrintPreprocessedTokensStates();
+
 
 private:
     std::vector<PreprocessedToken> preprocessedTokens;

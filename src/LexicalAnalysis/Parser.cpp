@@ -139,9 +139,26 @@ std::string Parser::RemoveComments(std::string textProgram) {
     return textProgram;
 }
 
-void Parser::PrintPreprocessedTokens() {
+void Parser::PrintPreprocessedTokensValues() {
     for (const auto &ppToken: preprocessedTokens) {
         std::cout << ppToken.toString();
+    }
+}
+
+void Parser::PrintPreprocessedTokensStates() {
+    for (const auto &ppToken: preprocessedTokens) {
+        switch (ppToken.state) {
+            case PreprocessedToken::TokenState::Other:
+                std::cout << "Other";
+                break;
+            case PreprocessedToken::TokenState::IntConstant:
+                std::cout << "IntConstant";
+                break;
+            case PreprocessedToken::TokenState::Identifier:
+                std::cout << "Identifier";
+                break;
+        }
+        std::cout << " ";
     }
 }
 
