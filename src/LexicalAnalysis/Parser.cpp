@@ -202,8 +202,7 @@ std::vector<Token> Parser::GetTokens() {
                         used_preprocessed_tokens[i + 1] = true;
                         std::string real_str = preprocessedTokens[i - 1].value + preprocessedTokens[i].value + preprocessedTokens[i + 1].value;
                         long double real_value = std::stold(real_str);
-                        Span tmp_span = MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i].span);
-                        tokens.emplace_back(MakeNewSpan(tmp_span, preprocessedTokens[i + 1].span), TokenCode::tkConstReal, real_str, 0,real_value);
+                        tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i + 1].span), TokenCode::tkConstReal, real_str, 0,real_value);
                 } else if (preprocessedTokens[i + 1].value == ".") {
                     used_preprocessed_tokens[i + 1] = true;
                     used_preprocessed_tokens[i] = true;
