@@ -11,6 +11,7 @@ enum class TokenCode {
     tkArray,
     tkType,
     tkRecord,
+    tkRoutine,
     tkIdentifier,
 
     //booleans
@@ -67,5 +68,6 @@ enum class TokenCode {
     tkCURLY_BRACKET_START,
     tkCURLY_BRACKET_END,
     tkBackSlash,
+    tkSlash,
     tkSpace
 };

@@ -11,6 +11,8 @@ public:
 
     Span(int lineNum, int posBegin, int posEnd) : lineNum(lineNum), posBegin(posBegin), posEnd(posEnd) {}
 
+    Span(const Span& other) = default;
+
     void ClearSpanPosition();
 
     void MoveSpanToNewLine();

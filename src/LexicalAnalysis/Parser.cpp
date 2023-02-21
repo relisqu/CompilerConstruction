@@ -9,6 +9,13 @@ enum class SymbolState {
 };
 
 
+Span MakeNewSpan(const Span& span1, const Span& span2) {
+    if (span1.lineNum == span2.lineNum) {
+        return {span1.lineNum, span1.posBegin, span2.posEnd};
+    }
+}
+
+
 PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState currentSymbol, Span currentSpan) {
     switch (firstSymbol) {
         case SymbolState::Number:
@@ -97,23 +104,23 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
     int currentLine = 0;
 
     if (textProgram[0] == '\n') {
-        currentLine++;
+        ++currentLine;
     }
 
     int currentSymbol = 0;
 
     for (int i = 0; i < textProgram.length(); ++i) {
-        currentSymbol++;
+        ++currentSymbol;
         if (textProgram[i] == '\n') {
-            currentLine++;
+            ++currentLine;
             currentSymbol = 0;
         }
         if (textProgram.size() - 1 != i) {
             if (textProgram[i] == '/' && textProgram[i + 1] == '*') {
-                isComment++;
+                ++isComment;
             }
             if (textProgram[i] == '*' && textProgram[i + 1] == '/') {
-                isComment--;
+                --isComment;
             }
         }
         if (isComment == 0) {
@@ -127,8 +134,8 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
 }
 
 std::string Parser::RemoveComments(std::string textProgram) {
-    textProgram = this->RemoveMultiLineComments(textProgram);
-    textProgram = this->RemoveSingleLineComments(textProgram);
+    textProgram = RemoveMultiLineComments(textProgram);
+    textProgram = RemoveSingleLineComments(textProgram);
     return textProgram;
 }
 
@@ -142,8 +149,6 @@ std::vector<Token> Parser::GetTokens() {
     TokenMap &map = TokenMap::getInstance();
     // Теперь в map есть поле tokenMap // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
     // суть как пользоваться- вот тут https://stackoverflow.com/questions/3019153/how-do-i-use-an-enum-value-in-a-switch-statement-in-c/3019194#3019194
-    std::vector<Token> tokens;
-
     /* обработать токены - сверить identifier c ключевыми словами по типу integer, присвоить им
      токенкод из енама кодов.
 
@@ -160,5 +165,238 @@ std::vector<Token> Parser::GetTokens() {
 
      */
 
+
+    std::vector<Token> tokens;
+    std::vector<bool> used_preprocessed_tokens(preprocessedTokens.size(), false);
+
+    for (int i = 0; i < preprocessedTokens.size(); ++i) {
+        switch (map.tokenMap[preprocessedTokens[i].value]) {
+            case TokenCode::tkInt:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkInt, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkReal:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkReal, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkVar:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkVar, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBoolean:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBoolean, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkString:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkString, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkArray:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkArray, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkType:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkType, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkRecord:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkRecord, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkRoutine:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkRoutine, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBoolAnd:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBoolAnd, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBoolOr:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBoolOr, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBoolXor:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBoolXor, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBoolNot:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBoolNot, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkTrue:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkTrue, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkFalse:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkFalse, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkPlus:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkPlus, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkMinus:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkMinus, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkMultiple:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkMultiple, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkMod:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkMod, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkIs:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIs, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkIf:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIf, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkThen:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkThen, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkElse:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkElse, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkEnd:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEnd, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkFor:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkFor, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkIn:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIn, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkLoop:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkLoop, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkReverse:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkReverse, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkWhile:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkWhile, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkReturn:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkReturn, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkContinue:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkContinue, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBreak:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBreak, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkSemiColon:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkSemiColon, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkNewLine:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkNewLine, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkSQUARE_BRACKET_START:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkSQUARE_BRACKET_START,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkSQUARE_BRACKET_END:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkSQUARE_BRACKET_END,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkROUND_BRACKET_START:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkROUND_BRACKET_START,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkROUND_BRACKET_END:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkROUND_BRACKET_END,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkCURLY_BRACKET_START:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkCURLY_BRACKET_START,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkCURLY_BRACKET_END:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkCURLY_BRACKET_END,
+                                    preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkBackSlash:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkBackSlash, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            case TokenCode::tkSpace:
+                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkSpace, preprocessedTokens[i].value);
+                used_preprocessed_tokens[i] = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // are the boundaries okay?
+    for (int i = 1; i < preprocessedTokens.size() - 1; ++i) {
+        if (!used_preprocessed_tokens[i]) {
+            if (preprocessedTokens[i].value == "=") {
+                if (preprocessedTokens[i - 1].value == ">") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkBiggerEquals, ">=");
+                } else if (preprocessedTokens[i - 1].value == "<") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkLessEquals, "<=");
+                } else if (preprocessedTokens[i - 1].value == "/") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkNotEquals, "/=");
+                } else if (preprocessedTokens[i - 1].value == ":") {
+                    used_preprocessed_tokens[i - 1] = true;
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkCOLON_EQUALS, ":=");
+                } else {
+                    used_preprocessed_tokens[i] = true;
+                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEquals, "=");
+                }
+            } else if (preprocessedTokens[i].value == ".") {
+                if (preprocessedTokens[i - 1].state == PreprocessedToken::TokenState::IntConstant and
+                        preprocessedTokens[i + 1].state == PreprocessedToken::TokenState::IntConstant) {
+                        used_preprocessed_tokens[i - 1] = true;
+                        used_preprocessed_tokens[i] = true;
+                        used_preprocessed_tokens[i + 1] = true;
+                        std::string real_str = preprocessedTokens[i - 1].value + preprocessedTokens[i].value + preprocessedTokens[i + 1].value;
+                        long double real_value = std::stold(real_str);
+                        Span tmp_span = MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i].span);
+                        tokens.emplace_back(MakeNewSpan(tmp_span, preprocessedTokens[i + 1].span), TokenCode::tkFloatConstant, real_value);
+                } else if (preprocessedTokens[i - 1].value == "." or preprocessedTokens[i + 1].value == ".") {
+                        if (preprocessedTokens[i - 1].value == ".") {
+                            used_preprocessed_tokens[i - 1] = true;
+                            used_preprocessed_tokens[i] = true;
+                            tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i].span), TokenCode::tkDOT_DOT, "..");
+                        } else {
+                            used_preprocessed_tokens[i + 1] = true;
+                            used_preprocessed_tokens[i] = true;
+                            tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
+                        }
+                }
+            }
+        }
+    }
 }
 

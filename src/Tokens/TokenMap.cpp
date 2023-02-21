@@ -10,9 +10,9 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["array"] = TokenCode::tkArray;
     TokenMap::tokenMap["type"] = TokenCode::tkType;
     TokenMap::tokenMap["record"] = TokenCode::tkRecord;
+    TokenMap::tokenMap["routine"] = TokenCode::tkRoutine;
 
     //booleans
-
     TokenMap::tokenMap["and"] = TokenCode::tkBoolAnd;
     TokenMap::tokenMap["or"] = TokenCode::tkBoolOr;
     TokenMap::tokenMap["xor"] = TokenCode::tkBoolXor;
@@ -21,22 +21,17 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["false"] = TokenCode::tkFalse;
 
     //conditions
-
     TokenMap::tokenMap["<"] = TokenCode::tkLess;
     TokenMap::tokenMap[">"] = TokenCode::tkBigger;
     TokenMap::tokenMap["="] = TokenCode::tkEquals;
-    TokenMap::tokenMap["false"] = TokenCode::tkFalse;
 
     //operations
-
     TokenMap::tokenMap["+"] = TokenCode::tkPlus;
     TokenMap::tokenMap["-"] = TokenCode::tkMinus;
     TokenMap::tokenMap["*"] = TokenCode::tkMultiple;
     TokenMap::tokenMap["%"] = TokenCode::tkMod;
-    TokenMap::tokenMap["/"] = TokenCode::tkDivide;
 
     //Cycles
-
     TokenMap::tokenMap["is"] = TokenCode::tkIs;
     TokenMap::tokenMap["if"] = TokenCode::tkIf;
     TokenMap::tokenMap["then"] = TokenCode::tkThen;
@@ -52,7 +47,6 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["break"] = TokenCode::tkBreak;
 
     //Other
-
     TokenMap::tokenMap[":"] = TokenCode::tkColon;
     TokenMap::tokenMap["."] = TokenCode::tkDot;
     TokenMap::tokenMap[","] = TokenCode::tkComma;
@@ -66,6 +60,6 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["{"] = TokenCode::tkCURLY_BRACKET_START;
     TokenMap::tokenMap["}"] = TokenCode::tkCURLY_BRACKET_END;
     TokenMap::tokenMap["\\"] = TokenCode::tkBackSlash;
+    TokenMap::tokenMap["/"] = TokenCode::tkSlash;
     TokenMap::tokenMap[" "] = TokenCode::tkSpace;
-
 }
