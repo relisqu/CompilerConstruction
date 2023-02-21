@@ -12,4 +12,7 @@ public:
     Token() = default;
 
     Token(Span span, TokenCode code);
+
+    Span getSpan();
+    TokenCode getTokenCode();
 };
