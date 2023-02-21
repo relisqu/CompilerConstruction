@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
 
     std::string fileText = ReadFile(
-            R"(../../ILanguageCodeSnippets/ArraySum.i)");
+            R"(../../ILanguageCodeSnippets/ult.i)");
     std::cout << fileText << "\n\n";
 
     Parser parser = Parser();
