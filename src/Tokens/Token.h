@@ -5,11 +5,12 @@
 #pragma once
 
 class Token {
-
-    Span span{};
-    TokenCode code{};
 public:
     Token() = default;
 
-    Token(Span span, TokenCode code);
+    Token(Span span, TokenCode code) : span(span), code(code) {}
+
+private:
+    Span span{};
+    TokenCode code{};
 };

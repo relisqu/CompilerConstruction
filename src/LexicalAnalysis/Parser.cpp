@@ -12,7 +12,6 @@ enum class SymbolState {
 PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState currentSymbol, Span currentSpan) {
     switch (firstSymbol) {
         case SymbolState::Number:
-
             switch (currentSymbol) {
                 case SymbolState::Number:
                     return PreprocessedToken::TokenState::IntConstant;
@@ -20,7 +19,6 @@ PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState
                     ErrorHandler::ThrowError("Expected unqualified-id", currentSpan);
                     break;
             }
-
             break;
         case SymbolState::Literal:
             return PreprocessedToken::TokenState::Identifier;
@@ -39,8 +37,7 @@ void Parser::ParseText(const std::string &textProgram) {
     Span currentSpan{0, 0, 0};
     currentSpan.lineNum = 0;
     for (char symbol: textProgram) {
-
-        symbolCurrentPosition++;
+        ++symbolCurrentPosition;
         if (std::isdigit(symbol)) {
             currentSymbolState = SymbolState::Number;
         } else if (std::isalpha(symbol)) {
@@ -142,7 +139,7 @@ void Parser::PrintPreprocessedTokens() {
 }
 
 std::vector<Token> Parser::GetTokens() {
-    TokenMap& map = TokenMap::getInstance();
+    TokenMap &map = TokenMap::getInstance();
     // Теперь в map есть поле tokenMap // инициализация мапы - она нужна для того, чтобы оптимально находить токен, используя строку (switch case для строк)
     // суть как пользоваться- вот тут https://stackoverflow.com/questions/3019153/how-do-i-use-an-enum-value-in-a-switch-statement-in-c/3019194#3019194
     std::vector<Token> tokens;

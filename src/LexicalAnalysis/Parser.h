@@ -6,9 +6,6 @@
 #include <string>
 
 class Parser {
-
-    std::vector<PreprocessedToken> preprocessedTokens;
-
 public:
     static std::string RemoveSingleLineComments(std::string textProgram);
 
@@ -21,4 +18,7 @@ public:
     std::vector<Token> GetTokens();
 
     void PrintPreprocessedTokens();
+
+private:
+    std::vector<PreprocessedToken> preprocessedTokens;
 };
