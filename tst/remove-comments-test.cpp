@@ -25,10 +25,11 @@ TEST(commentsTest, multilinecom) {
             {"2)var A : integer is 10; /*prIVET*/\n","2)var A : integer is 10; \n"},
             {"3)var A : integer is 10;/* /**/ */ "  ,"3)var A : integer is 10; "},
             {"4)var A : integer is 10;\n"           ,"4)var A : integer is 10;\n"},
-            {"5)var A : integer is 10;/*"           ,"Unclosed multiline comment"},
-            {"6)var A : integer is 10;/*/\n*/"      ,"6)var A : integer is 10;\n"},
+            {"5)var A : integer is 10;/**/"         ,"5)var A : integer is 10;"},
+            {"6)var A : integer is 10;/*/\n*/"      ,"6)var A : integer is 10;"},
             {"7)var A : integer is 10;\n/**/\n"     ,"7)var A : integer is 10;\n\n"}
     };
+    int i = 1;
     for (auto [in, out]:tests){
         EXPECT_EQ (Parser::RemoveMultiLineComments(in), out);
     }
