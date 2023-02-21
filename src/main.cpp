@@ -1,11 +1,11 @@
 #include <iostream>
-#include "FileReader.h"
+#include "FileReader/FileReader.h"
 #include "LexicalAnalysis/Parser.h"
 
 int main(int argc, char *argv[]) {
 
     std::string fileText = FileReader::ReadFile(
-            R"(F:\Study\S23\CompilerConstruction\ILanguageCodeSnippets\ArraySum.i)");
+            R"(../../ILanguageCodeSnippets/ArraySum.i)");
     std::cout << fileText << "\n";
     Parser parser = Parser();
     parser.ParseText(fileText);

@@ -1,5 +1,5 @@
 #include "Parser.h"
-#include "../ErrorHandler.h"
+#include "Error/ErrorHandler.h"
 #include "../Tokens/PreprocessedToken.h"
 #include "Tokens/TokenMap.h"
 
