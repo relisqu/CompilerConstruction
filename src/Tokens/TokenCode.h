@@ -1,5 +1,7 @@
 #pragma once
-
+/**
+ * Enumerator of all \b tokens
+ */
 enum class TokenCode {
 
     //values

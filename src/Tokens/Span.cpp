@@ -12,6 +12,3 @@ void Span::MoveSpanToNewLine() {
     ++lineNum;
 }
 
-std::string Span::toString() const {
-    return std::to_string(lineNum) + std::to_string(posBegin);
-}
