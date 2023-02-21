@@ -5,19 +5,33 @@
 #include "../Tokens/PreprocessedToken.h"
 #include "Tokens/TokenMap.h"
 
+// Symbol state for specific character
 enum class SymbolState {
     Number,
     Literal
 };
 
-
+/**
+ * Make new span from two existing, used for tokens like '>=' '<=' ':=' and etc.
+ * @param span1 : First span
+ * @param span2 : Second span;
+ * @return New \b Span with span1.lineNum, span1.posBegin, span2.posEnd
+ *
+ * @todo Add behavior when condition is false
+ */
 Span MakeNewSpan(const Span& span1, const Span& span2) {
     if (span1.lineNum == span2.lineNum) {
         return {span1.lineNum, span1.posBegin, span2.posEnd};
     }
 }
 
-
+/**
+ * Return state of preprocessed token
+ * @param firstSymbol : First symbol of \e buffer
+ * @param currentSymbol : Current symbol of \e buffer
+ * @param currentSpan : Current position of token in \e programm
+ * @return
+ */
 PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState currentSymbol, Span currentSpan) {
     switch (firstSymbol) {
         case SymbolState::Number:
@@ -26,15 +40,16 @@ PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState
                     return PreprocessedToken::TokenState::IntConstant;
                 case SymbolState::Literal:
                     ErrorHandler::ThrowError("Expected unqualified-id", currentSpan);
-                    break;
             }
             break;
         case SymbolState::Literal:
             return PreprocessedToken::TokenState::Identifier;
     }
 }
-
-
+/**
+ * Parse text of program to tokens
+ * @param textProgram : text of input program
+ */
 void Parser::ParseText(const std::string &textProgram) {
     std::string buffer;
     SymbolState firstSymbolState;
@@ -83,7 +98,11 @@ void Parser::ParseText(const std::string &textProgram) {
     }
 }
 
-
+/**
+ * Remove from input string one line comments like '//'
+ * @param textProgram : String with comments
+ * @return Text program without \b one \b line \b comments
+ */
 std::string Parser::RemoveSingleLineComments(std::string textProgram) {
     std::string buffer;
     bool isComment = false;
@@ -100,7 +119,11 @@ std::string Parser::RemoveSingleLineComments(std::string textProgram) {
     }
     return buffer;
 }
-
+/**
+ * Remove from input string multi line comments
+ * @param textProgram : String with comments
+ * @return Text program without \b multi \b line \b comments
+ **/
 std::string Parser::RemoveMultiLineComments(std::string textProgram) {
 
     std::string buffer;
@@ -136,36 +159,21 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
     }
     return buffer;
 }
-
+/**
+ * Remove all types of comments from textProgram
+ * @param textProgram : Input string
+ * @return String of program without comments
+ */
 std::string Parser::RemoveComments(std::string textProgram) {
     textProgram = RemoveMultiLineComments(textProgram);
     textProgram = RemoveSingleLineComments(textProgram);
     return textProgram;
 }
 
-void Parser::PrintPreprocessedTokensValues() {
-    for (const auto &ppToken: preprocessedTokens) {
-        std::cout << ppToken.toString();
-    }
-}
-
-void Parser::PrintPreprocessedTokensStates() {
-    for (const auto &ppToken: preprocessedTokens) {
-        switch (ppToken.state) {
-            case PreprocessedToken::TokenState::Other:
-                std::cout << "Other";
-                break;
-            case PreprocessedToken::TokenState::IntConstant:
-                std::cout << "IntConstant";
-                break;
-            case PreprocessedToken::TokenState::Identifier:
-                std::cout << "Identifier";
-                break;
-        }
-        std::cout << " ";
-    }
-}
-
+/**
+ * Go through program and get all \b simple and \b complex tokens
+ * @return vector of all existing tokens in program
+ */
 std::vector<Token> Parser::GetTokens() {
     TokenMap &map = TokenMap::getInstance();
 
@@ -261,7 +269,11 @@ std::vector<Token> Parser::GetTokens() {
 
     return tokens;
 }
-
+/**
+ * Get \b all tokens from \b input text of program
+ * @param textProgram
+ * @return
+ */
 std::vector<Token> Parser::GetLexicalAnalysisTokens(std::string textProgram) {
     std::string text= RemoveComments(std::move(textProgram));
     ParseText(text);
