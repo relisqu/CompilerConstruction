@@ -104,6 +104,7 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
     }
 
     int currentSymbol = 0;
+    Span last_start;
 
     for (int i = 0; i < textProgram.length(); ++i) {
         currentSymbol++;
@@ -111,13 +112,12 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
             currentLine++;
             currentSymbol = 0;
         }
-        if (textProgram.size() - 1 != i) {
-            if (textProgram[i] == '/' && textProgram[i + 1] == '*') {
-                isComment++;
-            }
-            if (textProgram[i] == '*' && textProgram[i + 1] == '/') {
-                isComment--;
-            }
+        if (textProgram.size() - 1 != i && textProgram[i] == '/' && textProgram[i + 1] == '*') {
+            isComment++;
+            last_start = Span(currentLine, currentSymbol, currentSymbol + 2);
+        }
+        if (i >= 2 && textProgram[i - 2] == '*' && textProgram[i - 1] == '/') {
+            isComment--;
         }
         if (isComment == 0) {
             buffer.push_back(textProgram[i]);
@@ -125,6 +125,9 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
         if (isComment < 0) {
             ErrorHandler::ThrowError("Unexpected end of comment", Span(currentLine, currentSymbol, currentSymbol));
         }
+    }
+    if (isComment > 0) {
+        ErrorHandler::ThrowError("Unclosed multiline comment", last_start);
     }
     return buffer;
 }

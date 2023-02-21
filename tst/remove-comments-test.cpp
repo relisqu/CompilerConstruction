@@ -23,9 +23,9 @@ TEST(commentsTest, multilinecom) {
     std::vector<std::pair<std::string,std::string>> tests ={
             {"1)var A : integer is 10;"             ,"1)var A : integer is 10;"},
             {"2)var A : integer is 10; /*prIVET*/\n","2)var A : integer is 10; \n"},
-            {"3)var A : integer is 10;/* /**/ */ "  ,"3)var A : integer is 10;"},
+            {"3)var A : integer is 10;/* /**/ */ "  ,"3)var A : integer is 10; "},
             {"4)var A : integer is 10;\n"           ,"4)var A : integer is 10;\n"},
-            {"5)var A : integer is 10;/*"           ,"5)var A : integer is 10;/*"},
+            {"5)var A : integer is 10;/*"           ,"Unclosed multiline comment"},
             {"6)var A : integer is 10;/*/\n*/"      ,"6)var A : integer is 10;\n"},
             {"7)var A : integer is 10;\n/**/\n"     ,"7)var A : integer is 10;\n\n"}
     };
