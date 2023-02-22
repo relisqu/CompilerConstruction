@@ -9,10 +9,11 @@ class Parser {
 public:
     std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
 
-private:
     static std::string RemoveSingleLineComments(std::string textProgram);
 
     static std::string RemoveMultiLineComments(std::string textProgram);
+
+private:
 
     std::string RemoveComments(std::string textProgram);
 
