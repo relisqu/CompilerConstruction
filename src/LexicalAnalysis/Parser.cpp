@@ -232,7 +232,7 @@ std::vector<Token> Parser::GetTokens() {
                 }
             } else if (preprocessedTokens[i].value == ".") {
                 if (preprocessedTokens[i - 1].state == PreprocessedToken::TokenState::IntConstant and
-                        preprocessedTokens[i + 1].state == PreprocessedToken::TokenState::IntConstant) {
+                        preprocessedTokens[i + 1].state == PreprocessedToken::TokenState::IntConstant and !used_preprocessed_tokens[i - 1]) {
                         used_preprocessed_tokens[i - 1] = true;
                         used_preprocessed_tokens[i] = true;
                         used_preprocessed_tokens[i + 1] = true;
