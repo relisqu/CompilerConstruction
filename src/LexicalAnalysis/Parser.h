@@ -21,4 +21,6 @@ private:
 
     std::vector<Token> GetTokens();
     std::vector<PreprocessedToken> preprocessedTokens;
+
+    void RemoveTabulationTokens();
 };

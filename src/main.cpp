@@ -9,6 +9,7 @@
  @authors Anna Kopeikina, Danila Korneenko, Tasha Sakovets, Yaroslav Kim, Dmitriy Pirozhenko
  @version \b 1.1 \e 21/02/2023
  **/
+
 int main(int argc, char *argv[]) {
 
     std::string fileText = ReadFile(

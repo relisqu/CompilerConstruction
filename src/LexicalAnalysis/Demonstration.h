@@ -55,7 +55,7 @@ void DemonstrateLexer(std::vector<Token> tokens) {
     // Printing the tokenized program:
     for (auto &token: tokens) {
         switch (token.getTokenCode()) {
-            case TokenCode::tkSpace:
+            case TokenCode::tkTabulation:
                 std::cout << ' ';
                 break;
             case TokenCode::tkNewLine:

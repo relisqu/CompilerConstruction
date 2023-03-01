@@ -76,5 +76,5 @@ enum class TokenCode {
     tkCURLY_BRACKET_END,
     tkBackSlash,
     tkSlash,
-    tkSpace
+    tkSpace, tkTabulation
 };
