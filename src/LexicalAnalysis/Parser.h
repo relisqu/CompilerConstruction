@@ -1,6 +1,3 @@
-//
-// Created by kopko on 13.02.2023.
-//
 #pragma once
 
 #include "../Tokens/PreprocessedToken.h"
@@ -8,16 +5,22 @@
 #include <vector>
 #include <string>
 
-class Parser{
+class Parser {
+public:
+    std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
 
+    static std::string RemoveSingleLineComments(std::string textProgram);
+
+    static std::string RemoveMultiLineComments(std::string textProgram);
+
+private:
+
+    std::string RemoveComments(std::string textProgram);
+
+    void ParseText(const std::string &textProgram);
+
+    std::vector<Token> GetTokens();
     std::vector<PreprocessedToken> preprocessedTokens;
 
-public:
-    static std::string RemoveSingleLineComments(std::string textProgram);
-    static std::string RemoveMultiLineComments(std::string textProgram);
-    std::string RemoveComments(std::string textProgram);
-    void ParseText(const std::string& textProgram);
-    std::vector<Token> GetTokens();
-
-    void PrintPreprocessedTokens();
+    void RemoveTabulationTokens();
 };

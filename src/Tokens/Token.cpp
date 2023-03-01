@@ -1,10 +1,26 @@
-//
-// Created by kopko on 14.02.2023.
-//
-
 #include "Token.h"
 
-Token::Token(Span span, TokenCode code) {
-    this->span=span;
-    this->code=code;
+
+Span Token::getSpan() {
+    return this->span;
+}
+
+TokenCode Token::getTokenCode() {
+    return this->code;
+}
+
+std::string Token::getStringValue() {
+    return this->strValue;
+}
+
+int Token::getIntValue() {
+    return this->intValue;
+}
+
+float Token::getRealValue() {
+    return this->realValue;
+}
+
+bool Token::getBoolValue() {
+    return this->boolValue;
 }

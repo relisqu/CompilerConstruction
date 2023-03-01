@@ -6,7 +6,7 @@ end;
 return sum;
 
 var myArray : array [4] integer;
-myArray[1] := 9
+myArray[1] := 91
 myArray[2] := 10
 myArray[3] := 2
 myArray[4] := 7
