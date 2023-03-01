@@ -2,8 +2,8 @@
 
 #include <utility>
 #include "Error/ErrorHandler.h"
-#include "../Tokens/PreprocessedToken.h"
 #include "Tokens/TokenMap.h"
+#include "Debug/DebugMode.h"
 
 // Symbol state for specific character
 enum class SymbolState {
@@ -191,6 +191,12 @@ std::vector<Token> Parser::GetTokens() {
     for (int i = 0; i < preprocessedTokens.size(); ++i) {
         if (map.tokenMap.find(preprocessedTokens[i].value) != map.tokenMap.end()) {
             switch (map.tokenMap[preprocessedTokens[i].value]) {
+                case TokenCode::tkTabulation:
+                    if(IS_DEBUG_MODE){
+                        tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkTabulation, preprocessedTokens[i].value, 0, 0, true);
+                    }
+                    used_preprocessed_tokens[i] = true;
+                    break;
                 case TokenCode::tkTrue:
                     tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, true);
                     used_preprocessed_tokens[i] = true;
@@ -277,6 +283,7 @@ std::vector<Token> Parser::GetTokens() {
 
     return tokens;
 }
+
 /**
  * Get \b all tokens from \b input text of program
  * @param textProgram

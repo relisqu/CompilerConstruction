@@ -52,6 +52,8 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap[","] = TokenCode::tkComma;
     TokenMap::tokenMap[";"] = TokenCode::tkSemiColon;
     TokenMap::tokenMap["\n"] = TokenCode::tkNewLine;
+    TokenMap::tokenMap["\r"] = TokenCode::tkTabulation;
+    TokenMap::tokenMap[" "] = TokenCode::tkTabulation;
     TokenMap::tokenMap["\""] = TokenCode::tkQuote;
     TokenMap::tokenMap["["] = TokenCode::tkSQUARE_BRACKET_START;
     TokenMap::tokenMap["]"] = TokenCode::tkSQUARE_BRACKET_END;
@@ -61,5 +63,4 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["}"] = TokenCode::tkCURLY_BRACKET_END;
     TokenMap::tokenMap["\\"] = TokenCode::tkBackSlash;
     // TokenMap::tokenMap["/"] = TokenCode::tkSlash;
-    TokenMap::tokenMap[" "] = TokenCode::tkSpace;
 }
