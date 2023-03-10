@@ -1,0 +1,43 @@
+%require "3.2"
+%language "C++"
+%define api.value.type variant
+%define api.token.constructor
+%define parse.assert
+
+%code requires
+{
+    #pragma once
+    #include <iostream>
+    #include <string>
+    namespace yy
+    {
+        class parser;
+    }
+}
+
+%code
+{
+    namespace yy
+    {
+        parser::symbol_type yylex();
+    }
+
+    extern yy::parser::symbol_type get_next_token();
+}
+
+%token IDENT VAR INT IS
+%type <std::string> IDENT
+
+%%
+Program:
+|Program VariableDeclaration
+
+VariableDeclaration: VAR IDENT IS INT {std::cout <<"defined an int variable" << $2 <<"\n";}
+%%
+namespace yy
+{
+    void parser::error(const std::string& msg)
+    {
+        std::cout <<"Syntax error\n";
+    }
+}

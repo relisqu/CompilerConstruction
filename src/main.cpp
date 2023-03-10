@@ -1,6 +1,6 @@
 #include <iostream>
 #include "FileReader/FileReader.cpp"
-#include "LexicalAnalysis/Parser.h"
+#include "LexicalAnalysis/Scanner.h"
 #include "LexicalAnalysis/Demonstration.h"
 
 /**
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
             R"(../../ILanguageCodeSnippets/ult.i)");
     std::cout << fileText << "\n\n";
 
-    Parser parser = Parser();
+    Scanner parser = Scanner();
     DemonstrateLexer(parser.GetLexicalAnalysisTokens(fileText));
     return 0;
 }
