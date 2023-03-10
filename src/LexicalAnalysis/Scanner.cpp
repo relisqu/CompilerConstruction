@@ -177,7 +177,7 @@ std::string Scanner::RemoveComments(std::string textProgram) {
  * Go through program and get all \b simple and \b complex tokens
  * @return vector of all existing tokens in program
  */
-std::vector<Token> Scanner::GetTokens() {
+std::vector<Token> Scanner::finalize_tokens() {
     TokenMap &map = TokenMap::getInstance();
 
     std::vector<Token> tokens;
@@ -284,8 +284,12 @@ std::vector<Token> Scanner::GetTokens() {
  * @param textProgram
  * @return
  */
-std::vector<Token> Scanner::GetLexicalAnalysisTokens(std::string textProgram) {
-    std::string text= RemoveComments(std::move(textProgram));
+std::vector<Token> Scanner::GetLexicalAnalysisTokens() {
+    std::string text= RemoveComments(std::move(text_file));
     ParseText(text);
-    return GetTokens();
+    tokens = finalize_tokens();
+}
+
+yy::parser::symbol_type Scanner::get_next_token() {
+
 }
