@@ -1,9 +1,4 @@
-#include "Parser.h"
-
-#include <utility>
-#include "Error/ErrorHandler.h"
-#include "Tokens/TokenMap.h"
-#include "Debug/DebugMode.h"
+#include "Scanner.h"
 
 // Symbol state for specific character
 enum class SymbolState {
@@ -50,7 +45,7 @@ PreprocessedToken::TokenState GetTokenState(SymbolState firstSymbol, SymbolState
  * Parse text of program to tokens
  * @param textProgram : text of input program
  */
-void Parser::ParseText(const std::string &textProgram) {
+void Scanner::ParseText(const std::string &textProgram) {
     std::string buffer;
     SymbolState firstSymbolState;
     SymbolState currentSymbolState;
@@ -103,7 +98,7 @@ void Parser::ParseText(const std::string &textProgram) {
  * @param textProgram : String with comments
  * @return Text program without \b one \b line \b comments
  */
-std::string Parser::RemoveSingleLineComments(std::string textProgram) {
+std::string Scanner::RemoveSingleLineComments(std::string textProgram) {
     std::string buffer;
     bool isComment = false;
     for (int i = 0; i < textProgram.length(); ++i) {
@@ -124,7 +119,7 @@ std::string Parser::RemoveSingleLineComments(std::string textProgram) {
  * @param textProgram : String with comments
  * @return Text program without \b multi \b line \b comments
  **/
-std::string Parser::RemoveMultiLineComments(std::string textProgram) {
+std::string Scanner::RemoveMultiLineComments(std::string textProgram) {
 
     std::string buffer;
     int isComment = 0;
@@ -172,7 +167,7 @@ std::string Parser::RemoveMultiLineComments(std::string textProgram) {
  * @param textProgram : Input string
  * @return String of program without comments
  */
-std::string Parser::RemoveComments(std::string textProgram) {
+std::string Scanner::RemoveComments(std::string textProgram) {
     textProgram = RemoveMultiLineComments(textProgram);
     textProgram = RemoveSingleLineComments(textProgram);
     return textProgram;
@@ -182,31 +177,31 @@ std::string Parser::RemoveComments(std::string textProgram) {
  * Go through program and get all \b simple and \b complex tokens
  * @return vector of all existing tokens in program
  */
-std::vector<Token> Parser::GetTokens() {
+std::vector<Token> Scanner::GetTokens() {
     TokenMap &map = TokenMap::getInstance();
 
     std::vector<Token> tokens;
     std::vector<bool> used_preprocessed_tokens(preprocessedTokens.size(), false);
 
     for (int i = 0; i < preprocessedTokens.size(); ++i) {
-        if (map.tokenMap.find(preprocessedTokens[i].value) != map.tokenMap.end()) {
-            switch (map.tokenMap[preprocessedTokens[i].value]) {
+        if (map.tokenMap.find(preprocessedTokens[i].get_value()) != map.tokenMap.end()) {
+            switch (map.tokenMap[preprocessedTokens[i].get_value()]) {
                 case TokenCode::tkTabulation:
                     if(IS_DEBUG_MODE){
-                        tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkTabulation, preprocessedTokens[i].value, 0, 0, true);
+                        tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkTabulation, preprocessedTokens[i].get_value(), 0, 0, true);
                     }
                     used_preprocessed_tokens[i] = true;
                     break;
                 case TokenCode::tkTrue:
-                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, true);
+                    tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkConstBoolean, preprocessedTokens[i].get_value(), 0, 0, true);
                     used_preprocessed_tokens[i] = true;
                     break;
                 case TokenCode::tkFalse:
-                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstBoolean, preprocessedTokens[i].value, 0, 0, false);
+                    tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkConstBoolean, preprocessedTokens[i].get_value(), 0, 0, false);
                     used_preprocessed_tokens[i] = true;
                     break;
                 default:
-                    tokens.emplace_back(preprocessedTokens[i].span, map.tokenMap[preprocessedTokens[i].value], preprocessedTokens[i].value);
+                    tokens.emplace_back(preprocessedTokens[i].get_span(), map.tokenMap[preprocessedTokens[i].get_value()], preprocessedTokens[i].get_value());
                     used_preprocessed_tokens[i] = true;
                     break;
             }
@@ -215,43 +210,43 @@ std::vector<Token> Parser::GetTokens() {
 
     for (int i = 1; i < preprocessedTokens.size() - 1; ++i) {
         if (!used_preprocessed_tokens[i]) {
-            if (preprocessedTokens[i].value == "=") {
-                if (preprocessedTokens[i - 1].value == ">") {
+            if (preprocessedTokens[i].get_value() == "=") {
+                if (preprocessedTokens[i - 1].get_value() == ">") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkGreaterEquals, ">=");
-                } else if (preprocessedTokens[i - 1].value == "<") {
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkGreaterEquals, ">=");
+                } else if (preprocessedTokens[i - 1].get_value() == "<") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkLessEquals, "<=");
-                } else if (preprocessedTokens[i - 1].value == "/") {
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkLessEquals, "<=");
+                } else if (preprocessedTokens[i - 1].get_value() == "/") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkNotEquals, "/=");
-                } else if (preprocessedTokens[i - 1].value == ":") {
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkNotEquals, "/=");
+                } else if (preprocessedTokens[i - 1].get_value() == ":") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].span, preprocessedTokens[i].span), TokenCode::tkCOLON_EQUALS, ":=");
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkCOLON_EQUALS, ":=");
                 } else {
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkEquals, preprocessedTokens[i].value);
+                    tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkEquals, preprocessedTokens[i].get_value());
                 }
-            } else if (preprocessedTokens[i].value == ".") {
-                if (preprocessedTokens[i - 1].state == PreprocessedToken::TokenState::IntConstant and
-                        preprocessedTokens[i + 1].state == PreprocessedToken::TokenState::IntConstant and !used_preprocessed_tokens[i - 1]) {
+            } else if (preprocessedTokens[i].get_value() == ".") {
+                if (preprocessedTokens[i - 1].get_state() == PreprocessedToken::TokenState::IntConstant and
+                        preprocessedTokens[i + 1].get_state() == PreprocessedToken::TokenState::IntConstant and !used_preprocessed_tokens[i - 1]) {
                         used_preprocessed_tokens[i - 1] = true;
                         used_preprocessed_tokens[i] = true;
                         used_preprocessed_tokens[i + 1] = true;
-                        std::string real_str = preprocessedTokens[i - 1].value + preprocessedTokens[i].value + preprocessedTokens[i + 1].value;
+                        std::string real_str = preprocessedTokens[i - 1].get_value() + preprocessedTokens[i].get_value() + preprocessedTokens[i + 1].get_value();
                         long double real_value = std::stold(real_str);
-                        tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].span, preprocessedTokens[i + 1].span), TokenCode::tkConstReal, real_str, 0,real_value);
-                } else if (preprocessedTokens[i + 1].value == ".") {
+                        tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkConstReal, real_str, 0,real_value);
+                } else if (preprocessedTokens[i + 1].get_value() == ".") {
                     used_preprocessed_tokens[i + 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].span, preprocessedTokens[i + 1].span), TokenCode::tkDOT_DOT, "..");
+                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkDOT_DOT, "..");
                 } else {
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDot, ".");
+                    tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkDot, ".");
                 }
             }
         }
@@ -259,24 +254,24 @@ std::vector<Token> Parser::GetTokens() {
 
     for (int i = 0; i < preprocessedTokens.size(); ++i) {
         if (!used_preprocessed_tokens[i]) {
-            if (preprocessedTokens[i].value == "<") {
+            if (preprocessedTokens[i].get_value() == "<") {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkLess, preprocessedTokens[i].value);
-            } else if (preprocessedTokens[i].value == ">") {
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkLess, preprocessedTokens[i].get_value());
+            } else if (preprocessedTokens[i].get_value() == ">") {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkGreater, preprocessedTokens[i].value);
-            } else if (preprocessedTokens[i].value == "/") {
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkGreater, preprocessedTokens[i].get_value());
+            } else if (preprocessedTokens[i].get_value() == "/") {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkDivide, preprocessedTokens[i].value);
-            } else if (preprocessedTokens[i].value == ":") {
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkDivide, preprocessedTokens[i].get_value());
+            } else if (preprocessedTokens[i].get_value() == ":") {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkColon, preprocessedTokens[i].value);
-            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::IntConstant) {
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkColon, preprocessedTokens[i].get_value());
+            } else if (preprocessedTokens[i].get_state() == PreprocessedToken::TokenState::IntConstant) {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkConstInt, preprocessedTokens[i].value, std::stoi(preprocessedTokens[i].value));
-            } else if (preprocessedTokens[i].state == PreprocessedToken::TokenState::Identifier) {
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkConstInt, preprocessedTokens[i].get_value(), std::stoi(preprocessedTokens[i].get_value()));
+            } else if (preprocessedTokens[i].get_state() == PreprocessedToken::TokenState::Identifier) {
                 used_preprocessed_tokens[i] = true;
-                tokens.emplace_back(preprocessedTokens[i].span, TokenCode::tkIdentifier, preprocessedTokens[i].value);
+                tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkIdentifier, preprocessedTokens[i].get_value());
             }
         }
     }
@@ -289,7 +284,7 @@ std::vector<Token> Parser::GetTokens() {
  * @param textProgram
  * @return
  */
-std::vector<Token> Parser::GetLexicalAnalysisTokens(std::string textProgram) {
+std::vector<Token> Scanner::GetLexicalAnalysisTokens(std::string textProgram) {
     std::string text= RemoveComments(std::move(textProgram));
     ParseText(text);
     return GetTokens();

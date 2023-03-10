@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "Parser.h"
+#include "Scanner.h"
 #include "../Tokens/TokenNameMap.h"
 
 /**

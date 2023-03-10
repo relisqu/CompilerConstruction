@@ -1,11 +1,17 @@
 #pragma once
 
-#include "../Tokens/PreprocessedToken.h"
-#include "Tokens/Token.h"
+
 #include <vector>
 #include <string>
+#include <utility>
 
-class Parser {
+#include "Error/ErrorHandler.h"
+#include "Tokens/TokenMap.h"
+#include "Debug/DebugMode.h"
+#include "Tokens/PreprocessedToken.h"
+#include "Tokens/Token.h"
+
+class Scanner {
 public:
     std::vector<Token> GetLexicalAnalysisTokens(std::string textProgram);
 

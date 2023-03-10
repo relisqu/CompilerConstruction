@@ -2,7 +2,7 @@
 // Created by dyllas on 17.02.23.
 //
 #include "gtest/gtest.h"
-#include "LexicalAnalysis/Parser.h"
+#include "LexicalAnalysis/Scanner.h"
 
 TEST(commentsTest, linecom) {
     std::vector<std::pair<std::string,std::string>> tests ={
@@ -15,7 +15,7 @@ TEST(commentsTest, linecom) {
             {"var A : integer is 10;\n//\n"     ,"var A : integer is 10;\n\n"}
     };
     for (auto [in, out]:tests){
-        EXPECT_EQ (Parser::RemoveSingleLineComments (in), out);
+        EXPECT_EQ (Scanner::RemoveSingleLineComments (in), out);
     }
 }
 
@@ -31,6 +31,6 @@ TEST(commentsTest, multilinecom) {
     };
     int i = 1;
     for (auto [in, out]:tests){
-        EXPECT_EQ (Parser::RemoveMultiLineComments(in), out);
+        EXPECT_EQ (Scanner::RemoveMultiLineComments(in), out);
     }
 }

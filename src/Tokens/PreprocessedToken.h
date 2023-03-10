@@ -17,13 +17,15 @@ public:
     };
     PreprocessedToken() = default;
     PreprocessedToken(std::string value, TokenState state, Span span) : value(std::move(value)), state(state),
-                                                                        span(span) {}
+                                                                        span(span) {};
+    std::string get_value() {return value;}
+    Span get_span() {return span;}
+    TokenState get_state() {return state;}
 private:
 
     std::string value;
     Span span;
     TokenState state;
-    friend class Parser;
 
 };
 
