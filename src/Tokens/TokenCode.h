@@ -2,6 +2,7 @@
 /**
  * Enumerator of all \b tokens
  */
+//TODO: Recheck tokens
 enum class TokenCode {
 
     //values
@@ -75,6 +76,6 @@ enum class TokenCode {
     tkCURLY_BRACKET_START,
     tkCURLY_BRACKET_END,
     tkBackSlash,
-    tkSlash,
+    //tkSlash,
     tkSpace, tkTabulation
 };

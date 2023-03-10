@@ -1,5 +1,5 @@
 #include "TokenMap.h"
-
+//TODO: Clean unused tokens
 void TokenMap::GenerateMap() {
     //types
     TokenMap::tokenMap["integer"] = TokenCode::tkInt;
