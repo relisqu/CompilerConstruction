@@ -9,6 +9,7 @@
     #pragma once
     #include <iostream>
     #include <string>
+    #include "LexicalAnalysis/Scanner.h"
     namespace yy
     {
         class parser;
@@ -24,15 +25,145 @@
 
     extern yy::parser::symbol_type get_next_token();
 }
+%token tkConstInt tkConstReal tkConstBoolean
+%token tkInt tkReal tkVar tkBoolean tkString tkArray tkType tkRecord tkRoutine tkIdentifier
+%token tkBoolAnd tkBoolOr tkBoolXor tkBoolNot tkTrue tkFalse
+%token tkLess tkLessEquals tkGreater tkGreaterEquals tkEquals tkNotEquals
+%token tkPlus tkMinus tkMultiple tkMod tkDivide
+%token tkIs tkIf tkThen tkElse tkEnd tkFor tkIn tkLoop tkReverse tkDOT_DOT tkWhile tkReturn tkContinue tkBreak
+%token tkColon tkDot tkComma tkSemiColon tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
 
-%token IDENT VAR INT IS
-%type <std::string> IDENT
+%type <std::string> tkIdentifier
+%type <bool> _expr
+
+%left tkBoolOr
+%left tkBoolXor
+%left tkBoolAnd
+%left tkEquals tkNotEquals
+%left tkGreater tkGreaterEquals tkLess tkLessEquals
+%left tkPlus tkMinus tkMultiple tkMod tkDivide
+
 
 %%
-Program:
-|Program VariableDeclaration
+program:
+| program _var_dec {}
+| program _type_dec {}
+| program _routine_dec {}
+;
+//TODO replace debug commands with commands for making code tree\
 
-VariableDeclaration: VAR IDENT IS INT {std::cout <<"defined an int variable" << $2 <<"\n";}
+_var_dec : tkVar tkIdentifier tkColon _type {std::cout << "Made new variable "<< $2;}
+| tkVar tkIdentifier tkColon _type tkIs _expr {std::cout << "Made new variable with val: " << $6;}
+;
+
+_type_dec: tkType tkIdentifier tkIs _type {std::cout << "get type with ident:"<<$2;}
+;
+
+_routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd {}
+| tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd {}
+;
+
+_params: _param_dec {}
+| _params tkComma _param_dec {}
+;
+
+_param_dec: tkIdentifier tkColon _type {}
+;
+
+_type: tkIdentifier {}
+| _irb_type {}
+| _arr_type {}
+| _rec_type {}
+;
+
+_irb_type: tkInt {}
+| tkReal {}
+| tkBoolean {}
+;
+
+_rec_type: tkRecord _var_dec_block tkEnd {}
+;
+
+_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type {}
+| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type {}
+;
+
+_body: {}
+| _body _var_dec {}
+| _body _type_dec {}
+| _body _statement {}
+
+_statement: _assign {}
+| _routine {}
+| _while {}
+| _for {}
+| _if {}
+| _return {}
+;
+
+_return: tkReturn {}
+| tkReturn _expr {}
+;
+
+_assign: _modval tkCOLON_EQUALS _expr {}
+;
+
+_routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END {}
+;
+
+_while: tkWhile _expr tkLoop _body tkEnd {}
+;
+
+_for: tkFor tkIdentifier _range tkLoop _body tkEnd {}
+
+_range: tkIn _expr tkDOT_DOT _expr {}
+| tkIn tkReverse _expr tkDOT_DOT _expr {}
+;
+
+_if: tkIf _expr tkThen _body tkEnd {}
+| tkIf _expr tkThen _body tkElse _body tkEnd {}
+;
+
+_var_dec_block: {}
+| _var_dec_block _var_dec {}
+;
+
+_expr: _primary {}
+| _expr tkPlus _expr {}
+| _expr tkMinus _expr {}
+| _expr tkMultiple _expr {}
+| _expr tkMod _expr {}
+| _expr tkDivide _expr {}
+| _expr tkLess _expr {}
+| _expr tkLessEquals _expr {}
+| _expr tkGreater _expr {}
+| _expr tkGreaterEquals _expr {}
+| _expr tkEquals _expr {}
+| _expr tkNotEquals _expr {}
+| _expr tkBoolAnd _expr {}
+| _expr tkBoolOr _expr {}
+| _expr tkBoolXor _expr {}
+| tkROUND_BRACKET_START _expr tkROUND_BRACKET_START {}
+;
+
+_args: _expr {}
+| _args tkComma _expr {}
+
+_primary: tkConstInt {}
+| tkConstReal {}
+| tkConstBoolean {}
+| _modval {}
+| _routine {}
+;
+//Пустой в начале
+_getvar: {};
+| _getvar tkDot tkIdentifier {}
+| _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {}
+;
+//Итак, тут мы делаем магию над вторым, если он пустой, то это классический доступ к переменной, иначе всякие функции
+_modval: tkIdentifier _getvar {}
+;
+
 %%
 namespace yy
 {
