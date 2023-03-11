@@ -9,7 +9,6 @@
     #pragma once
     #include <iostream>
     #include <string>
-    #include "LexicalAnalysis/Scanner.h"
     namespace yy
     {
         class parser;
@@ -34,7 +33,9 @@
 %token tkColon tkDot tkComma tkSemiColon tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
 
 %type <std::string> tkIdentifier
-%type <bool> _expr
+%type <double> tkConstReal
+%type <int> tkConstInt
+%type <bool> tkConstBoolean
 
 %left tkBoolOr
 %left tkBoolXor
@@ -53,7 +54,7 @@ program:
 //TODO replace debug commands with commands for making code tree\
 
 _var_dec : tkVar tkIdentifier tkColon _type {std::cout << "Made new variable "<< $2;}
-| tkVar tkIdentifier tkColon _type tkIs _expr {std::cout << "Made new variable with val: " << $6;}
+| tkVar tkIdentifier tkColon _type tkIs _expr {std::cout << "Made new variable "<< $2 <<" with val: ";}
 ;
 
 _type_dec: tkType tkIdentifier tkIs _type {std::cout << "get type with ident:"<<$2;}

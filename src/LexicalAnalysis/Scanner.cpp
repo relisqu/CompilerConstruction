@@ -19,6 +19,28 @@ Span MakeNewSpan(const Span& span1, const Span& span2) {
         return {span1.lineNum, span1.posBegin, span2.posEnd};
     }
 }
+/**
+ * Compare span's \b lineNum or \b posBegin  to detect which span was earlier
+ * @param a : First span to compare
+ * @param b : Second span to compare
+ * @return Which span appeared \e earlier in code snippet
+ */
+static bool spanComparator(Span a, Span b) {
+    if (a.lineNum != b.lineNum) {
+        return a.lineNum < b.lineNum;
+    } else {
+        return a.posBegin < b.posBegin;
+    }
+}
+/**
+ *
+ * @param a : First token to compare
+ * @param b : Second token to compare
+ * @return Result of @code static bool spanComparator(a,b) @endcode
+ */
+static bool tokenComparator(Token a, Token b) {
+    return spanComparator(a.getSpan(), b.getSpan());
+}
 
 /**
  * Return state of preprocessed token
@@ -284,12 +306,34 @@ std::vector<Token> Scanner::finalize_tokens() {
  * @param textProgram
  * @return
  */
-std::vector<Token> Scanner::GetLexicalAnalysisTokens() {
+void Scanner::GetLexicalAnalysisTokens(std::string text_file) {
     std::string text= RemoveComments(std::move(text_file));
     ParseText(text);
     tokens = finalize_tokens();
+    std::sort(tokens.begin(), tokens.end(), tokenComparator);
 }
 
 yy::parser::symbol_type Scanner::get_next_token() {
+    // if we get to the end -> send signal of ending to Bison
+    iter++;
+
+    if (iter >= tokens.size()) return yy::parser::make_YYEOF();
+
+    auto token = tokens[iter];
+    switch (token.getTokenCode()){
+        case TokenCode::tkIdentifier :
+            return yy::parser::make_tkIdentifier(token.getStringValue());
+        case TokenCode::tkConstInt :
+            return yy::parser::make_tkConstInt(token.getIntValue());
+        case TokenCode::tkConstBoolean :
+            return yy::parser::make_tkConstBoolean(token.getBoolValue());
+        case TokenCode::tkConstReal :
+            return yy::parser::make_tkConstReal(token.getRealValue());
+        default:
+            return token_to_bison[token.getTokenCode()];
+    }
+
+
+
 
 }
