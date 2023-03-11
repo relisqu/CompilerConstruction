@@ -14,7 +14,6 @@ Scanner scanner;
 
 //TODO: Исправить баг с пустым файлом/не найденным файлом
 int main(int argc, char *argv[]) {
-
     std::string text_file = ReadFile(R"(ILanguageCodeSnippets/ArraySum.imp)");
     std::cout << text_file;
 
@@ -30,6 +29,6 @@ namespace yy
 {
     parser::symbol_type yylex()
     {
-        scanner.get_next_token();
+        return scanner.get_next_token();
     }
 }
