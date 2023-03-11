@@ -3,4 +3,4 @@
 //
 #pragma once
 
-#define IS_DEBUG_MODE true
+#define IS_DEBUG_MODE false

@@ -2,7 +2,6 @@
 #include "FileReader/FileReader.cpp"
 #include "LexicalAnalysis/Scanner.h"
 #include "LexicalAnalysis/Demonstration.h"
-#include "Parser/Parser.tab.hpp"
 
 /**
  Compilers Construction, team A
@@ -13,11 +12,17 @@
 
 Scanner scanner;
 
+//TODO: Исправить баг с пустым файлом/не найденным файлом
 int main(int argc, char *argv[]) {
 
-    ReadFile(R"(ILanguageCodeSnippets/ult.i)");
-    scanner.GetLexicalAnalysisTokens();
-    DemonstrateLexer(scanner.get_tokens());
+    std::string text_file = ReadFile(R"(ILanguageCodeSnippets/ArraySum.imp)");
+    std::cout << text_file;
+
+    scanner.GetLexicalAnalysisTokens(text_file);
+
+    yy::parser p;
+    p.parse();
+    //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }
 
@@ -25,6 +30,6 @@ namespace yy
 {
     parser::symbol_type yylex()
     {
-        return scanner.get_next_token();
+        scanner.get_next_token();
     }
 }
