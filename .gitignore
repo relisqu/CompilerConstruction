@@ -64,5 +64,5 @@ _deps
 
 build/*
 
-src/Parser/*.tab.cpp
-src/Parser/*.tab.hpp
+#src/Parser/*.tab.cpp
+#src/Parser/*.tab.hpp
