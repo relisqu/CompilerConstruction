@@ -572,23 +572,22 @@ namespace yy {
     tkReturn = 299,                // tkReturn
     tkContinue = 300,              // tkContinue
     tkBreak = 301,                 // tkBreak
-    tkSemiColon = 302,             // tkSemiColon
-    tkColon = 303,                 // tkColon
-    tkDot = 304,                   // tkDot
-    tkComma = 305,                 // tkComma
-    EOL = 306,                     // EOL
-    tkCOLON_EQUALS = 307,          // tkCOLON_EQUALS
-    tkNewLine = 308,               // tkNewLine
-    tkQuote = 309,                 // tkQuote
-    tkSQUARE_BRACKET_START = 310,  // tkSQUARE_BRACKET_START
-    tkSQUARE_BRACKET_END = 311,    // tkSQUARE_BRACKET_END
-    tkROUND_BRACKET_START = 312,   // tkROUND_BRACKET_START
-    tkROUND_BRACKET_END = 313,     // tkROUND_BRACKET_END
-    tkCURLY_BRACKET_START = 314,   // tkCURLY_BRACKET_START
-    tkCURLY_BRACKET_END = 315,     // tkCURLY_BRACKET_END
-    tkBackSlash = 316,             // tkBackSlash
-    tkSpace = 317,                 // tkSpace
-    tkTabulation = 318             // tkTabulation
+    tkColon = 302,                 // tkColon
+    tkDot = 303,                   // tkDot
+    tkComma = 304,                 // tkComma
+    EOL = 305,                     // EOL
+    tkCOLON_EQUALS = 306,          // tkCOLON_EQUALS
+    tkNewLine = 307,               // tkNewLine
+    tkQuote = 308,                 // tkQuote
+    tkSQUARE_BRACKET_START = 309,  // tkSQUARE_BRACKET_START
+    tkSQUARE_BRACKET_END = 310,    // tkSQUARE_BRACKET_END
+    tkROUND_BRACKET_START = 311,   // tkROUND_BRACKET_START
+    tkROUND_BRACKET_END = 312,     // tkROUND_BRACKET_END
+    tkCURLY_BRACKET_START = 313,   // tkCURLY_BRACKET_START
+    tkCURLY_BRACKET_END = 314,     // tkCURLY_BRACKET_END
+    tkBackSlash = 315,             // tkBackSlash
+    tkSpace = 316,                 // tkSpace
+    tkTabulation = 317             // tkTabulation
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -605,7 +604,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 64, ///< Number of tokens.
+        YYNTOKENS = 63, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -654,49 +653,48 @@ namespace yy {
         S_tkReturn = 44,                         // tkReturn
         S_tkContinue = 45,                       // tkContinue
         S_tkBreak = 46,                          // tkBreak
-        S_tkSemiColon = 47,                      // tkSemiColon
-        S_tkColon = 48,                          // tkColon
-        S_tkDot = 49,                            // tkDot
-        S_tkComma = 50,                          // tkComma
-        S_EOL = 51,                              // EOL
-        S_tkCOLON_EQUALS = 52,                   // tkCOLON_EQUALS
-        S_tkNewLine = 53,                        // tkNewLine
-        S_tkQuote = 54,                          // tkQuote
-        S_tkSQUARE_BRACKET_START = 55,           // tkSQUARE_BRACKET_START
-        S_tkSQUARE_BRACKET_END = 56,             // tkSQUARE_BRACKET_END
-        S_tkROUND_BRACKET_START = 57,            // tkROUND_BRACKET_START
-        S_tkROUND_BRACKET_END = 58,              // tkROUND_BRACKET_END
-        S_tkCURLY_BRACKET_START = 59,            // tkCURLY_BRACKET_START
-        S_tkCURLY_BRACKET_END = 60,              // tkCURLY_BRACKET_END
-        S_tkBackSlash = 61,                      // tkBackSlash
-        S_tkSpace = 62,                          // tkSpace
-        S_tkTabulation = 63,                     // tkTabulation
-        S_YYACCEPT = 64,                         // $accept
-        S_program = 65,                          // program
-        S__var_dec = 66,                         // _var_dec
-        S__type_dec = 67,                        // _type_dec
-        S__routine_dec = 68,                     // _routine_dec
-        S__params = 69,                          // _params
-        S__param_dec = 70,                       // _param_dec
-        S__type = 71,                            // _type
-        S__irb_type = 72,                        // _irb_type
-        S__rec_type = 73,                        // _rec_type
-        S__arr_type = 74,                        // _arr_type
-        S__body = 75,                            // _body
-        S__statement = 76,                       // _statement
-        S__return = 77,                          // _return
-        S__assign = 78,                          // _assign
-        S__routine = 79,                         // _routine
-        S__while = 80,                           // _while
-        S__for = 81,                             // _for
-        S__range = 82,                           // _range
-        S__if = 83,                              // _if
-        S__var_dec_block = 84,                   // _var_dec_block
-        S__expr = 85,                            // _expr
-        S__args = 86,                            // _args
-        S__primary = 87,                         // _primary
-        S__getvar = 88,                          // _getvar
-        S__modval = 89                           // _modval
+        S_tkColon = 47,                          // tkColon
+        S_tkDot = 48,                            // tkDot
+        S_tkComma = 49,                          // tkComma
+        S_EOL = 50,                              // EOL
+        S_tkCOLON_EQUALS = 51,                   // tkCOLON_EQUALS
+        S_tkNewLine = 52,                        // tkNewLine
+        S_tkQuote = 53,                          // tkQuote
+        S_tkSQUARE_BRACKET_START = 54,           // tkSQUARE_BRACKET_START
+        S_tkSQUARE_BRACKET_END = 55,             // tkSQUARE_BRACKET_END
+        S_tkROUND_BRACKET_START = 56,            // tkROUND_BRACKET_START
+        S_tkROUND_BRACKET_END = 57,              // tkROUND_BRACKET_END
+        S_tkCURLY_BRACKET_START = 58,            // tkCURLY_BRACKET_START
+        S_tkCURLY_BRACKET_END = 59,              // tkCURLY_BRACKET_END
+        S_tkBackSlash = 60,                      // tkBackSlash
+        S_tkSpace = 61,                          // tkSpace
+        S_tkTabulation = 62,                     // tkTabulation
+        S_YYACCEPT = 63,                         // $accept
+        S_program = 64,                          // program
+        S__var_dec = 65,                         // _var_dec
+        S__type_dec = 66,                        // _type_dec
+        S__routine_dec = 67,                     // _routine_dec
+        S__params = 68,                          // _params
+        S__param_dec = 69,                       // _param_dec
+        S__type = 70,                            // _type
+        S__irb_type = 71,                        // _irb_type
+        S__rec_type = 72,                        // _rec_type
+        S__arr_type = 73,                        // _arr_type
+        S__body = 74,                            // _body
+        S__statement = 75,                       // _statement
+        S__return = 76,                          // _return
+        S__assign = 77,                          // _assign
+        S__routine = 78,                         // _routine
+        S__while = 79,                           // _while
+        S__for = 80,                             // _for
+        S__range = 81,                           // _range
+        S__if = 82,                              // _if
+        S__var_dec_block = 83,                   // _var_dec_block
+        S__expr = 84,                            // _expr
+        S__args = 85,                            // _args
+        S__primary = 86,                         // _primary
+        S__getvar = 87,                          // _getvar
+        S__modval = 88                           // _modval
       };
     };
 
@@ -2081,21 +2079,6 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_tkSemiColon ()
-      {
-        return symbol_type (token::tkSemiColon);
-      }
-#else
-      static
-      symbol_type
-      make_tkSemiColon ()
-      {
-        return symbol_type (token::tkSemiColon);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
       make_tkColon ()
       {
         return symbol_type (token::tkColon);
@@ -2637,7 +2620,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 432,     ///< Last index in yytable_.
+      yylast_ = 413,     ///< Last index in yytable_.
       yynnts_ = 26,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
@@ -2687,10 +2670,10 @@ switch (yykind)
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
       45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,    56,    57,    58,    59,    60,    61,    62,    63
+      55,    56,    57,    58,    59,    60,    61,    62
     };
     // Last valid token kind.
-    const int code_max = 318;
+    const int code_max = 317;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -2972,7 +2955,7 @@ switch (yykind)
 
 
 } // yy
-#line 2976 "Parser.tab.hpp"
+#line 2959 "Parser.tab.hpp"
 
 
 

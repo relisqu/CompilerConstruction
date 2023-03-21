@@ -37,7 +37,7 @@
 %token tkLess tkLessEquals tkGreater tkGreaterEquals tkEquals tkNotEquals
 %token tkPlus tkMinus tkMultiple tkMod tkDivide
 %token tkIs tkIf tkThen tkElse tkEnd tkFor tkIn tkLoop tkReverse tkDOT_DOT tkWhile tkReturn tkContinue tkBreak
-%token tkSemiColon tkColon tkDot tkComma EOL tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
+%token tkColon tkDot tkComma EOL tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
 
 %type <std::string> tkIdentifier
 %type <double> tkConstReal
@@ -200,13 +200,23 @@ _primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
 | _modval {  $$ = $1;}
 | _routine { $$ = std::make_shared<ast::Expression>(($1)->name); }
 ;
-//Пустой в начале
+
 _getvar: {};
 | _getvar tkDot tkIdentifier {}
 | _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {}
 ;
-//Итак, тут мы делаем магию над вторым, если он пустой, то это классический доступ к переменной, иначе всякие функции
-_modval: tkIdentifier _getvar {}
+
+
+_modval: tkIdentifier _getvar {
+
+sp<ast::Expression> temp = std::make_shared<ast::Expression>($1);
+if($2 != nullptr)
+  $$ = std::make_shared<ast::Expression>(".",temp, $2);
+else
+  $$ = temp;
+
+}
+
 ;
 
 %%
