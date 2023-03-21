@@ -113,6 +113,7 @@ void Scanner::ParseText(const std::string &textProgram) {
         buffer.push_back(symbol);
         wordLength += 1;
     }
+    if (!buffer.empty()) preprocessedTokens.emplace_back(buffer, currentBufferStatus, currentSpan);
 }
 
 /**
