@@ -1,10 +1,13 @@
 #include "AST.h"
 
+int ast::line = 0;
+extern ast::sp<ast::Program> ourProgram;
+
+
 namespace ast {
     std::unordered_map<std::string, std::shared_ptr<Type> > Type::TypeTable = {};
 
-    int line = 0;
-    extern sp<Program> ourProgram;
+
 
     void Block::addVariable(const sp<Variable> &variable) {
         variables.push_back(variable);
