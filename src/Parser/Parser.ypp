@@ -90,7 +90,6 @@ program:
 _var_dec : tkVar tkIdentifier tkColon _type { $$ = std::make_shared<ast::Variable>($2, $4);  }
 | tkVar tkIdentifier tkColon _type tkIs _expr {
     auto temp = std::make_shared<ast::Variable>($2, $4);
-    std::cout<< $6<<"\n";
     temp->value = $6;
     $$ = temp;
 }
@@ -195,11 +194,11 @@ _expr: _primary { $$ = $1;}
 _args: _expr {}
 | _args tkComma _expr {}
 
-_primary: tkConstInt {}
-| tkConstReal {}
-| tkConstBoolean {}
-| _modval {}
-| _routine {}
+_primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
+| tkConstReal {$$ = std::make_shared<ast::Expression>($1); }
+| tkConstBoolean {$$ = std::make_shared<ast::Expression>($1); }
+| _modval {  $$ = $1;}
+| _routine { $$ = std::make_shared<ast::Expression>(($1)->name); }
 ;
 //Пустой в начале
 _getvar: {};

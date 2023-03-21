@@ -1314,31 +1314,31 @@ namespace yy {
 
   case 67: // _primary: tkConstInt
 #line 198 "Parser.ypp"
-                     {}
+                     {   yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < int > (), false);  }
 #line 1319 "Parser.tab.cpp"
     break;
 
   case 68: // _primary: tkConstReal
 #line 199 "Parser.ypp"
-              {}
+              {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < double > ()); }
 #line 1325 "Parser.tab.cpp"
     break;
 
   case 69: // _primary: tkConstBoolean
 #line 200 "Parser.ypp"
-                 {}
+                 {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < bool > ()); }
 #line 1331 "Parser.tab.cpp"
     break;
 
   case 70: // _primary: _modval
 #line 201 "Parser.ypp"
-          {}
+          {  yylhs.value.as < sp<Expression> > () = yystack_[0].value.as < sp<Expression> > ();}
 #line 1337 "Parser.tab.cpp"
     break;
 
   case 71: // _primary: _routine
 #line 202 "Parser.ypp"
-           {}
+           { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>((yystack_[0].value.as < sp<RoutineCall>  > ())->name); }
 #line 1343 "Parser.tab.cpp"
     break;
 

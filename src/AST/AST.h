@@ -226,7 +226,7 @@ namespace ast {
             r = std::move(second);
         }
 
-        Expression(long long int val, bool temp) : Node("INTEGER"), value(val) {}
+        explicit Expression(long long int val, bool _temp) : Node("INTEGER"), value(val) {}
 
         explicit Expression(bool val) : Node("BOOLEAN"), value(val) {}
 
