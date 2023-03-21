@@ -5,6 +5,17 @@ std::unordered_map<std::string, std::shared_ptr<Type> > Type::TypeTable = {};
 int line = 0;
 extern std::shared_ptr<Program> ourProgram;
 
+void Block::addVariable(const shared_pointer<Variable> &variable) {
+    variables.push_back(variable);
+    end = std::max(variable->end, end);
+}
+
+void Block::addStatement(const shared_pointer<Statement> &statement) {
+    statements.push_back(statement);
+    end = std::max(statement->end, end);
+}
+
+
 std::string Expression::getType(const std::shared_ptr<Expression> &exp) {
     if (exp == nullptr) {
         return "";
@@ -28,14 +39,12 @@ std::string Expression::getType(const std::shared_ptr<Expression> &exp) {
         }
         if (temp == "ident") {
             return Type::TypeTable[std::get<0>(exp->value)]->name;
-        }
-        else {
+        } else {
             return temp;
         }
     } else if (exp->l == nullptr) {
         return getType(exp->l);
-    }
-    else if (exp->r == nullptr) {
+    } else if (exp->r == nullptr) {
         return getType(exp->r);
     }
     std::string left = getType(exp->l);
@@ -43,12 +52,32 @@ std::string Expression::getType(const std::shared_ptr<Expression> &exp) {
 
     if (left == "double" || right == "double") {
         return "double";
-    }
-    else if (left == "int" || right == "int") {
+    } else if (left == "int" || right == "int") {
         return "int";
-    }
-    else {
+    } else {
         return "bool";
+    }
+}
+
+void dfs() {
+    std::sort(ourProgram->variables.begin(), ourProgram->variables.end(),
+              [](const std::shared_ptr<Variable> &a, const std::shared_ptr<Variable> &b) -> bool {
+                  return a->name < b->name;
+              });
+    std::cout << "ourProgram contains:\nvariables:\n";
+    for (const auto &v: ourProgram->variables) {
+        printVariable(v);
+    }
+    std::cout << "Routines:\n";
+    for (const auto &r: ourProgram->routines) {
+        std::cout << r->name;
+        std::cout << " with parameters: \n";
+        for (const auto &p: r->parameters)
+            std::cout << p->name << " of type " << p->type->name << "\n";
+        std::cout << std::endl;
+        std::cout << "with variables :\n";
+        for (const auto &v: r->body->variables)
+            printVariable(v);
     }
 }
 
@@ -57,8 +86,7 @@ void printVariable(const std::shared_ptr<Variable> &v) {
     std::cout << v->name << " ";
     if (v->value == nullptr) {
         std::cout << "(no value yet)";
-    }
-    else {
+    } else {
         std::cout << "of type " << Expression::getType(v->value);
     }
     std::cout << " at line " << v->start << std::endl;
