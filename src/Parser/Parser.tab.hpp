@@ -45,7 +45,7 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 8 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
+#line 8 "Parser.ypp"
 
     #pragma once
     #include <iostream>
@@ -2637,7 +2637,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 425,     ///< Last index in yytable_.
+      yylast_ = 432,     ///< Last index in yytable_.
       yynnts_ = 26,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
