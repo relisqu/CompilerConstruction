@@ -1,4 +1,5 @@
 #include "Scanner.h"
+#include "Tokens/TokenNameMap.h"
 
 // Symbol state for specific character
 enum class SymbolState {
@@ -321,6 +322,13 @@ yy::parser::symbol_type Scanner::get_next_token() {
     if (iter >= tokens.size()) return yy::parser::make_YYEOF();
 
     auto token = tokens[iter];
+
+#ifdef IS_DEBUG_MODE
+    std::cout << "Token line: " <<  token.getSpan().lineNum + 1 << '\n';
+    std::cout<< TokenNameMap::getInstance().tokenMap[token.getTokenCode()]<<"\n";
+    std::cout << "Token symbol range: " <<  token.getSpan().posBegin << " - " <<  token.getSpan().posEnd << '\n';
+    std::cout << "----------------------------" << '\n';
+#endif
     switch (token.getTokenCode()){
         case TokenCode::tkIdentifier :
             return yy::parser::make_tkIdentifier(token.getStringValue());

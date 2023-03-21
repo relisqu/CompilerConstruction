@@ -1010,373 +1010,379 @@ yylhs.value.as < sp<Routine> > () = std::make_shared<ast::Routine>(yystack_[6].v
 #line 1011 "Parser.tab.cpp"
     break;
 
-  case 16: // _type: tkIdentifier
-#line 122 "Parser.ypp"
-                    { yylhs.value.as < sp<Type> > () = std::make_shared<ast::Type>(yystack_[0].value.as < std::string > ()); }
+  case 16: // _param_dec: %empty
+#line 120 "Parser.ypp"
+  {}
 #line 1017 "Parser.tab.cpp"
     break;
 
-  case 17: // _type: _irb_type
+  case 17: // _type: tkIdentifier
 #line 123 "Parser.ypp"
-            {  yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<BuiltinType> > (); }
+                    { yylhs.value.as < sp<Type> > () = std::make_shared<ast::Type>(yystack_[0].value.as < std::string > ()); }
 #line 1023 "Parser.tab.cpp"
     break;
 
-  case 18: // _type: _arr_type
+  case 18: // _type: _irb_type
 #line 124 "Parser.ypp"
-            { yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<Array> > (); }
+            {  yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<BuiltinType> > (); }
 #line 1029 "Parser.tab.cpp"
     break;
 
-  case 19: // _type: _rec_type
+  case 19: // _type: _arr_type
 #line 125 "Parser.ypp"
-            { yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<Record> > (); }
+            { yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<Array> > (); }
 #line 1035 "Parser.tab.cpp"
     break;
 
-  case 20: // _irb_type: tkInt
-#line 128 "Parser.ypp"
-                 { yylhs.value.as < sp<BuiltinType> > () = std::make_shared<ast::BuiltinType>("integer"); }
+  case 20: // _type: _rec_type
+#line 126 "Parser.ypp"
+            { yylhs.value.as < sp<Type> > () = yystack_[0].value.as < sp<Record> > (); }
 #line 1041 "Parser.tab.cpp"
     break;
 
-  case 21: // _irb_type: tkReal
+  case 21: // _irb_type: tkInt
 #line 129 "Parser.ypp"
-         {  yylhs.value.as < sp<BuiltinType> > () =  std::make_shared<ast::BuiltinType> ("real"); }
+                 { yylhs.value.as < sp<BuiltinType> > () = std::make_shared<ast::BuiltinType>("integer"); }
 #line 1047 "Parser.tab.cpp"
     break;
 
-  case 22: // _irb_type: tkBoolean
+  case 22: // _irb_type: tkReal
 #line 130 "Parser.ypp"
-            {   yylhs.value.as < sp<BuiltinType> > () =  std::make_shared<ast::BuiltinType> ("boolean"); }
+         {  yylhs.value.as < sp<BuiltinType> > () =  std::make_shared<ast::BuiltinType> ("real"); }
 #line 1053 "Parser.tab.cpp"
     break;
 
-  case 23: // _rec_type: tkRecord _var_dec_block tkEnd
-#line 133 "Parser.ypp"
-                                         {  yylhs.value.as < sp<Record> > () = std::make_shared<ast::Record>("Record", yystack_[1].value.as < spv<Variable> > ()); }
+  case 23: // _irb_type: tkBoolean
+#line 131 "Parser.ypp"
+            {   yylhs.value.as < sp<BuiltinType> > () =  std::make_shared<ast::BuiltinType> ("boolean"); }
 #line 1059 "Parser.tab.cpp"
     break;
 
-  case 24: // _arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type
-#line 136 "Parser.ypp"
-                                                                           { yylhs.value.as < sp<Array> > () = std::make_shared<ast::Array>("Array"); }
+  case 24: // _rec_type: tkRecord _var_dec_block tkEnd
+#line 134 "Parser.ypp"
+                                         {  yylhs.value.as < sp<Record> > () = std::make_shared<ast::Record>("Record", yystack_[1].value.as < spv<Variable> > ()); }
 #line 1065 "Parser.tab.cpp"
     break;
 
-  case 25: // _arr_type: tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type
+  case 25: // _arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type
 #line 137 "Parser.ypp"
-                                                            { yylhs.value.as < sp<Array> > () = std::make_shared<ast::Array>("Array"); }
+                                                                           { yylhs.value.as < sp<Array> > () = std::make_shared<ast::Array>("Array"); }
 #line 1071 "Parser.tab.cpp"
     break;
 
-  case 26: // _body: %empty
-#line 140 "Parser.ypp"
-       { yylhs.value.as < sp<Block> > () = std::make_shared<ast::Block>(); }
+  case 26: // _arr_type: tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type
+#line 138 "Parser.ypp"
+                                                            { yylhs.value.as < sp<Array> > () = std::make_shared<ast::Array>("Array"); }
 #line 1077 "Parser.tab.cpp"
     break;
 
-  case 27: // _body: _body _var_dec
+  case 27: // _body: %empty
 #line 141 "Parser.ypp"
-                 { (yystack_[1].value.as < sp<Block> > ())->addVariable(yystack_[0].value.as < sp<Variable> > ()); yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
+       { yylhs.value.as < sp<Block> > () = std::make_shared<ast::Block>(); }
 #line 1083 "Parser.tab.cpp"
     break;
 
-  case 28: // _body: _body _type_dec
+  case 28: // _body: _body _var_dec
 #line 142 "Parser.ypp"
-                  {}
+                 { (yystack_[1].value.as < sp<Block> > ())->addVariable(yystack_[0].value.as < sp<Variable> > ()); yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
 #line 1089 "Parser.tab.cpp"
     break;
 
-  case 29: // _body: _body _statement
+  case 29: // _body: _body _type_dec
 #line 143 "Parser.ypp"
-                   { (yystack_[1].value.as < sp<Block> > ())->addStatement(yystack_[0].value.as < sp<Statement> > ()); yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
+                  {}
 #line 1095 "Parser.tab.cpp"
     break;
 
-  case 30: // _body: _body EOL
+  case 30: // _body: _body _statement
 #line 144 "Parser.ypp"
-  { yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
+                   { (yystack_[1].value.as < sp<Block> > ())->addStatement(yystack_[0].value.as < sp<Statement> > ()); yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
 #line 1101 "Parser.tab.cpp"
     break;
 
-  case 31: // _statement: _assign
-#line 147 "Parser.ypp"
-                    {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Assignment> > ();}
+  case 31: // _body: _body EOL
+#line 145 "Parser.ypp"
+  { yylhs.value.as < sp<Block> > () = yystack_[1].value.as < sp<Block> > (); }
 #line 1107 "Parser.tab.cpp"
     break;
 
-  case 32: // _statement: _routine
+  case 32: // _statement: _assign
 #line 148 "Parser.ypp"
-           {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<RoutineCall>  > ();}
+                    {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Assignment> > ();}
 #line 1113 "Parser.tab.cpp"
     break;
 
-  case 33: // _statement: _while
+  case 33: // _statement: _routine
 #line 149 "Parser.ypp"
-         {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
+           {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<RoutineCall>  > ();}
 #line 1119 "Parser.tab.cpp"
     break;
 
-  case 34: // _statement: _for
+  case 34: // _statement: _while
 #line 150 "Parser.ypp"
-       {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
+         {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
 #line 1125 "Parser.tab.cpp"
     break;
 
-  case 35: // _statement: _if
+  case 35: // _statement: _for
 #line 151 "Parser.ypp"
-      {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
+       {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
 #line 1131 "Parser.tab.cpp"
     break;
 
-  case 36: // _statement: _return
+  case 36: // _statement: _if
 #line 152 "Parser.ypp"
-          {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<ReturnStatement> > ();}
+      {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<Statement> > ();}
 #line 1137 "Parser.tab.cpp"
     break;
 
-  case 37: // _return: tkReturn EOL
-#line 155 "Parser.ypp"
-                     {   yylhs.value.as < sp<ReturnStatement> > () = std::make_shared<ast::ReturnStatement>(nullptr);  }
+  case 37: // _statement: _return
+#line 153 "Parser.ypp"
+          {yylhs.value.as < sp<Statement> > () = yystack_[0].value.as < sp<ReturnStatement> > ();}
 #line 1143 "Parser.tab.cpp"
     break;
 
-  case 38: // _return: tkReturn _expr
+  case 38: // _return: tkReturn EOL
 #line 156 "Parser.ypp"
-                 {     yylhs.value.as < sp<ReturnStatement> > () = std::make_shared<ast::ReturnStatement>(yystack_[0].value.as < sp<Expression> > ());   }
+                     {   yylhs.value.as < sp<ReturnStatement> > () = std::make_shared<ast::ReturnStatement>(nullptr);  }
 #line 1149 "Parser.tab.cpp"
     break;
 
-  case 39: // _assign: _modval tkCOLON_EQUALS _expr
-#line 159 "Parser.ypp"
-                                      { yylhs.value.as < sp<Assignment> > () = std::make_shared<ast::Assignment>(std::get<0>((yystack_[2].value.as < sp<Expression> > ())->value), yystack_[0].value.as < sp<Expression> > ()); }
+  case 39: // _return: tkReturn _expr
+#line 157 "Parser.ypp"
+                 {     yylhs.value.as < sp<ReturnStatement> > () = std::make_shared<ast::ReturnStatement>(yystack_[0].value.as < sp<Expression> > ());   }
 #line 1155 "Parser.tab.cpp"
     break;
 
-  case 40: // _routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END
-#line 162 "Parser.ypp"
-                                                                       { yylhs.value.as < sp<RoutineCall>  > () = std::make_shared<ast::RoutineCall>(yystack_[3].value.as < std::string > ()); (yylhs.value.as < sp<RoutineCall>  > ())->args = std::move(yystack_[1].value.as < spv<Expression> > ()); }
+  case 40: // _assign: _modval tkCOLON_EQUALS _expr
+#line 160 "Parser.ypp"
+                                      { yylhs.value.as < sp<Assignment> > () = std::make_shared<ast::Assignment>(std::get<0>((yystack_[2].value.as < sp<Expression> > ())->value), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1161 "Parser.tab.cpp"
     break;
 
-  case 41: // _while: tkWhile _expr tkLoop _body tkEnd
-#line 165 "Parser.ypp"
-                                         { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::WhileLoop>(yystack_[3].value.as < sp<Expression> > (), yystack_[1].value.as < sp<Block> > ()); }
+  case 41: // _routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END
+#line 163 "Parser.ypp"
+                                                                       { yylhs.value.as < sp<RoutineCall>  > () = std::make_shared<ast::RoutineCall>(yystack_[3].value.as < std::string > ()); (yylhs.value.as < sp<RoutineCall>  > ())->args = std::move(yystack_[1].value.as < spv<Expression> > ()); }
 #line 1167 "Parser.tab.cpp"
     break;
 
-  case 42: // _for: tkFor tkIdentifier _range tkLoop _body tkEnd
-#line 168 "Parser.ypp"
-                                                   { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::ForLoop>(yystack_[4].value.as < std::string > (), yystack_[3].value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > (), yystack_[1].value.as < sp<Block> > ()); }
+  case 42: // _while: tkWhile _expr tkLoop _body tkEnd
+#line 166 "Parser.ypp"
+                                         { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::WhileLoop>(yystack_[3].value.as < sp<Expression> > (), yystack_[1].value.as < sp<Block> > ()); }
 #line 1173 "Parser.tab.cpp"
     break;
 
-  case 43: // _range: tkIn _expr tkDOT_DOT _expr
-#line 170 "Parser.ypp"
-                                   { yylhs.value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > () = std::make_tuple(yystack_[2].value.as < sp<Expression> > (),yystack_[0].value.as < sp<Expression> > (), false);  }
+  case 43: // _for: tkFor tkIdentifier _range tkLoop _body tkEnd
+#line 169 "Parser.ypp"
+                                                   { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::ForLoop>(yystack_[4].value.as < std::string > (), yystack_[3].value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > (), yystack_[1].value.as < sp<Block> > ()); }
 #line 1179 "Parser.tab.cpp"
     break;
 
-  case 44: // _range: tkIn tkReverse _expr tkDOT_DOT _expr
+  case 44: // _range: tkIn _expr tkDOT_DOT _expr
 #line 171 "Parser.ypp"
-                                       { yylhs.value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > () = std::make_tuple(yystack_[2].value.as < sp<Expression> > (),yystack_[0].value.as < sp<Expression> > (), true); }
+                                   { yylhs.value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > () = std::make_tuple(yystack_[2].value.as < sp<Expression> > (),yystack_[0].value.as < sp<Expression> > (), false);  }
 #line 1185 "Parser.tab.cpp"
     break;
 
-  case 45: // _if: tkIf _expr tkThen _body tkEnd
-#line 174 "Parser.ypp"
-                                   { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::IfStatement>(yystack_[3].value.as < sp<Expression> > (), yystack_[1].value.as < sp<Block> > (), nullptr); }
+  case 45: // _range: tkIn tkReverse _expr tkDOT_DOT _expr
+#line 172 "Parser.ypp"
+                                       { yylhs.value.as < std::tuple<sp<Expression>, sp<Expression>, bool> > () = std::make_tuple(yystack_[2].value.as < sp<Expression> > (),yystack_[0].value.as < sp<Expression> > (), true); }
 #line 1191 "Parser.tab.cpp"
     break;
 
-  case 46: // _if: tkIf _expr tkThen _body EOL tkElse _body tkEnd
+  case 46: // _if: tkIf _expr tkThen _body tkEnd
 #line 175 "Parser.ypp"
-                                                 { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::IfStatement>(yystack_[6].value.as < sp<Expression> > (), yystack_[4].value.as < sp<Block> > (), yystack_[1].value.as < sp<Block> > ()); }
+                                   { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::IfStatement>(yystack_[3].value.as < sp<Expression> > (), yystack_[1].value.as < sp<Block> > (), nullptr); }
 #line 1197 "Parser.tab.cpp"
     break;
 
-  case 47: // _var_dec_block: %empty
-#line 178 "Parser.ypp"
-                {}
+  case 47: // _if: tkIf _expr tkThen _body EOL tkElse _body tkEnd
+#line 176 "Parser.ypp"
+                                                 { yylhs.value.as < sp<Statement> > () = std::make_shared<ast::IfStatement>(yystack_[6].value.as < sp<Expression> > (), yystack_[4].value.as < sp<Block> > (), yystack_[1].value.as < sp<Block> > ()); }
 #line 1203 "Parser.tab.cpp"
     break;
 
-  case 48: // _var_dec_block: _var_dec_block _var_dec
+  case 48: // _var_dec_block: %empty
 #line 179 "Parser.ypp"
-                          { swap(yystack_[1].value.as < spv<Variable> > (),yylhs.value.as < spv<Variable> > ()); (yylhs.value.as < spv<Variable> > ()).push_back(yystack_[0].value.as < sp<Variable> > ()); }
+                {}
 #line 1209 "Parser.tab.cpp"
     break;
 
-  case 49: // _var_dec_block: _var_dec_block EOL
+  case 49: // _var_dec_block: _var_dec_block _var_dec
 #line 180 "Parser.ypp"
-                     { swap(yystack_[1].value.as < spv<Variable> > (),yylhs.value.as < spv<Variable> > ()); }
+                          { swap(yystack_[1].value.as < spv<Variable> > (),yylhs.value.as < spv<Variable> > ()); (yylhs.value.as < spv<Variable> > ()).push_back(yystack_[0].value.as < sp<Variable> > ()); }
 #line 1215 "Parser.tab.cpp"
     break;
 
-  case 50: // _expr: _primary
-#line 183 "Parser.ypp"
-                { yylhs.value.as < sp<Expression> > () = yystack_[0].value.as < sp<Expression> > ();}
+  case 50: // _var_dec_block: _var_dec_block EOL
+#line 181 "Parser.ypp"
+                     { swap(yystack_[1].value.as < spv<Variable> > (),yylhs.value.as < spv<Variable> > ()); }
 #line 1221 "Parser.tab.cpp"
     break;
 
-  case 51: // _expr: _expr tkPlus _expr
+  case 51: // _expr: _primary
 #line 184 "Parser.ypp"
-                     { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("+", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ());}
+                { yylhs.value.as < sp<Expression> > () = yystack_[0].value.as < sp<Expression> > ();}
 #line 1227 "Parser.tab.cpp"
     break;
 
-  case 52: // _expr: _expr tkMinus _expr
+  case 52: // _expr: _expr tkPlus _expr
 #line 185 "Parser.ypp"
-                      {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("-", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                     { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("+", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ());}
 #line 1233 "Parser.tab.cpp"
     break;
 
-  case 53: // _expr: _expr tkMultiple _expr
+  case 53: // _expr: _expr tkMinus _expr
 #line 186 "Parser.ypp"
-                         { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("*", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                      {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("-", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1239 "Parser.tab.cpp"
     break;
 
-  case 54: // _expr: _expr tkMod _expr
+  case 54: // _expr: _expr tkMultiple _expr
 #line 187 "Parser.ypp"
-                    { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("%", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                         { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("*", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1245 "Parser.tab.cpp"
     break;
 
-  case 55: // _expr: _expr tkDivide _expr
+  case 55: // _expr: _expr tkMod _expr
 #line 188 "Parser.ypp"
-                       { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("/", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                    { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("%", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1251 "Parser.tab.cpp"
     break;
 
-  case 56: // _expr: _expr tkLess _expr
+  case 56: // _expr: _expr tkDivide _expr
 #line 189 "Parser.ypp"
-                     {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("<", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                       { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("/", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1257 "Parser.tab.cpp"
     break;
 
-  case 57: // _expr: _expr tkLessEquals _expr
+  case 57: // _expr: _expr tkLess _expr
 #line 190 "Parser.ypp"
-                           {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("<=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                     {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("<", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1263 "Parser.tab.cpp"
     break;
 
-  case 58: // _expr: _expr tkGreater _expr
+  case 58: // _expr: _expr tkLessEquals _expr
 #line 191 "Parser.ypp"
-                        {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(">", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                           {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("<=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1269 "Parser.tab.cpp"
     break;
 
-  case 59: // _expr: _expr tkGreaterEquals _expr
+  case 59: // _expr: _expr tkGreater _expr
 #line 192 "Parser.ypp"
-                              {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(">=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                        {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(">", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1275 "Parser.tab.cpp"
     break;
 
-  case 60: // _expr: _expr tkEquals _expr
+  case 60: // _expr: _expr tkGreaterEquals _expr
 #line 193 "Parser.ypp"
-                       {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                              {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(">=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1281 "Parser.tab.cpp"
     break;
 
-  case 61: // _expr: _expr tkNotEquals _expr
+  case 61: // _expr: _expr tkEquals _expr
 #line 194 "Parser.ypp"
-                          {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("/=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                       {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1287 "Parser.tab.cpp"
     break;
 
-  case 62: // _expr: _expr tkBoolAnd _expr
+  case 62: // _expr: _expr tkNotEquals _expr
 #line 195 "Parser.ypp"
-                        { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("and", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                          {  yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("/=", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1293 "Parser.tab.cpp"
     break;
 
-  case 63: // _expr: _expr tkBoolOr _expr
+  case 63: // _expr: _expr tkBoolAnd _expr
 #line 196 "Parser.ypp"
-                       { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("or", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                        { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("and", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1299 "Parser.tab.cpp"
     break;
 
-  case 64: // _expr: _expr tkBoolXor _expr
+  case 64: // _expr: _expr tkBoolOr _expr
 #line 197 "Parser.ypp"
-                        { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("xor", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
+                       { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("or", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1305 "Parser.tab.cpp"
     break;
 
-  case 65: // _expr: tkROUND_BRACKET_START _expr tkROUND_BRACKET_START
+  case 65: // _expr: _expr tkBoolXor _expr
 #line 198 "Parser.ypp"
-                                                    {  yylhs.value.as < sp<Expression> > () = yystack_[1].value.as < sp<Expression> > (); }
+                        { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>("xor", yystack_[2].value.as < sp<Expression> > (), yystack_[0].value.as < sp<Expression> > ()); }
 #line 1311 "Parser.tab.cpp"
     break;
 
-  case 66: // _args: _expr
-#line 201 "Parser.ypp"
-             { (yylhs.value.as < spv<Expression> > ()).push_back(yystack_[0].value.as < sp<Expression> > ()); }
+  case 66: // _expr: tkROUND_BRACKET_START _expr tkROUND_BRACKET_START
+#line 199 "Parser.ypp"
+                                                    {  yylhs.value.as < sp<Expression> > () = yystack_[1].value.as < sp<Expression> > (); }
 #line 1317 "Parser.tab.cpp"
     break;
 
-  case 67: // _args: _args tkComma _expr
+  case 67: // _args: _expr
 #line 202 "Parser.ypp"
-                      { swap(yylhs.value.as < spv<Expression> > (),yystack_[2].value.as < spv<Expression> > ()); (yylhs.value.as < spv<Expression> > ()).push_back(yystack_[0].value.as < sp<Expression> > ()); }
+             { (yylhs.value.as < spv<Expression> > ()).push_back(yystack_[0].value.as < sp<Expression> > ()); }
 #line 1323 "Parser.tab.cpp"
     break;
 
-  case 68: // _primary: tkConstInt
-#line 204 "Parser.ypp"
-                     {   yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < int > (), false);  }
+  case 68: // _args: _args tkComma _expr
+#line 203 "Parser.ypp"
+                      { swap(yylhs.value.as < spv<Expression> > (),yystack_[2].value.as < spv<Expression> > ()); (yylhs.value.as < spv<Expression> > ()).push_back(yystack_[0].value.as < sp<Expression> > ()); }
 #line 1329 "Parser.tab.cpp"
     break;
 
-  case 69: // _primary: tkConstReal
+  case 69: // _primary: tkConstInt
 #line 205 "Parser.ypp"
-              {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < double > ()); }
+                     {   yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < int > (), false);  }
 #line 1335 "Parser.tab.cpp"
     break;
 
-  case 70: // _primary: tkConstBoolean
+  case 70: // _primary: tkConstReal
 #line 206 "Parser.ypp"
-                 {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < bool > ()); }
+              {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < double > ()); }
 #line 1341 "Parser.tab.cpp"
     break;
 
-  case 71: // _primary: _modval
+  case 71: // _primary: tkConstBoolean
 #line 207 "Parser.ypp"
-          {  yylhs.value.as < sp<Expression> > () = yystack_[0].value.as < sp<Expression> > ();}
+                 {yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(yystack_[0].value.as < bool > ()); }
 #line 1347 "Parser.tab.cpp"
     break;
 
-  case 72: // _primary: _routine
+  case 72: // _primary: _modval
 #line 208 "Parser.ypp"
-           { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>((yystack_[0].value.as < sp<RoutineCall>  > ())->name); }
+          {  yylhs.value.as < sp<Expression> > () = yystack_[0].value.as < sp<Expression> > ();}
 #line 1353 "Parser.tab.cpp"
     break;
 
-  case 73: // _getvar: %empty
-#line 211 "Parser.ypp"
-         {yylhs.value.as < sp<Expression> > () = nullptr;}
+  case 73: // _primary: _routine
+#line 209 "Parser.ypp"
+           { yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>((yystack_[0].value.as < sp<RoutineCall>  > ())->name); }
 #line 1359 "Parser.tab.cpp"
     break;
 
-  case 74: // _getvar: _getvar tkDot tkIdentifier
+  case 74: // _getvar: %empty
 #line 212 "Parser.ypp"
+         {yylhs.value.as < sp<Expression> > () = nullptr;}
+#line 1365 "Parser.tab.cpp"
+    break;
+
+  case 75: // _getvar: _getvar tkDot tkIdentifier
+#line 213 "Parser.ypp"
                              {
 sp<ast::Expression> temp = std::make_shared<ast::Expression>(yystack_[0].value.as < std::string > ());
 yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(".",temp, yystack_[2].value.as < sp<Expression> > ());
 }
-#line 1368 "Parser.tab.cpp"
+#line 1374 "Parser.tab.cpp"
     break;
 
-  case 75: // _getvar: _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END
-#line 216 "Parser.ypp"
+  case 76: // _getvar: _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END
+#line 217 "Parser.ypp"
                                                             {
 yylhs.value.as < sp<Expression> > () = std::make_shared<ast::Expression>(".",yystack_[1].value.as < sp<Expression> > (), yystack_[3].value.as < sp<Expression> > (), true);
 }
-#line 1376 "Parser.tab.cpp"
+#line 1382 "Parser.tab.cpp"
     break;
 
-  case 76: // _modval: tkIdentifier _getvar
-#line 223 "Parser.ypp"
+  case 77: // _modval: tkIdentifier _getvar
+#line 224 "Parser.ypp"
                               {
 
 sp<ast::Expression> temp = std::make_shared<ast::Expression>(yystack_[1].value.as < std::string > ());
@@ -1386,11 +1392,11 @@ else
   yylhs.value.as < sp<Expression> > () = temp;
 
 }
-#line 1390 "Parser.tab.cpp"
+#line 1396 "Parser.tab.cpp"
     break;
 
 
-#line 1394 "Parser.tab.cpp"
+#line 1400 "Parser.tab.cpp"
 
             default:
               break;
@@ -1608,21 +1614,21 @@ else
   parser::yydefact_[] =
   {
        2,     0,     1,     0,     0,     0,     6,     3,     4,     5,
-       0,     0,     0,     0,     0,     0,     0,    68,    69,    70,
-      73,     0,    72,     9,    50,    71,    20,    21,    22,     0,
-      47,    16,     7,    17,    19,    18,    10,     0,     0,    13,
-       0,    76,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    16,    69,    70,    71,
+      74,     0,    73,     9,    51,    72,    21,    22,    23,     0,
+      48,    17,     7,    18,    20,    19,    10,     0,     0,    13,
+       0,    77,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    66,     0,     0,     0,    65,    62,    63,
-      64,    56,    57,    58,    59,    60,    61,    51,    52,    53,
-      54,    55,     0,     0,    23,    49,    48,     8,    15,    14,
-      26,     0,     0,    40,    74,     0,    25,     0,     0,     0,
-      67,    75,    24,     0,    11,     0,     0,     0,    30,    27,
-      28,    29,    36,    31,    32,    33,    34,    35,     0,    26,
-       0,     0,     0,    37,    38,     0,     0,    26,     0,     0,
-      26,    39,    12,     0,     0,     0,    26,     0,    45,    30,
-       0,     0,     0,    41,    26,     0,    43,    42,     0,    44,
-      46
+       0,    16,     0,    67,     0,     0,     0,    66,    63,    64,
+      65,    57,    58,    59,    60,    61,    62,    52,    53,    54,
+      55,    56,     0,     0,    24,    50,    49,     8,    15,    14,
+      27,     0,     0,    41,    75,     0,    26,     0,     0,     0,
+      68,    76,    25,     0,    11,     0,     0,     0,    31,    28,
+      29,    30,    37,    32,    33,    34,    35,    36,     0,    27,
+       0,     0,     0,    38,    39,     0,     0,    27,     0,     0,
+      27,    40,    12,     0,     0,     0,    27,     0,    46,    31,
+       0,     0,     0,    42,    27,     0,    44,    43,     0,    45,
+      47
   };
 
   const signed char
@@ -1764,26 +1770,26 @@ else
   parser::yyr1_[] =
   {
        0,    63,    64,    64,    64,    64,    64,    65,    65,    65,
-      66,    67,    67,    68,    68,    69,    70,    70,    70,    70,
-      71,    71,    71,    72,    73,    73,    74,    74,    74,    74,
-      74,    75,    75,    75,    75,    75,    75,    76,    76,    77,
-      78,    79,    80,    81,    81,    82,    82,    83,    83,    83,
-      84,    84,    84,    84,    84,    84,    84,    84,    84,    84,
-      84,    84,    84,    84,    84,    84,    85,    85,    86,    86,
-      86,    86,    86,    87,    87,    87,    88
+      66,    67,    67,    68,    68,    69,    69,    70,    70,    70,
+      70,    71,    71,    71,    72,    73,    73,    74,    74,    74,
+      74,    74,    75,    75,    75,    75,    75,    75,    76,    76,
+      77,    78,    79,    80,    81,    81,    82,    82,    83,    83,
+      83,    84,    84,    84,    84,    84,    84,    84,    84,    84,
+      84,    84,    84,    84,    84,    84,    84,    85,    85,    86,
+      86,    86,    86,    86,    87,    87,    87,    88
   };
 
   const signed char
   parser::yyr2_[] =
   {
        0,     2,     0,     2,     2,     2,     2,     4,     6,     4,
-       4,     8,    10,     1,     3,     3,     1,     1,     1,     1,
-       1,     1,     1,     3,     5,     4,     0,     2,     2,     2,
-       2,     1,     1,     1,     1,     1,     1,     2,     2,     3,
-       4,     5,     6,     4,     5,     5,     8,     0,     2,     2,
-       1,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     1,     3,     1,     1,
-       1,     1,     1,     0,     3,     4,     2
+       4,     8,    10,     1,     3,     3,     0,     1,     1,     1,
+       1,     1,     1,     1,     3,     5,     4,     0,     2,     2,
+       2,     2,     1,     1,     1,     1,     1,     1,     2,     2,
+       3,     4,     5,     6,     4,     5,     5,     8,     0,     2,
+       2,     1,     3,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3,     1,     3,     1,
+       1,     1,     1,     1,     0,     3,     4,     2
   };
 
 
@@ -1819,13 +1825,13 @@ else
   parser::yyrline_[] =
   {
        0,    82,    82,    83,    84,    85,    86,    90,    91,    96,
-     103,   106,   109,   115,   116,   119,   122,   123,   124,   125,
-     128,   129,   130,   133,   136,   137,   140,   141,   142,   143,
-     144,   147,   148,   149,   150,   151,   152,   155,   156,   159,
-     162,   165,   168,   170,   171,   174,   175,   178,   179,   180,
-     183,   184,   185,   186,   187,   188,   189,   190,   191,   192,
-     193,   194,   195,   196,   197,   198,   201,   202,   204,   205,
-     206,   207,   208,   211,   212,   216,   223
+     103,   106,   109,   115,   116,   119,   120,   123,   124,   125,
+     126,   129,   130,   131,   134,   137,   138,   141,   142,   143,
+     144,   145,   148,   149,   150,   151,   152,   153,   156,   157,
+     160,   163,   166,   169,   171,   172,   175,   176,   179,   180,
+     181,   184,   185,   186,   187,   188,   189,   190,   191,   192,
+     193,   194,   195,   196,   197,   198,   199,   202,   203,   205,
+     206,   207,   208,   209,   212,   213,   217,   224
   };
 
   void
@@ -1857,12 +1863,13 @@ else
 
 
 } // yy
-#line 1861 "Parser.tab.cpp"
+#line 1867 "Parser.tab.cpp"
 
-#line 234 "Parser.ypp"
+#line 235 "Parser.ypp"
 
 namespace yy
 {
+
     void parser::error(const std::string& msg)
     {
         std::cout <<"Syntax error\n";

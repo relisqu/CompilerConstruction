@@ -1,1 +1,16 @@
-var mynum : integer is 13 var amongus : real is 32.1
+var counter : integer is 0
+
+routine MyRoutine1 () is
+	counter := counter + 1;
+end;
+
+routine MyRoutine2 (arg1 : integer, arg2 : integer) is
+	var sum is arg1 + arg2;
+	counter := counter + sum;
+end;
+
+if MyNumber1 % 2 = 0 or MyNumber1 > 2 then
+	MyRoutine1();
+else
+	MyRoutine2(2, 3);
+end;
