@@ -86,6 +86,8 @@ private:
                     { TokenCode::tkDOT_DOT, yy::parser::make_tkDOT_DOT() },
                     { TokenCode::tkDot, yy::parser::make_tkDot() },
 
+                    { TokenCode::tkNewLine, yy::parser::make_EOL()},
+                    { TokenCode::tkSemiColon, yy::parser::make_EOL()}
             };
 
 

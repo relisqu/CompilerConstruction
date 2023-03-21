@@ -1,4 +1,4 @@
-// A Bison parser, made by GNU Bison 3.8.2.
+// A Bison parser, made by GNU Bison 3.7.6.
 
 // Skeleton interface for Bison LALR(1) parsers in C++
 
@@ -45,17 +45,21 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 8 "Parser.ypp"
+#line 8 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
 
     #pragma once
     #include <iostream>
     #include <string>
+    #include "../AST/AST.h"
+
+    using namespace ast;
+
     namespace yy
     {
         class parser;
     }
 
-#line 59 "Parser.tab.hpp"
+#line 63 "Parser.tab.hpp"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -131,18 +135,12 @@
 # define YY_USE(E) /* empty */
 #endif
 
+#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
-# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
-#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
-    _Pragma ("GCC diagnostic push")                                     \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
-# else
-#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -195,7 +193,7 @@
 #endif
 
 namespace yy {
-#line 199 "Parser.tab.hpp"
+#line 197 "Parser.tab.hpp"
 
 
 
@@ -204,32 +202,27 @@ namespace yy {
   class parser
   {
   public:
-#ifdef YYSTYPE
-# ifdef __GNUC__
-#  pragma GCC message "bison: do not #define YYSTYPE in C++, use %define api.value.type"
-# endif
-    typedef YYSTYPE value_type;
-#else
+#ifndef YYSTYPE
   /// A buffer to store and retrieve objects.
   ///
   /// Sort of a variant, but does not keep track of the nature
   /// of the stored data, since that knowledge is available
   /// via the current parser state.
-  class value_type
+  class semantic_type
   {
   public:
     /// Type of *this.
-    typedef value_type self_type;
+    typedef semantic_type self_type;
 
     /// Empty construction.
-    value_type () YY_NOEXCEPT
-      : yyraw_ ()
+    semantic_type () YY_NOEXCEPT
+      : yybuffer_ ()
       , yytypeid_ (YY_NULLPTR)
     {}
 
     /// Construct and fill.
     template <typename T>
-    value_type (YY_RVREF (T) t)
+    semantic_type (YY_RVREF (T) t)
       : yytypeid_ (&typeid (T))
     {
       YY_ASSERT (sizeof (T) <= size);
@@ -238,13 +231,13 @@ namespace yy {
 
 #if 201103L <= YY_CPLUSPLUS
     /// Non copyable.
-    value_type (const self_type&) = delete;
+    semantic_type (const self_type&) = delete;
     /// Non copyable.
     self_type& operator= (const self_type&) = delete;
 #endif
 
     /// Destruction, allowed only if empty.
-    ~value_type () YY_NOEXCEPT
+    ~semantic_type () YY_NOEXCEPT
     {
       YY_ASSERT (!yytypeid_);
     }
@@ -388,7 +381,7 @@ namespace yy {
   private:
 #if YY_CPLUSPLUS < 201103L
     /// Non copyable.
-    value_type (const self_type&);
+    semantic_type (const self_type&);
     /// Non copyable.
     self_type& operator= (const self_type&);
 #endif
@@ -398,7 +391,7 @@ namespace yy {
     T*
     yyas_ () YY_NOEXCEPT
     {
-      void *yyp = yyraw_;
+      void *yyp = yybuffer_.yyraw;
       return static_cast<T*> (yyp);
      }
 
@@ -407,7 +400,7 @@ namespace yy {
     const T*
     yyas_ () const YY_NOEXCEPT
     {
-      const void *yyp = yyraw_;
+      const void *yyp = yybuffer_.yyraw;
       return static_cast<const T*> (yyp);
      }
 
@@ -423,8 +416,63 @@ namespace yy {
       // tkConstInt
       char dummy3[sizeof (int)];
 
+      // _arr_type
+      char dummy4[sizeof (sp<ast::Array>)];
+
+      // _assign
+      char dummy5[sizeof (sp<ast::Assignment>)];
+
+      // _body
+      char dummy6[sizeof (sp<ast::Block>)];
+
+      // _irb_type
+      char dummy7[sizeof (sp<ast::BuiltinType>)];
+
+      // _expr
+      // _primary
+      // _getvar
+      char dummy8[sizeof (sp<ast::Expression>)];
+
+      // _modval
+      char dummy9[sizeof (sp<ast::Expression> )];
+
+      // _rec_type
+      char dummy10[sizeof (sp<ast::Record>)];
+
+      // _return
+      char dummy11[sizeof (sp<ast::ReturnStatement>)];
+
+      // _routine_dec
+      char dummy12[sizeof (sp<ast::Routine>)];
+
+      // _routine
+      char dummy13[sizeof (sp<ast::RoutineCall> )];
+
+      // _statement
+      // _while
+      // _for
+      // _if
+      char dummy14[sizeof (sp<ast::Statement>)];
+
+      // _type
+      char dummy15[sizeof (sp<ast::Type>)];
+
+      // _var_dec
+      // _param_dec
+      char dummy16[sizeof (sp<ast::Variable>)];
+
       // tkIdentifier
-      char dummy4[sizeof (std::string)];
+      char dummy17[sizeof (std::string)];
+
+      // _range
+      char dummy18[sizeof (std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool>)];
+
+      // _args
+      char dummy19[sizeof (std::vector<sp<ast::Expression>>)];
+
+      // _params
+      // _var_dec_block
+      char dummy20[sizeof (std::vector<sp<ast::Variable>>)];
     };
 
     /// The size of the largest semantic type.
@@ -434,19 +482,18 @@ namespace yy {
     union
     {
       /// Strongest alignment constraints.
-      long double yyalign_me_;
+      long double yyalign_me;
       /// A buffer large enough to store any of the semantic values.
-      char yyraw_[size];
-    };
+      char yyraw[size];
+    } yybuffer_;
 
     /// Whether the content is built: if defined, the name of the stored type.
     const std::type_info *yytypeid_;
   };
 
+#else
+    typedef YYSTYPE semantic_type;
 #endif
-    /// Backward compatibility (Bison 3.8).
-    typedef value_type semantic_type;
-
 
     /// Syntax errors thrown from user actions.
     struct syntax_error : std::runtime_error
@@ -515,29 +562,30 @@ namespace yy {
     tkReturn = 299,                // tkReturn
     tkContinue = 300,              // tkContinue
     tkBreak = 301,                 // tkBreak
-    tkColon = 302,                 // tkColon
-    tkDot = 303,                   // tkDot
-    tkComma = 304,                 // tkComma
-    EOL = 305,                     // EOL
-    tkCOLON_EQUALS = 306,          // tkCOLON_EQUALS
-    tkNewLine = 307,               // tkNewLine
-    tkQuote = 308,                 // tkQuote
-    tkSQUARE_BRACKET_START = 309,  // tkSQUARE_BRACKET_START
-    tkSQUARE_BRACKET_END = 310,    // tkSQUARE_BRACKET_END
-    tkROUND_BRACKET_START = 311,   // tkROUND_BRACKET_START
-    tkROUND_BRACKET_END = 312,     // tkROUND_BRACKET_END
-    tkCURLY_BRACKET_START = 313,   // tkCURLY_BRACKET_START
-    tkCURLY_BRACKET_END = 314,     // tkCURLY_BRACKET_END
-    tkBackSlash = 315,             // tkBackSlash
-    tkSpace = 316,                 // tkSpace
-    tkTabulation = 317             // tkTabulation
+    tkSemiColon = 302,             // tkSemiColon
+    tkColon = 303,                 // tkColon
+    tkDot = 304,                   // tkDot
+    tkComma = 305,                 // tkComma
+    EOL = 306,                     // EOL
+    tkCOLON_EQUALS = 307,          // tkCOLON_EQUALS
+    tkNewLine = 308,               // tkNewLine
+    tkQuote = 309,                 // tkQuote
+    tkSQUARE_BRACKET_START = 310,  // tkSQUARE_BRACKET_START
+    tkSQUARE_BRACKET_END = 311,    // tkSQUARE_BRACKET_END
+    tkROUND_BRACKET_START = 312,   // tkROUND_BRACKET_START
+    tkROUND_BRACKET_END = 313,     // tkROUND_BRACKET_END
+    tkCURLY_BRACKET_START = 314,   // tkCURLY_BRACKET_START
+    tkCURLY_BRACKET_END = 315,     // tkCURLY_BRACKET_END
+    tkBackSlash = 316,             // tkBackSlash
+    tkSpace = 317,                 // tkSpace
+    tkTabulation = 318             // tkTabulation
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
     };
 
     /// Token kind, as returned by yylex.
-    typedef token::token_kind_type token_kind_type;
+    typedef token::yytokentype token_kind_type;
 
     /// Backward compatibility alias (Bison 3.6).
     typedef token_kind_type token_type;
@@ -547,7 +595,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 63, ///< Number of tokens.
+        YYNTOKENS = 64, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -596,48 +644,49 @@ namespace yy {
         S_tkReturn = 44,                         // tkReturn
         S_tkContinue = 45,                       // tkContinue
         S_tkBreak = 46,                          // tkBreak
-        S_tkColon = 47,                          // tkColon
-        S_tkDot = 48,                            // tkDot
-        S_tkComma = 49,                          // tkComma
-        S_EOL = 50,                              // EOL
-        S_tkCOLON_EQUALS = 51,                   // tkCOLON_EQUALS
-        S_tkNewLine = 52,                        // tkNewLine
-        S_tkQuote = 53,                          // tkQuote
-        S_tkSQUARE_BRACKET_START = 54,           // tkSQUARE_BRACKET_START
-        S_tkSQUARE_BRACKET_END = 55,             // tkSQUARE_BRACKET_END
-        S_tkROUND_BRACKET_START = 56,            // tkROUND_BRACKET_START
-        S_tkROUND_BRACKET_END = 57,              // tkROUND_BRACKET_END
-        S_tkCURLY_BRACKET_START = 58,            // tkCURLY_BRACKET_START
-        S_tkCURLY_BRACKET_END = 59,              // tkCURLY_BRACKET_END
-        S_tkBackSlash = 60,                      // tkBackSlash
-        S_tkSpace = 61,                          // tkSpace
-        S_tkTabulation = 62,                     // tkTabulation
-        S_YYACCEPT = 63,                         // $accept
-        S_program = 64,                          // program
-        S__var_dec = 65,                         // _var_dec
-        S__type_dec = 66,                        // _type_dec
-        S__routine_dec = 67,                     // _routine_dec
-        S__params = 68,                          // _params
-        S__param_dec = 69,                       // _param_dec
-        S__type = 70,                            // _type
-        S__irb_type = 71,                        // _irb_type
-        S__rec_type = 72,                        // _rec_type
-        S__arr_type = 73,                        // _arr_type
-        S__body = 74,                            // _body
-        S__statement = 75,                       // _statement
-        S__return = 76,                          // _return
-        S__assign = 77,                          // _assign
-        S__routine = 78,                         // _routine
-        S__while = 79,                           // _while
-        S__for = 80,                             // _for
-        S__range = 81,                           // _range
-        S__if = 82,                              // _if
-        S__var_dec_block = 83,                   // _var_dec_block
-        S__expr = 84,                            // _expr
-        S__args = 85,                            // _args
-        S__primary = 86,                         // _primary
-        S__getvar = 87,                          // _getvar
-        S__modval = 88                           // _modval
+        S_tkSemiColon = 47,                      // tkSemiColon
+        S_tkColon = 48,                          // tkColon
+        S_tkDot = 49,                            // tkDot
+        S_tkComma = 50,                          // tkComma
+        S_EOL = 51,                              // EOL
+        S_tkCOLON_EQUALS = 52,                   // tkCOLON_EQUALS
+        S_tkNewLine = 53,                        // tkNewLine
+        S_tkQuote = 54,                          // tkQuote
+        S_tkSQUARE_BRACKET_START = 55,           // tkSQUARE_BRACKET_START
+        S_tkSQUARE_BRACKET_END = 56,             // tkSQUARE_BRACKET_END
+        S_tkROUND_BRACKET_START = 57,            // tkROUND_BRACKET_START
+        S_tkROUND_BRACKET_END = 58,              // tkROUND_BRACKET_END
+        S_tkCURLY_BRACKET_START = 59,            // tkCURLY_BRACKET_START
+        S_tkCURLY_BRACKET_END = 60,              // tkCURLY_BRACKET_END
+        S_tkBackSlash = 61,                      // tkBackSlash
+        S_tkSpace = 62,                          // tkSpace
+        S_tkTabulation = 63,                     // tkTabulation
+        S_YYACCEPT = 64,                         // $accept
+        S_program = 65,                          // program
+        S__var_dec = 66,                         // _var_dec
+        S__type_dec = 67,                        // _type_dec
+        S__routine_dec = 68,                     // _routine_dec
+        S__params = 69,                          // _params
+        S__param_dec = 70,                       // _param_dec
+        S__type = 71,                            // _type
+        S__irb_type = 72,                        // _irb_type
+        S__rec_type = 73,                        // _rec_type
+        S__arr_type = 74,                        // _arr_type
+        S__body = 75,                            // _body
+        S__statement = 76,                       // _statement
+        S__return = 77,                          // _return
+        S__assign = 78,                          // _assign
+        S__routine = 79,                         // _routine
+        S__while = 80,                           // _while
+        S__for = 81,                             // _for
+        S__range = 82,                           // _range
+        S__if = 83,                              // _if
+        S__var_dec_block = 84,                   // _var_dec_block
+        S__expr = 85,                            // _expr
+        S__args = 86,                            // _args
+        S__primary = 87,                         // _primary
+        S__getvar = 88,                          // _getvar
+        S__modval = 89                           // _modval
       };
     };
 
@@ -660,7 +709,7 @@ namespace yy {
       typedef Base super_type;
 
       /// Default constructor.
-      basic_symbol () YY_NOEXCEPT
+      basic_symbol ()
         : value ()
       {}
 
@@ -684,8 +733,79 @@ namespace yy {
         value.move< int > (std::move (that.value));
         break;
 
+      case symbol_kind::S__arr_type: // _arr_type
+        value.move< sp<ast::Array> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__assign: // _assign
+        value.move< sp<ast::Assignment> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__body: // _body
+        value.move< sp<ast::Block> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__irb_type: // _irb_type
+        value.move< sp<ast::BuiltinType> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__expr: // _expr
+      case symbol_kind::S__primary: // _primary
+      case symbol_kind::S__getvar: // _getvar
+        value.move< sp<ast::Expression> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__modval: // _modval
+        value.move< sp<ast::Expression>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__rec_type: // _rec_type
+        value.move< sp<ast::Record> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__return: // _return
+        value.move< sp<ast::ReturnStatement> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__routine_dec: // _routine_dec
+        value.move< sp<ast::Routine> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__routine: // _routine
+        value.move< sp<ast::RoutineCall>  > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__statement: // _statement
+      case symbol_kind::S__while: // _while
+      case symbol_kind::S__for: // _for
+      case symbol_kind::S__if: // _if
+        value.move< sp<ast::Statement> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__type: // _type
+        value.move< sp<ast::Type> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__var_dec: // _var_dec
+      case symbol_kind::S__param_dec: // _param_dec
+        value.move< sp<ast::Variable> > (std::move (that.value));
+        break;
+
       case symbol_kind::S_tkIdentifier: // tkIdentifier
         value.move< std::string > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__range: // _range
+        value.move< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.move< std::vector<sp<ast::Expression>> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.move< std::vector<sp<ast::Variable>> > (std::move (that.value));
         break;
 
       default:
@@ -746,6 +866,162 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Array>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Array>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Assignment>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Assignment>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Block>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Block>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::BuiltinType>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::BuiltinType>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Expression>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Expression>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Expression> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Expression> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Record>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Record>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::ReturnStatement>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::ReturnStatement>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Routine>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Routine>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::RoutineCall> && v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::RoutineCall> & v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Statement>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Statement>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Type>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Type>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, sp<ast::Variable>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const sp<ast::Variable>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
@@ -757,13 +1033,47 @@ namespace yy {
       {}
 #endif
 
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Expression>>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Expression>>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::vector<sp<ast::Variable>>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::vector<sp<ast::Variable>>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
       /// Destroy the symbol.
       ~basic_symbol ()
       {
         clear ();
       }
-
-
 
       /// Destroy contents, and record that is empty.
       void clear () YY_NOEXCEPT
@@ -793,8 +1103,79 @@ switch (yykind)
         value.template destroy< int > ();
         break;
 
+      case symbol_kind::S__arr_type: // _arr_type
+        value.template destroy< sp<ast::Array> > ();
+        break;
+
+      case symbol_kind::S__assign: // _assign
+        value.template destroy< sp<ast::Assignment> > ();
+        break;
+
+      case symbol_kind::S__body: // _body
+        value.template destroy< sp<ast::Block> > ();
+        break;
+
+      case symbol_kind::S__irb_type: // _irb_type
+        value.template destroy< sp<ast::BuiltinType> > ();
+        break;
+
+      case symbol_kind::S__expr: // _expr
+      case symbol_kind::S__primary: // _primary
+      case symbol_kind::S__getvar: // _getvar
+        value.template destroy< sp<ast::Expression> > ();
+        break;
+
+      case symbol_kind::S__modval: // _modval
+        value.template destroy< sp<ast::Expression>  > ();
+        break;
+
+      case symbol_kind::S__rec_type: // _rec_type
+        value.template destroy< sp<ast::Record> > ();
+        break;
+
+      case symbol_kind::S__return: // _return
+        value.template destroy< sp<ast::ReturnStatement> > ();
+        break;
+
+      case symbol_kind::S__routine_dec: // _routine_dec
+        value.template destroy< sp<ast::Routine> > ();
+        break;
+
+      case symbol_kind::S__routine: // _routine
+        value.template destroy< sp<ast::RoutineCall>  > ();
+        break;
+
+      case symbol_kind::S__statement: // _statement
+      case symbol_kind::S__while: // _while
+      case symbol_kind::S__for: // _for
+      case symbol_kind::S__if: // _if
+        value.template destroy< sp<ast::Statement> > ();
+        break;
+
+      case symbol_kind::S__type: // _type
+        value.template destroy< sp<ast::Type> > ();
+        break;
+
+      case symbol_kind::S__var_dec: // _var_dec
+      case symbol_kind::S__param_dec: // _param_dec
+        value.template destroy< sp<ast::Variable> > ();
+        break;
+
       case symbol_kind::S_tkIdentifier: // tkIdentifier
         value.template destroy< std::string > ();
+        break;
+
+      case symbol_kind::S__range: // _range
+        value.template destroy< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > ();
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.template destroy< std::vector<sp<ast::Expression>> > ();
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.template destroy< std::vector<sp<ast::Variable>> > ();
         break;
 
       default:
@@ -823,7 +1204,7 @@ switch (yykind)
       void move (basic_symbol& s);
 
       /// The semantic value.
-      value_type value;
+      semantic_type value;
 
     private:
 #if YY_CPLUSPLUS < 201103L
@@ -835,24 +1216,22 @@ switch (yykind)
     /// Type access provider for token (enum) based symbols.
     struct by_kind
     {
-      /// The symbol kind as needed by the constructor.
-      typedef token_kind_type kind_type;
-
       /// Default constructor.
-      by_kind () YY_NOEXCEPT;
+      by_kind ();
 
 #if 201103L <= YY_CPLUSPLUS
       /// Move constructor.
-      by_kind (by_kind&& that) YY_NOEXCEPT;
+      by_kind (by_kind&& that);
 #endif
 
       /// Copy constructor.
-      by_kind (const by_kind& that) YY_NOEXCEPT;
+      by_kind (const by_kind& that);
+
+      /// The symbol kind as needed by the constructor.
+      typedef token_kind_type kind_type;
 
       /// Constructor from (external) token numbers.
-      by_kind (kind_type t) YY_NOEXCEPT;
-
-
+      by_kind (kind_type t);
 
       /// Record that this symbol is empty.
       void clear () YY_NOEXCEPT;
@@ -882,71 +1261,61 @@ switch (yykind)
       typedef basic_symbol<by_kind> super_type;
 
       /// Empty symbol.
-      symbol_type () YY_NOEXCEPT {}
+      symbol_type () {}
 
       /// Constructor for valueless symbols, and symbols from each type.
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok)
-        : super_type (token_kind_type (tok))
+        : super_type(token_type (tok))
 #else
       symbol_type (int tok)
-        : super_type (token_kind_type (tok))
+        : super_type(token_type (tok))
 #endif
       {
-#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::YYEOF
                    || (token::YYerror <= tok && tok <= token::YYUNDEF)
                    || (token::tkInt <= tok && tok <= token::tkRoutine)
                    || (token::tkBoolAnd <= tok && tok <= token::tkTabulation));
-#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, bool v)
-        : super_type (token_kind_type (tok), std::move (v))
+        : super_type(token_type (tok), std::move (v))
 #else
       symbol_type (int tok, const bool& v)
-        : super_type (token_kind_type (tok), v)
+        : super_type(token_type (tok), v)
 #endif
       {
-#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::tkConstBoolean);
-#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, double v)
-        : super_type (token_kind_type (tok), std::move (v))
+        : super_type(token_type (tok), std::move (v))
 #else
       symbol_type (int tok, const double& v)
-        : super_type (token_kind_type (tok), v)
+        : super_type(token_type (tok), v)
 #endif
       {
-#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::tkConstReal);
-#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, int v)
-        : super_type (token_kind_type (tok), std::move (v))
+        : super_type(token_type (tok), std::move (v))
 #else
       symbol_type (int tok, const int& v)
-        : super_type (token_kind_type (tok), v)
+        : super_type(token_type (tok), v)
 #endif
       {
-#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::tkConstInt);
-#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v)
-        : super_type (token_kind_type (tok), std::move (v))
+        : super_type(token_type (tok), std::move (v))
 #else
       symbol_type (int tok, const std::string& v)
-        : super_type (token_kind_type (tok), v)
+        : super_type(token_type (tok), v)
 #endif
       {
-#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::tkIdentifier);
-#endif
       }
     };
 
@@ -997,7 +1366,7 @@ switch (yykind)
 #endif // #if YYDEBUG || 0
 
 
-    // Implementation of make_symbol for each token kind.
+    // Implementation of make_symbol for each symbol type.
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
@@ -1706,6 +2075,21 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_tkSemiColon ()
+      {
+        return symbol_type (token::tkSemiColon);
+      }
+#else
+      static
+      symbol_type
+      make_tkSemiColon ()
+      {
+        return symbol_type (token::tkSemiColon);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_tkColon ()
       {
         return symbol_type (token::tkColon);
@@ -1964,19 +2348,19 @@ switch (yykind)
 
     /// Whether the given \c yypact_ value indicates a defaulted state.
     /// \param yyvalue   the value to check
-    static bool yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT;
+    static bool yy_pact_value_is_default_ (int yyvalue);
 
     /// Whether the given \c yytable_ value indicates a syntax error.
     /// \param yyvalue   the value to check
-    static bool yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT;
+    static bool yy_table_value_is_error_ (int yyvalue);
 
     static const signed char yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token kind \a t to a symbol kind.
     /// In theory \a t should be a token_kind_type, but character literals
-    /// are valid, yet not members of the token_kind_type enum.
-    static symbol_kind_type yytranslate_ (int t) YY_NOEXCEPT;
+    /// are valid, yet not members of the token_type enum.
+    static symbol_kind_type yytranslate_ (int t);
 
 #if YYDEBUG || 0
     /// For a symbol, its name in clear.
@@ -2007,14 +2391,14 @@ switch (yykind)
 
     static const short yycheck_[];
 
-    // YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
-    // state STATE-NUM.
+    // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
+    // symbol of state STATE-NUM.
     static const signed char yystos_[];
 
-    // YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.
+    // YYR1[YYN] -- Symbol number of symbol that rule YYN derives.
     static const signed char yyr1_[];
 
-    // YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.
+    // YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.
     static const signed char yyr2_[];
 
 
@@ -2113,7 +2497,7 @@ switch (yykind)
       typedef typename S::size_type size_type;
       typedef typename std::ptrdiff_t index_type;
 
-      stack (size_type n = 200) YY_NOEXCEPT
+      stack (size_type n = 200)
         : seq_ (n)
       {}
 
@@ -2192,7 +2576,7 @@ switch (yykind)
       class slice
       {
       public:
-        slice (const stack& stack, index_type range) YY_NOEXCEPT
+        slice (const stack& stack, index_type range)
           : stack_ (stack)
           , range_ (range)
         {}
@@ -2242,12 +2626,12 @@ switch (yykind)
     void yypush_ (const char* m, state_type s, YY_MOVE_REF (symbol_type) sym);
 
     /// Pop \a n symbols from the stack.
-    void yypop_ (int n = 1) YY_NOEXCEPT;
+    void yypop_ (int n = 1);
 
     /// Constants.
     enum
     {
-      yylast_ = 417,     ///< Last index in yytable_.
+      yylast_ = 425,     ///< Last index in yytable_.
       yynnts_ = 26,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
@@ -2258,7 +2642,7 @@ switch (yykind)
 
   inline
   parser::symbol_kind_type
-  parser::yytranslate_ (int t) YY_NOEXCEPT
+  parser::yytranslate_ (int t)
   {
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
@@ -2297,15 +2681,15 @@ switch (yykind)
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
       45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,    56,    57,    58,    59,    60,    61,    62
+      55,    56,    57,    58,    59,    60,    61,    62,    63
     };
     // Last valid token kind.
-    const int code_max = 317;
+    const int code_max = 318;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
     else if (t <= code_max)
-      return static_cast <symbol_kind_type> (translate_table[t]);
+      return YY_CAST (symbol_kind_type, translate_table[t]);
     else
       return symbol_kind::S_YYUNDEF;
   }
@@ -2330,8 +2714,79 @@ switch (yykind)
         value.copy< int > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S__arr_type: // _arr_type
+        value.copy< sp<ast::Array> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__assign: // _assign
+        value.copy< sp<ast::Assignment> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__body: // _body
+        value.copy< sp<ast::Block> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__irb_type: // _irb_type
+        value.copy< sp<ast::BuiltinType> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__expr: // _expr
+      case symbol_kind::S__primary: // _primary
+      case symbol_kind::S__getvar: // _getvar
+        value.copy< sp<ast::Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__modval: // _modval
+        value.copy< sp<ast::Expression>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__rec_type: // _rec_type
+        value.copy< sp<ast::Record> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__return: // _return
+        value.copy< sp<ast::ReturnStatement> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__routine_dec: // _routine_dec
+        value.copy< sp<ast::Routine> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__routine: // _routine
+        value.copy< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__statement: // _statement
+      case symbol_kind::S__while: // _while
+      case symbol_kind::S__for: // _for
+      case symbol_kind::S__if: // _if
+        value.copy< sp<ast::Statement> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__type: // _type
+        value.copy< sp<ast::Type> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__var_dec: // _var_dec
+      case symbol_kind::S__param_dec: // _param_dec
+        value.copy< sp<ast::Variable> > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_tkIdentifier: // tkIdentifier
         value.copy< std::string > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__range: // _range
+        value.copy< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.copy< std::vector<sp<ast::Expression>> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.copy< std::vector<sp<ast::Variable>> > (YY_MOVE (that.value));
         break;
 
       default:
@@ -2342,14 +2797,12 @@ switch (yykind)
 
 
 
-
   template <typename Base>
   parser::symbol_kind_type
   parser::basic_symbol<Base>::type_get () const YY_NOEXCEPT
   {
     return this->kind ();
   }
-
 
   template <typename Base>
   bool
@@ -2377,8 +2830,79 @@ switch (yykind)
         value.move< int > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S__arr_type: // _arr_type
+        value.move< sp<ast::Array> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__assign: // _assign
+        value.move< sp<ast::Assignment> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__body: // _body
+        value.move< sp<ast::Block> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__irb_type: // _irb_type
+        value.move< sp<ast::BuiltinType> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__expr: // _expr
+      case symbol_kind::S__primary: // _primary
+      case symbol_kind::S__getvar: // _getvar
+        value.move< sp<ast::Expression> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__modval: // _modval
+        value.move< sp<ast::Expression>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__rec_type: // _rec_type
+        value.move< sp<ast::Record> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__return: // _return
+        value.move< sp<ast::ReturnStatement> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__routine_dec: // _routine_dec
+        value.move< sp<ast::Routine> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__routine: // _routine
+        value.move< sp<ast::RoutineCall>  > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__statement: // _statement
+      case symbol_kind::S__while: // _while
+      case symbol_kind::S__for: // _for
+      case symbol_kind::S__if: // _if
+        value.move< sp<ast::Statement> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__type: // _type
+        value.move< sp<ast::Type> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__var_dec: // _var_dec
+      case symbol_kind::S__param_dec: // _param_dec
+        value.move< sp<ast::Variable> > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_tkIdentifier: // tkIdentifier
         value.move< std::string > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__range: // _range
+        value.move< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.move< std::vector<sp<ast::Expression>> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.move< std::vector<sp<ast::Variable>> > (YY_MOVE (s.value));
         break;
 
       default:
@@ -2389,13 +2913,13 @@ switch (yykind)
 
   // by_kind.
   inline
-  parser::by_kind::by_kind () YY_NOEXCEPT
+  parser::by_kind::by_kind ()
     : kind_ (symbol_kind::S_YYEMPTY)
   {}
 
 #if 201103L <= YY_CPLUSPLUS
   inline
-  parser::by_kind::by_kind (by_kind&& that) YY_NOEXCEPT
+  parser::by_kind::by_kind (by_kind&& that)
     : kind_ (that.kind_)
   {
     that.clear ();
@@ -2403,16 +2927,14 @@ switch (yykind)
 #endif
 
   inline
-  parser::by_kind::by_kind (const by_kind& that) YY_NOEXCEPT
+  parser::by_kind::by_kind (const by_kind& that)
     : kind_ (that.kind_)
   {}
 
   inline
-  parser::by_kind::by_kind (token_kind_type t) YY_NOEXCEPT
+  parser::by_kind::by_kind (token_kind_type t)
     : kind_ (yytranslate_ (t))
   {}
-
-
 
   inline
   void
@@ -2436,7 +2958,6 @@ switch (yykind)
     return kind_;
   }
 
-
   inline
   parser::symbol_kind_type
   parser::by_kind::type_get () const YY_NOEXCEPT
@@ -2444,9 +2965,8 @@ switch (yykind)
     return this->kind ();
   }
 
-
 } // yy
-#line 2450 "Parser.tab.hpp"
+#line 2970 "Parser.tab.hpp"
 
 
 
