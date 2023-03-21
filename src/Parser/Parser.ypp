@@ -100,77 +100,84 @@ _var_dec : tkVar tkIdentifier tkColon _type { $$ = std::make_shared<ast::Variabl
     }
 ;
 
-_type_dec: tkType tkIdentifier tkIs _type {std::cout << "get type with ident:"<<$2;}
+_type_dec: tkType tkIdentifier tkIs _type { ast::Type::TypeTable.insert({$2,$4}); }
 ;
 
-_routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd {}
-| tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd {}
+_routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd {
+$$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);
+}
+| tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd {
+ $$ = std::make_shared<ast::Routine>($2, $4, $9, $7);
+ ast::Type::TypeTable[$2] = $7;
+}
 ;
 
-_params: _param_dec {}
-| _params tkComma _param_dec {}
+_params: _param_dec { ($$).push_back($1); }
+| _params tkComma _param_dec { swap($1, $$);  ($$).push_back($3); }
 ;
 
-_param_dec: tkIdentifier tkColon _type {}
+_param_dec: tkIdentifier tkColon _type { $$ = std::make_shared<ast::Variable>($1, $3); }
 ;
 
-_type: tkIdentifier {}
-| _irb_type {}
-| _arr_type {}
-| _rec_type {}
+_type: tkIdentifier { $$ = std::make_shared<ast::Type>($1); }
+| _irb_type {  $$ = $1; }
+| _arr_type { $$ = $1; }
+| _rec_type { $$ = $1; }
 ;
 
-_irb_type: tkInt {}
-| tkReal {}
-| tkBoolean {}
+_irb_type: tkInt { $$ = std::make_shared<ast::BuiltinType>("integer"); }  //irb = integer, real, bool
+| tkReal {  $$ =  std::make_shared<ast::BuiltinType> ("real"); }
+| tkBoolean {   $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
 ;
 
-_rec_type: tkRecord _var_dec_block tkEnd {}
+_rec_type: tkRecord _var_dec_block tkEnd {  $$ = std::make_shared<ast::Record>("Record", $2); }
 ;
 
-_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type {}
-| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type {}
+_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>("Array"); }
+| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>("Array"); }
 ;
 
-_body: {}
-| _body _var_dec {}
+_body: { $$ = std::make_shared<ast::Block>(); }
+| _body _var_dec { ($1)->addVariable($2); $$ = $1; }
 | _body _type_dec {}
-| _body _statement {}
-
-_statement: _assign {}
-| _routine {}
-| _while {}
-| _for {}
-| _if {}
-| _return {}
+| _body _statement { ($1)->addStatement($2); $$ = $1; }
+| _body EOL
 ;
 
-_return: tkReturn {}
-| tkReturn _expr {}
+_statement: _assign {$$ = $1;}
+| _routine {$$ = $1;}
+| _while {$$ = $1;}
+| _for {$$ = $1;}
+| _if {$$ = $1;}
+| _return {$$ = $1;}
 ;
 
-_assign: _modval tkCOLON_EQUALS _expr {}
+_return: tkReturn EOL{   $$ = std::make_shared<ast::ReturnStatement>(nullptr);  }
+| tkReturn _expr {     $$ = std::make_shared<ast::ReturnStatement>($2);   }
 ;
 
-_routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END {}
+_assign: _modval tkCOLON_EQUALS _expr { $$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3); }
 ;
 
-_while: tkWhile _expr tkLoop _body tkEnd {}
+_routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END { $$ = std::make_shared<ast::RoutineCall>($1); ($$)->args = std::move($3); }
 ;
 
-_for: tkFor tkIdentifier _range tkLoop _body tkEnd {}
-
-_range: tkIn _expr tkDOT_DOT _expr {}
-| tkIn tkReverse _expr tkDOT_DOT _expr {}
+_while: tkWhile _expr tkLoop _body tkEnd { $$ = std::make_shared<ast::WhileLoop>($2, $4); }
 ;
 
-_if: tkIf _expr tkThen _body tkEnd {}
-| tkIf _expr tkThen _body tkElse _body tkEnd {}
+_for: tkFor tkIdentifier _range tkLoop _body tkEnd { $$ = std::make_shared<ast::ForLoop>($2, $3, $5); }
+
+_range: tkIn _expr tkDOT_DOT _expr { $$ = std::make_tuple($2,$4, false);  }
+| tkIn tkReverse _expr tkDOT_DOT _expr { $$ = std::make_tuple($3,$5, true); }
+;
+
+_if: tkIf _expr tkThen _body tkEnd { $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr); }
+| tkIf _expr tkThen _body EOL tkElse _body tkEnd { $$ = std::make_shared<ast::IfStatement>($2, $4, $7); }
 ;
 
 _var_dec_block: {}
-| _var_dec_block _var_dec {}
-| _var_dec_block EOL {}
+| _var_dec_block _var_dec { swap($1,$$); ($$).push_back($2); }
+| _var_dec_block EOL { swap($1,$$); }
 ;
 
 _expr: _primary { $$ = $1;}
@@ -191,8 +198,8 @@ _expr: _primary { $$ = $1;}
 | tkROUND_BRACKET_START _expr tkROUND_BRACKET_START {  $$ = $2; }
 ;
 
-_args: _expr {}
-| _args tkComma _expr {}
+_args: _expr { ($$).push_back($1); }
+| _args tkComma _expr { swap($$,$1); ($$).push_back($3); }
 
 _primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
 | tkConstReal {$$ = std::make_shared<ast::Expression>($1); }
@@ -201,9 +208,15 @@ _primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
 | _routine { $$ = std::make_shared<ast::Expression>(($1)->name); }
 ;
 
-_getvar: {};
-| _getvar tkDot tkIdentifier {}
-| _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {}
+_getvar: {$$ = nullptr;};
+| _getvar tkDot tkIdentifier {
+sp<ast::Expression> temp = std::make_shared<ast::Expression>($3);
+$$ = std::make_shared<ast::Expression>(".",temp, $1);
+}
+| _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {
+$$ = std::make_shared<ast::Expression>(".",$3, $1, true);
+}
+
 ;
 
 
@@ -216,7 +229,6 @@ else
   $$ = temp;
 
 }
-
 ;
 
 %%
