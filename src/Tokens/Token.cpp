@@ -2,25 +2,25 @@
 
 
 Span Token::getSpan() {
-    return this->span;
+    return span;
 }
 
 TokenCode Token::getTokenCode() {
-    return this->code;
+    return code;
 }
 
 std::string Token::getStringValue() {
-    return this->strValue;
+    return strValue;
 }
 
-int Token::getIntValue() {
-    return this->intValue;
+int Token::getIntValue() const {
+    return intValue;
 }
 
-float Token::getRealValue() {
-    return this->realValue;
+long double Token::getRealValue() const {
+    return realValue;
 }
 
-bool Token::getBoolValue() {
-    return this->boolValue;
+bool Token::getBoolValue() const {
+    return boolValue;
 }

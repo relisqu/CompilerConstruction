@@ -8,7 +8,6 @@
  * Stores \b value, \b token \b state and \b span
  */
 class PreprocessedToken {
-
 public:
     enum class TokenState {
         Identifier,
@@ -26,4 +25,3 @@ private:
     friend class Parser;
 
 };
-

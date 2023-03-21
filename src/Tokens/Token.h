@@ -16,9 +16,9 @@ public:
     Span getSpan();
     TokenCode getTokenCode();
     std::string getStringValue();
-    float getRealValue();
-    int getIntValue();
-    bool getBoolValue();
+    long double getRealValue() const;
+    int getIntValue() const;
+    bool getBoolValue() const;
 private:
     Span span{};
     TokenCode code{};

@@ -2,7 +2,6 @@
 
 #include <utility>
 #include "Error/ErrorHandler.h"
-#include "../Tokens/PreprocessedToken.h"
 #include "Tokens/TokenMap.h"
 
 // Symbol state for specific character
