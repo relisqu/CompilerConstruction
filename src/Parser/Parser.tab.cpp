@@ -1,4 +1,4 @@
-// A Bison parser, made by GNU Bison 3.7.6.
+// A Bison parser, made by GNU Bison 3.8.2.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
@@ -42,7 +42,7 @@
 
 
 // Unqualified %code blocks.
-#line 23 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 23 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
 
     // Our program is defined here
     sp<ast::Program> ourProgram = std::make_shared<ast::Program>();
@@ -145,9 +145,9 @@ namespace yy {
   parser::syntax_error::~syntax_error () YY_NOEXCEPT YY_NOTHROW
   {}
 
-  /*---------------.
-  | symbol kinds.  |
-  `---------------*/
+  /*---------.
+  | symbol.  |
+  `---------*/
 
 
 
@@ -207,61 +207,67 @@ namespace yy {
         break;
 
       case symbol_kind::S__arr_type: // _arr_type
-        value.YY_MOVE_OR_COPY< sp<ast::Array> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Array> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__assign: // _assign
-        value.YY_MOVE_OR_COPY< sp<ast::Assignment> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Assignment> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__body: // _body
-        value.YY_MOVE_OR_COPY< sp<ast::Block> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Block> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__irb_type: // _irb_type
-        value.YY_MOVE_OR_COPY< sp<ast::BuiltinType> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<BuiltinType> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__expr: // _expr
       case symbol_kind::S__primary: // _primary
       case symbol_kind::S__getvar: // _getvar
-        value.YY_MOVE_OR_COPY< sp<ast::Expression> > (YY_MOVE (that.value));
-        break;
-
       case symbol_kind::S__modval: // _modval
-        value.YY_MOVE_OR_COPY< sp<ast::Expression>  > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Expression> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__rec_type: // _rec_type
-        value.YY_MOVE_OR_COPY< sp<ast::Record> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Record> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__return: // _return
-        value.YY_MOVE_OR_COPY< sp<ast::ReturnStatement> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<ReturnStatement> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__routine_dec: // _routine_dec
-        value.YY_MOVE_OR_COPY< sp<ast::Routine> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Routine> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__routine: // _routine
-        value.YY_MOVE_OR_COPY< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<RoutineCall>  > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__statement: // _statement
       case symbol_kind::S__while: // _while
       case symbol_kind::S__for: // _for
       case symbol_kind::S__if: // _if
-        value.YY_MOVE_OR_COPY< sp<ast::Statement> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Statement> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__type: // _type
-        value.YY_MOVE_OR_COPY< sp<ast::Type> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Type> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__var_dec: // _var_dec
       case symbol_kind::S__param_dec: // _param_dec
-        value.YY_MOVE_OR_COPY< sp<ast::Variable> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< sp<Variable> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.YY_MOVE_OR_COPY< spv<Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.YY_MOVE_OR_COPY< spv<Variable> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_tkIdentifier: // tkIdentifier
@@ -269,16 +275,7 @@ namespace yy {
         break;
 
       case symbol_kind::S__range: // _range
-        value.YY_MOVE_OR_COPY< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S__args: // _args
-        value.YY_MOVE_OR_COPY< std::vector<sp<ast::Expression>> > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S__params: // _params
-      case symbol_kind::S__var_dec_block: // _var_dec_block
-        value.YY_MOVE_OR_COPY< std::vector<sp<ast::Variable>> > (YY_MOVE (that.value));
+        value.YY_MOVE_OR_COPY< std::tuple<sp<Expression>, sp<Expression>, bool> > (YY_MOVE (that.value));
         break;
 
       default:
@@ -309,61 +306,67 @@ namespace yy {
         break;
 
       case symbol_kind::S__arr_type: // _arr_type
-        value.move< sp<ast::Array> > (YY_MOVE (that.value));
+        value.move< sp<Array> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__assign: // _assign
-        value.move< sp<ast::Assignment> > (YY_MOVE (that.value));
+        value.move< sp<Assignment> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__body: // _body
-        value.move< sp<ast::Block> > (YY_MOVE (that.value));
+        value.move< sp<Block> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__irb_type: // _irb_type
-        value.move< sp<ast::BuiltinType> > (YY_MOVE (that.value));
+        value.move< sp<BuiltinType> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__expr: // _expr
       case symbol_kind::S__primary: // _primary
       case symbol_kind::S__getvar: // _getvar
-        value.move< sp<ast::Expression> > (YY_MOVE (that.value));
-        break;
-
       case symbol_kind::S__modval: // _modval
-        value.move< sp<ast::Expression>  > (YY_MOVE (that.value));
+        value.move< sp<Expression> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__rec_type: // _rec_type
-        value.move< sp<ast::Record> > (YY_MOVE (that.value));
+        value.move< sp<Record> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__return: // _return
-        value.move< sp<ast::ReturnStatement> > (YY_MOVE (that.value));
+        value.move< sp<ReturnStatement> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__routine_dec: // _routine_dec
-        value.move< sp<ast::Routine> > (YY_MOVE (that.value));
+        value.move< sp<Routine> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__routine: // _routine
-        value.move< sp<ast::RoutineCall>  > (YY_MOVE (that.value));
+        value.move< sp<RoutineCall>  > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__statement: // _statement
       case symbol_kind::S__while: // _while
       case symbol_kind::S__for: // _for
       case symbol_kind::S__if: // _if
-        value.move< sp<ast::Statement> > (YY_MOVE (that.value));
+        value.move< sp<Statement> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__type: // _type
-        value.move< sp<ast::Type> > (YY_MOVE (that.value));
+        value.move< sp<Type> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S__var_dec: // _var_dec
       case symbol_kind::S__param_dec: // _param_dec
-        value.move< sp<ast::Variable> > (YY_MOVE (that.value));
+        value.move< sp<Variable> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.move< spv<Expression> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.move< spv<Variable> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_tkIdentifier: // tkIdentifier
@@ -371,16 +374,7 @@ namespace yy {
         break;
 
       case symbol_kind::S__range: // _range
-        value.move< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S__args: // _args
-        value.move< std::vector<sp<ast::Expression>> > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S__params: // _params
-      case symbol_kind::S__var_dec_block: // _var_dec_block
-        value.move< std::vector<sp<ast::Variable>> > (YY_MOVE (that.value));
+        value.move< std::tuple<sp<Expression>, sp<Expression>, bool> > (YY_MOVE (that.value));
         break;
 
       default:
@@ -411,61 +405,67 @@ namespace yy {
         break;
 
       case symbol_kind::S__arr_type: // _arr_type
-        value.copy< sp<ast::Array> > (that.value);
+        value.copy< sp<Array> > (that.value);
         break;
 
       case symbol_kind::S__assign: // _assign
-        value.copy< sp<ast::Assignment> > (that.value);
+        value.copy< sp<Assignment> > (that.value);
         break;
 
       case symbol_kind::S__body: // _body
-        value.copy< sp<ast::Block> > (that.value);
+        value.copy< sp<Block> > (that.value);
         break;
 
       case symbol_kind::S__irb_type: // _irb_type
-        value.copy< sp<ast::BuiltinType> > (that.value);
+        value.copy< sp<BuiltinType> > (that.value);
         break;
 
       case symbol_kind::S__expr: // _expr
       case symbol_kind::S__primary: // _primary
       case symbol_kind::S__getvar: // _getvar
-        value.copy< sp<ast::Expression> > (that.value);
-        break;
-
       case symbol_kind::S__modval: // _modval
-        value.copy< sp<ast::Expression>  > (that.value);
+        value.copy< sp<Expression> > (that.value);
         break;
 
       case symbol_kind::S__rec_type: // _rec_type
-        value.copy< sp<ast::Record> > (that.value);
+        value.copy< sp<Record> > (that.value);
         break;
 
       case symbol_kind::S__return: // _return
-        value.copy< sp<ast::ReturnStatement> > (that.value);
+        value.copy< sp<ReturnStatement> > (that.value);
         break;
 
       case symbol_kind::S__routine_dec: // _routine_dec
-        value.copy< sp<ast::Routine> > (that.value);
+        value.copy< sp<Routine> > (that.value);
         break;
 
       case symbol_kind::S__routine: // _routine
-        value.copy< sp<ast::RoutineCall>  > (that.value);
+        value.copy< sp<RoutineCall>  > (that.value);
         break;
 
       case symbol_kind::S__statement: // _statement
       case symbol_kind::S__while: // _while
       case symbol_kind::S__for: // _for
       case symbol_kind::S__if: // _if
-        value.copy< sp<ast::Statement> > (that.value);
+        value.copy< sp<Statement> > (that.value);
         break;
 
       case symbol_kind::S__type: // _type
-        value.copy< sp<ast::Type> > (that.value);
+        value.copy< sp<Type> > (that.value);
         break;
 
       case symbol_kind::S__var_dec: // _var_dec
       case symbol_kind::S__param_dec: // _param_dec
-        value.copy< sp<ast::Variable> > (that.value);
+        value.copy< sp<Variable> > (that.value);
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.copy< spv<Expression> > (that.value);
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.copy< spv<Variable> > (that.value);
         break;
 
       case symbol_kind::S_tkIdentifier: // tkIdentifier
@@ -473,16 +473,7 @@ namespace yy {
         break;
 
       case symbol_kind::S__range: // _range
-        value.copy< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (that.value);
-        break;
-
-      case symbol_kind::S__args: // _args
-        value.copy< std::vector<sp<ast::Expression>> > (that.value);
-        break;
-
-      case symbol_kind::S__params: // _params
-      case symbol_kind::S__var_dec_block: // _var_dec_block
-        value.copy< std::vector<sp<ast::Variable>> > (that.value);
+        value.copy< std::tuple<sp<Expression>, sp<Expression>, bool> > (that.value);
         break;
 
       default:
@@ -511,61 +502,67 @@ namespace yy {
         break;
 
       case symbol_kind::S__arr_type: // _arr_type
-        value.move< sp<ast::Array> > (that.value);
+        value.move< sp<Array> > (that.value);
         break;
 
       case symbol_kind::S__assign: // _assign
-        value.move< sp<ast::Assignment> > (that.value);
+        value.move< sp<Assignment> > (that.value);
         break;
 
       case symbol_kind::S__body: // _body
-        value.move< sp<ast::Block> > (that.value);
+        value.move< sp<Block> > (that.value);
         break;
 
       case symbol_kind::S__irb_type: // _irb_type
-        value.move< sp<ast::BuiltinType> > (that.value);
+        value.move< sp<BuiltinType> > (that.value);
         break;
 
       case symbol_kind::S__expr: // _expr
       case symbol_kind::S__primary: // _primary
       case symbol_kind::S__getvar: // _getvar
-        value.move< sp<ast::Expression> > (that.value);
-        break;
-
       case symbol_kind::S__modval: // _modval
-        value.move< sp<ast::Expression>  > (that.value);
+        value.move< sp<Expression> > (that.value);
         break;
 
       case symbol_kind::S__rec_type: // _rec_type
-        value.move< sp<ast::Record> > (that.value);
+        value.move< sp<Record> > (that.value);
         break;
 
       case symbol_kind::S__return: // _return
-        value.move< sp<ast::ReturnStatement> > (that.value);
+        value.move< sp<ReturnStatement> > (that.value);
         break;
 
       case symbol_kind::S__routine_dec: // _routine_dec
-        value.move< sp<ast::Routine> > (that.value);
+        value.move< sp<Routine> > (that.value);
         break;
 
       case symbol_kind::S__routine: // _routine
-        value.move< sp<ast::RoutineCall>  > (that.value);
+        value.move< sp<RoutineCall>  > (that.value);
         break;
 
       case symbol_kind::S__statement: // _statement
       case symbol_kind::S__while: // _while
       case symbol_kind::S__for: // _for
       case symbol_kind::S__if: // _if
-        value.move< sp<ast::Statement> > (that.value);
+        value.move< sp<Statement> > (that.value);
         break;
 
       case symbol_kind::S__type: // _type
-        value.move< sp<ast::Type> > (that.value);
+        value.move< sp<Type> > (that.value);
         break;
 
       case symbol_kind::S__var_dec: // _var_dec
       case symbol_kind::S__param_dec: // _param_dec
-        value.move< sp<ast::Variable> > (that.value);
+        value.move< sp<Variable> > (that.value);
+        break;
+
+      case symbol_kind::S__args: // _args
+        value.move< spv<Expression> > (that.value);
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        value.move< spv<Variable> > (that.value);
         break;
 
       case symbol_kind::S_tkIdentifier: // tkIdentifier
@@ -573,16 +570,7 @@ namespace yy {
         break;
 
       case symbol_kind::S__range: // _range
-        value.move< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > (that.value);
-        break;
-
-      case symbol_kind::S__args: // _args
-        value.move< std::vector<sp<ast::Expression>> > (that.value);
-        break;
-
-      case symbol_kind::S__params: // _params
-      case symbol_kind::S__var_dec_block: // _var_dec_block
-        value.move< std::vector<sp<ast::Variable>> > (that.value);
+        value.move< std::tuple<sp<Expression>, sp<Expression>, bool> > (that.value);
         break;
 
       default:
@@ -643,7 +631,7 @@ namespace yy {
   }
 
   void
-  parser::yypop_ (int n)
+  parser::yypop_ (int n) YY_NOEXCEPT
   {
     yystack_.pop (n);
   }
@@ -686,13 +674,13 @@ namespace yy {
   }
 
   bool
-  parser::yy_pact_value_is_default_ (int yyvalue)
+  parser::yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yypact_ninf_;
   }
 
   bool
-  parser::yy_table_value_is_error_ (int yyvalue)
+  parser::yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yytable_ninf_;
   }
@@ -852,61 +840,67 @@ namespace yy {
         break;
 
       case symbol_kind::S__arr_type: // _arr_type
-        yylhs.value.emplace< sp<ast::Array> > ();
+        yylhs.value.emplace< sp<Array> > ();
         break;
 
       case symbol_kind::S__assign: // _assign
-        yylhs.value.emplace< sp<ast::Assignment> > ();
+        yylhs.value.emplace< sp<Assignment> > ();
         break;
 
       case symbol_kind::S__body: // _body
-        yylhs.value.emplace< sp<ast::Block> > ();
+        yylhs.value.emplace< sp<Block> > ();
         break;
 
       case symbol_kind::S__irb_type: // _irb_type
-        yylhs.value.emplace< sp<ast::BuiltinType> > ();
+        yylhs.value.emplace< sp<BuiltinType> > ();
         break;
 
       case symbol_kind::S__expr: // _expr
       case symbol_kind::S__primary: // _primary
       case symbol_kind::S__getvar: // _getvar
-        yylhs.value.emplace< sp<ast::Expression> > ();
-        break;
-
       case symbol_kind::S__modval: // _modval
-        yylhs.value.emplace< sp<ast::Expression>  > ();
+        yylhs.value.emplace< sp<Expression> > ();
         break;
 
       case symbol_kind::S__rec_type: // _rec_type
-        yylhs.value.emplace< sp<ast::Record> > ();
+        yylhs.value.emplace< sp<Record> > ();
         break;
 
       case symbol_kind::S__return: // _return
-        yylhs.value.emplace< sp<ast::ReturnStatement> > ();
+        yylhs.value.emplace< sp<ReturnStatement> > ();
         break;
 
       case symbol_kind::S__routine_dec: // _routine_dec
-        yylhs.value.emplace< sp<ast::Routine> > ();
+        yylhs.value.emplace< sp<Routine> > ();
         break;
 
       case symbol_kind::S__routine: // _routine
-        yylhs.value.emplace< sp<ast::RoutineCall>  > ();
+        yylhs.value.emplace< sp<RoutineCall>  > ();
         break;
 
       case symbol_kind::S__statement: // _statement
       case symbol_kind::S__while: // _while
       case symbol_kind::S__for: // _for
       case symbol_kind::S__if: // _if
-        yylhs.value.emplace< sp<ast::Statement> > ();
+        yylhs.value.emplace< sp<Statement> > ();
         break;
 
       case symbol_kind::S__type: // _type
-        yylhs.value.emplace< sp<ast::Type> > ();
+        yylhs.value.emplace< sp<Type> > ();
         break;
 
       case symbol_kind::S__var_dec: // _var_dec
       case symbol_kind::S__param_dec: // _param_dec
-        yylhs.value.emplace< sp<ast::Variable> > ();
+        yylhs.value.emplace< sp<Variable> > ();
+        break;
+
+      case symbol_kind::S__args: // _args
+        yylhs.value.emplace< spv<Expression> > ();
+        break;
+
+      case symbol_kind::S__params: // _params
+      case symbol_kind::S__var_dec_block: // _var_dec_block
+        yylhs.value.emplace< spv<Variable> > ();
         break;
 
       case symbol_kind::S_tkIdentifier: // tkIdentifier
@@ -914,16 +908,7 @@ namespace yy {
         break;
 
       case symbol_kind::S__range: // _range
-        yylhs.value.emplace< std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool> > ();
-        break;
-
-      case symbol_kind::S__args: // _args
-        yylhs.value.emplace< std::vector<sp<ast::Expression>> > ();
-        break;
-
-      case symbol_kind::S__params: // _params
-      case symbol_kind::S__var_dec_block: // _var_dec_block
-        yylhs.value.emplace< std::vector<sp<ast::Variable>> > ();
+        yylhs.value.emplace< std::tuple<sp<Expression>, sp<Expression>, bool> > ();
         break;
 
       default:
@@ -941,433 +926,433 @@ namespace yy {
           switch (yyn)
             {
   case 3: // program: program _var_dec
-#line 86 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 83 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                    {}
-#line 947 "Parser.tab.cpp"
+#line 932 "Parser.tab.cpp"
     break;
 
   case 4: // program: program _type_dec
-#line 87 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 84 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                     {}
-#line 953 "Parser.tab.cpp"
+#line 938 "Parser.tab.cpp"
     break;
 
   case 5: // program: program _routine_dec
-#line 88 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 85 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                        {}
-#line 959 "Parser.tab.cpp"
+#line 944 "Parser.tab.cpp"
     break;
 
   case 7: // _var_dec: tkVar tkIdentifier tkColon _type
-#line 95 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 92 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                             {std::cout << "Made new variable "<< yystack_[2].value.as < std::string > ();}
-#line 965 "Parser.tab.cpp"
+#line 950 "Parser.tab.cpp"
     break;
 
   case 8: // _var_dec: tkVar tkIdentifier tkColon _type tkIs _expr
-#line 96 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 93 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                               {std::cout << "Made new variable "<< yystack_[4].value.as < std::string > () <<" with val: ";}
-#line 971 "Parser.tab.cpp"
+#line 956 "Parser.tab.cpp"
     break;
 
   case 9: // _type_dec: tkType tkIdentifier tkIs _type
-#line 99 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 96 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                           {std::cout << "get type with ident:"<<yystack_[2].value.as < std::string > ();}
-#line 977 "Parser.tab.cpp"
+#line 962 "Parser.tab.cpp"
     break;
 
   case 10: // _routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd
-#line 102 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 99 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                                                                         {}
-#line 983 "Parser.tab.cpp"
+#line 968 "Parser.tab.cpp"
     break;
 
   case 11: // _routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd
-#line 103 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 100 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                                                                           {}
-#line 989 "Parser.tab.cpp"
+#line 974 "Parser.tab.cpp"
     break;
 
   case 12: // _params: _param_dec
-#line 106 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 103 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                     {}
-#line 995 "Parser.tab.cpp"
+#line 980 "Parser.tab.cpp"
     break;
 
   case 13: // _params: _params tkComma _param_dec
-#line 107 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 104 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                              {}
-#line 1001 "Parser.tab.cpp"
+#line 986 "Parser.tab.cpp"
     break;
 
   case 14: // _param_dec: tkIdentifier tkColon _type
-#line 110 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 107 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                        {}
-#line 1007 "Parser.tab.cpp"
+#line 992 "Parser.tab.cpp"
     break;
 
   case 15: // _type: tkIdentifier
-#line 113 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 110 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                     {}
-#line 1013 "Parser.tab.cpp"
+#line 998 "Parser.tab.cpp"
     break;
 
   case 16: // _type: _irb_type
-#line 114 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 111 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
             {}
-#line 1019 "Parser.tab.cpp"
+#line 1004 "Parser.tab.cpp"
     break;
 
   case 17: // _type: _arr_type
-#line 115 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 112 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
             {}
-#line 1025 "Parser.tab.cpp"
+#line 1010 "Parser.tab.cpp"
     break;
 
   case 18: // _type: _rec_type
-#line 116 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 113 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
             {}
-#line 1031 "Parser.tab.cpp"
+#line 1016 "Parser.tab.cpp"
     break;
 
   case 19: // _irb_type: tkInt
-#line 119 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 116 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                  {}
-#line 1037 "Parser.tab.cpp"
+#line 1022 "Parser.tab.cpp"
     break;
 
   case 20: // _irb_type: tkReal
-#line 120 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 117 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
          {}
-#line 1043 "Parser.tab.cpp"
+#line 1028 "Parser.tab.cpp"
     break;
 
   case 21: // _irb_type: tkBoolean
-#line 121 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 118 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
             {}
-#line 1049 "Parser.tab.cpp"
+#line 1034 "Parser.tab.cpp"
     break;
 
   case 22: // _rec_type: tkRecord _var_dec_block tkEnd
-#line 124 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 121 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                          {}
-#line 1055 "Parser.tab.cpp"
+#line 1040 "Parser.tab.cpp"
     break;
 
   case 23: // _arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type
-#line 127 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 124 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                                            {}
-#line 1061 "Parser.tab.cpp"
+#line 1046 "Parser.tab.cpp"
     break;
 
   case 24: // _arr_type: tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type
-#line 128 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 125 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                             {}
-#line 1067 "Parser.tab.cpp"
+#line 1052 "Parser.tab.cpp"
     break;
 
   case 25: // _body: %empty
-#line 131 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 128 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
        {}
-#line 1073 "Parser.tab.cpp"
+#line 1058 "Parser.tab.cpp"
     break;
 
   case 26: // _body: _body _var_dec
-#line 132 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 129 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                  {}
-#line 1079 "Parser.tab.cpp"
+#line 1064 "Parser.tab.cpp"
     break;
 
   case 27: // _body: _body _type_dec
-#line 133 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 130 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                   {}
-#line 1085 "Parser.tab.cpp"
+#line 1070 "Parser.tab.cpp"
     break;
 
   case 28: // _body: _body _statement
-#line 134 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 131 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                    {}
-#line 1091 "Parser.tab.cpp"
+#line 1076 "Parser.tab.cpp"
     break;
 
   case 29: // _statement: _assign
-#line 136 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 133 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                     {}
-#line 1097 "Parser.tab.cpp"
+#line 1082 "Parser.tab.cpp"
     break;
 
   case 30: // _statement: _routine
-#line 137 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 134 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
            {}
-#line 1103 "Parser.tab.cpp"
+#line 1088 "Parser.tab.cpp"
     break;
 
   case 31: // _statement: _while
-#line 138 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 135 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
          {}
-#line 1109 "Parser.tab.cpp"
+#line 1094 "Parser.tab.cpp"
     break;
 
   case 32: // _statement: _for
-#line 139 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 136 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
        {}
-#line 1115 "Parser.tab.cpp"
+#line 1100 "Parser.tab.cpp"
     break;
 
   case 33: // _statement: _if
-#line 140 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 137 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
       {}
-#line 1121 "Parser.tab.cpp"
+#line 1106 "Parser.tab.cpp"
     break;
 
   case 34: // _statement: _return
-#line 141 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 138 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
           {}
-#line 1127 "Parser.tab.cpp"
+#line 1112 "Parser.tab.cpp"
     break;
 
   case 35: // _return: tkReturn
-#line 144 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 141 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                   {}
-#line 1133 "Parser.tab.cpp"
+#line 1118 "Parser.tab.cpp"
     break;
 
   case 36: // _return: tkReturn _expr
-#line 145 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 142 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                  {}
-#line 1139 "Parser.tab.cpp"
+#line 1124 "Parser.tab.cpp"
     break;
 
   case 37: // _assign: _modval tkCOLON_EQUALS _expr
-#line 148 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 145 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                       {}
-#line 1145 "Parser.tab.cpp"
+#line 1130 "Parser.tab.cpp"
     break;
 
   case 38: // _routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END
-#line 151 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 148 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                                        {}
-#line 1151 "Parser.tab.cpp"
+#line 1136 "Parser.tab.cpp"
     break;
 
   case 39: // _while: tkWhile _expr tkLoop _body tkEnd
-#line 154 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 151 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                          {}
-#line 1157 "Parser.tab.cpp"
+#line 1142 "Parser.tab.cpp"
     break;
 
   case 40: // _for: tkFor tkIdentifier _range tkLoop _body tkEnd
-#line 157 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 154 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                    {}
-#line 1163 "Parser.tab.cpp"
+#line 1148 "Parser.tab.cpp"
     break;
 
   case 41: // _range: tkIn _expr tkDOT_DOT _expr
-#line 159 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 156 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                    {}
-#line 1169 "Parser.tab.cpp"
+#line 1154 "Parser.tab.cpp"
     break;
 
   case 42: // _range: tkIn tkReverse _expr tkDOT_DOT _expr
-#line 160 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 157 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                        {}
-#line 1175 "Parser.tab.cpp"
+#line 1160 "Parser.tab.cpp"
     break;
 
   case 43: // _if: tkIf _expr tkThen _body tkEnd
-#line 163 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 160 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                    {}
-#line 1181 "Parser.tab.cpp"
+#line 1166 "Parser.tab.cpp"
     break;
 
   case 44: // _if: tkIf _expr tkThen _body tkElse _body tkEnd
-#line 164 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 161 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                              {}
-#line 1187 "Parser.tab.cpp"
+#line 1172 "Parser.tab.cpp"
     break;
 
   case 45: // _var_dec_block: %empty
-#line 167 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 164 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                 {}
-#line 1193 "Parser.tab.cpp"
+#line 1178 "Parser.tab.cpp"
     break;
 
   case 46: // _var_dec_block: _var_dec_block _var_dec
-#line 168 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 165 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                           {}
-#line 1199 "Parser.tab.cpp"
+#line 1184 "Parser.tab.cpp"
     break;
 
   case 47: // _var_dec_block: _var_dec_block EOL
-#line 169 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 166 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                      {}
-#line 1205 "Parser.tab.cpp"
+#line 1190 "Parser.tab.cpp"
     break;
 
   case 48: // _expr: _primary
-#line 172 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 169 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                 {}
-#line 1211 "Parser.tab.cpp"
+#line 1196 "Parser.tab.cpp"
     break;
 
   case 49: // _expr: _expr tkPlus _expr
-#line 173 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 170 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                      {}
-#line 1217 "Parser.tab.cpp"
+#line 1202 "Parser.tab.cpp"
     break;
 
   case 50: // _expr: _expr tkMinus _expr
-#line 174 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 171 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                       {}
-#line 1223 "Parser.tab.cpp"
+#line 1208 "Parser.tab.cpp"
     break;
 
   case 51: // _expr: _expr tkMultiple _expr
-#line 175 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 172 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                          {}
-#line 1229 "Parser.tab.cpp"
+#line 1214 "Parser.tab.cpp"
     break;
 
   case 52: // _expr: _expr tkMod _expr
-#line 176 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 173 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                     {}
-#line 1235 "Parser.tab.cpp"
+#line 1220 "Parser.tab.cpp"
     break;
 
   case 53: // _expr: _expr tkDivide _expr
-#line 177 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 174 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                        {}
-#line 1241 "Parser.tab.cpp"
+#line 1226 "Parser.tab.cpp"
     break;
 
   case 54: // _expr: _expr tkLess _expr
-#line 178 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 175 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                      {}
-#line 1247 "Parser.tab.cpp"
+#line 1232 "Parser.tab.cpp"
     break;
 
   case 55: // _expr: _expr tkLessEquals _expr
-#line 179 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 176 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                            {}
-#line 1253 "Parser.tab.cpp"
+#line 1238 "Parser.tab.cpp"
     break;
 
   case 56: // _expr: _expr tkGreater _expr
-#line 180 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 177 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                         {}
-#line 1259 "Parser.tab.cpp"
+#line 1244 "Parser.tab.cpp"
     break;
 
   case 57: // _expr: _expr tkGreaterEquals _expr
-#line 181 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 178 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                               {}
-#line 1265 "Parser.tab.cpp"
+#line 1250 "Parser.tab.cpp"
     break;
 
   case 58: // _expr: _expr tkEquals _expr
-#line 182 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 179 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                        {}
-#line 1271 "Parser.tab.cpp"
+#line 1256 "Parser.tab.cpp"
     break;
 
   case 59: // _expr: _expr tkNotEquals _expr
-#line 183 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 180 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                           {}
-#line 1277 "Parser.tab.cpp"
+#line 1262 "Parser.tab.cpp"
     break;
 
   case 60: // _expr: _expr tkBoolAnd _expr
-#line 184 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 181 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                         {}
-#line 1283 "Parser.tab.cpp"
+#line 1268 "Parser.tab.cpp"
     break;
 
   case 61: // _expr: _expr tkBoolOr _expr
-#line 185 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 182 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                        {}
-#line 1289 "Parser.tab.cpp"
+#line 1274 "Parser.tab.cpp"
     break;
 
   case 62: // _expr: _expr tkBoolXor _expr
-#line 186 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 183 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                         {}
-#line 1295 "Parser.tab.cpp"
+#line 1280 "Parser.tab.cpp"
     break;
 
   case 63: // _expr: tkROUND_BRACKET_START _expr tkROUND_BRACKET_START
-#line 187 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 184 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                     {}
-#line 1301 "Parser.tab.cpp"
+#line 1286 "Parser.tab.cpp"
     break;
 
   case 64: // _args: _expr
-#line 190 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 187 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
              {}
-#line 1307 "Parser.tab.cpp"
+#line 1292 "Parser.tab.cpp"
     break;
 
   case 65: // _args: _args tkComma _expr
-#line 191 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 188 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                       {}
-#line 1313 "Parser.tab.cpp"
+#line 1298 "Parser.tab.cpp"
     break;
 
   case 66: // _primary: tkConstInt
-#line 193 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 190 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                      {}
-#line 1319 "Parser.tab.cpp"
+#line 1304 "Parser.tab.cpp"
     break;
 
   case 67: // _primary: tkConstReal
-#line 194 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 191 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
               {}
-#line 1325 "Parser.tab.cpp"
+#line 1310 "Parser.tab.cpp"
     break;
 
   case 68: // _primary: tkConstBoolean
-#line 195 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 192 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                  {}
-#line 1331 "Parser.tab.cpp"
+#line 1316 "Parser.tab.cpp"
     break;
 
   case 69: // _primary: _modval
-#line 196 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 193 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
           {}
-#line 1337 "Parser.tab.cpp"
+#line 1322 "Parser.tab.cpp"
     break;
 
   case 70: // _primary: _routine
-#line 197 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 194 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
            {}
-#line 1343 "Parser.tab.cpp"
+#line 1328 "Parser.tab.cpp"
     break;
 
   case 71: // _getvar: %empty
-#line 200 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 197 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
          {}
-#line 1349 "Parser.tab.cpp"
+#line 1334 "Parser.tab.cpp"
     break;
 
   case 72: // _getvar: _getvar tkDot tkIdentifier
-#line 201 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 198 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                              {}
-#line 1355 "Parser.tab.cpp"
+#line 1340 "Parser.tab.cpp"
     break;
 
   case 73: // _getvar: _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END
-#line 202 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 199 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                                                             {}
-#line 1361 "Parser.tab.cpp"
+#line 1346 "Parser.tab.cpp"
     break;
 
   case 74: // _modval: tkIdentifier _getvar
-#line 205 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 202 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
                               {}
-#line 1367 "Parser.tab.cpp"
+#line 1352 "Parser.tab.cpp"
     break;
 
 
-#line 1371 "Parser.tab.cpp"
+#line 1356 "Parser.tab.cpp"
 
             default:
               break;
@@ -1547,6 +1532,10 @@ namespace yy {
     return yytname_[yysymbol];
   }
 #endif // #if YYDEBUG || 0
+
+
+
+
 
 
 
@@ -1786,14 +1775,14 @@ namespace yy {
   const unsigned char
   parser::yyrline_[] =
   {
-       0,    85,    85,    86,    87,    88,    89,    95,    96,    99,
-     102,   103,   106,   107,   110,   113,   114,   115,   116,   119,
-     120,   121,   124,   127,   128,   131,   132,   133,   134,   136,
-     137,   138,   139,   140,   141,   144,   145,   148,   151,   154,
-     157,   159,   160,   163,   164,   167,   168,   169,   172,   173,
-     174,   175,   176,   177,   178,   179,   180,   181,   182,   183,
-     184,   185,   186,   187,   190,   191,   193,   194,   195,   196,
-     197,   200,   201,   202,   205
+       0,    82,    82,    83,    84,    85,    86,    92,    93,    96,
+      99,   100,   103,   104,   107,   110,   111,   112,   113,   116,
+     117,   118,   121,   124,   125,   128,   129,   130,   131,   133,
+     134,   135,   136,   137,   138,   141,   142,   145,   148,   151,
+     154,   156,   157,   160,   161,   164,   165,   166,   169,   170,
+     171,   172,   173,   174,   175,   176,   177,   178,   179,   180,
+     181,   182,   183,   184,   187,   188,   190,   191,   192,   193,
+     194,   197,   198,   199,   202
   };
 
   void
@@ -1825,9 +1814,9 @@ namespace yy {
 
 
 } // yy
-#line 1829 "Parser.tab.cpp"
+#line 1818 "Parser.tab.cpp"
 
-#line 208 "/home/justsomedude/Documents/GitHub/CompilerConstruction/src/Parser/Parser.ypp"
+#line 205 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
 
 namespace yy
 {

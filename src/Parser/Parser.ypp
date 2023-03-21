@@ -43,32 +43,29 @@
 %type <double> tkConstReal
 %type <int>  tkConstInt
 %type <bool> tkConstBoolean
-
-
-%type<sp<ast::Type>> _type
-%type<sp<ast::BuiltinType>> _irb_type
-%type<sp<ast::Array>> _arr_type
-%type<sp<ast::Record>> _rec_type
-%type<sp<ast::Expression>> _expr
-%type<sp<ast::Expression>> _primary
-
-%type <sp<ast::Variable>> _var_dec
-%type <sp<ast::Routine>> _routine_dec
-%type <sp<ast::Block>> _body
-%type <sp<ast::Statement>> _if /*TODO*/
-%type <sp<ast::Statement>> _while /*TODO*/
-%type <sp<ast::Statement>> _for /*TODO*/
-%type <sp<ast::Statement>> _statement
-%type <sp<ast::ReturnStatement>> _return /* TODO change the name to correct one */
-%type <sp<ast::Assignment>> _assign
-%type <sp<ast::Expression>> _getvar
-%type <sp<ast::Expression> > _modval
-%type <sp<ast::RoutineCall> > _routine
-%type <std::vector<sp<ast::Expression>>> _args
-%type <sp<ast::Variable>> _param_dec
-%type <std::vector<sp<ast::Variable>>> _params
-%type <std::vector<sp<ast::Variable>>> _var_dec_block
-%type <std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool>> _range
+%type <sp<Type>> _type
+%type <sp<BuiltinType>> _irb_type
+%type <sp<Array>> _arr_type
+%type <sp<Record>> _rec_type
+%type <sp<Expression>> _expr
+%type <sp<Expression>> _primary
+%type <sp<Variable>> _var_dec
+%type <sp<Routine>> _routine_dec
+%type <sp<Block>> _body
+%type <sp<Statement>> _if /*TODO*/
+%type <sp<Statement>> _while /*TODO*/
+%type <sp<Statement>> _for /*TODO*/
+%type <sp<Statement>> _statement
+%type <sp<ReturnStatement>> _return /* TODO change the name to correct one */
+%type <sp<Assignment>> _assign
+%type <sp<Expression>> _getvar
+%type <sp<Expression>> _modval
+%type <sp<RoutineCall> > _routine
+%type <spv<Expression>> _args
+%type <sp<Variable>> _param_dec
+%type <spv<Variable>> _params
+%type <spv<Variable>> _var_dec_block
+%type <std::tuple<sp<Expression>, sp<Expression>, bool>> _range
 
 
 
