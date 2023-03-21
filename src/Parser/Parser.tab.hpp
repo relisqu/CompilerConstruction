@@ -45,7 +45,7 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 8 "/home/dyllas/git/CompilerConstruction/src/Parser/Parser.ypp"
+#line 8 "Parser.ypp"
 
     #pragma once
     #include <iostream>
@@ -518,7 +518,7 @@ namespace yy {
     tkColon = 302,                 // tkColon
     tkDot = 303,                   // tkDot
     tkComma = 304,                 // tkComma
-    tkSemiColon = 305,             // tkSemiColon
+    EOL = 305,                     // EOL
     tkCOLON_EQUALS = 306,          // tkCOLON_EQUALS
     tkNewLine = 307,               // tkNewLine
     tkQuote = 308,                 // tkQuote
@@ -599,7 +599,7 @@ namespace yy {
         S_tkColon = 47,                          // tkColon
         S_tkDot = 48,                            // tkDot
         S_tkComma = 49,                          // tkComma
-        S_tkSemiColon = 50,                      // tkSemiColon
+        S_EOL = 50,                              // EOL
         S_tkCOLON_EQUALS = 51,                   // tkCOLON_EQUALS
         S_tkNewLine = 52,                        // tkNewLine
         S_tkQuote = 53,                          // tkQuote
@@ -1751,16 +1751,16 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_tkSemiColon ()
+      make_EOL ()
       {
-        return symbol_type (token::tkSemiColon);
+        return symbol_type (token::EOL);
       }
 #else
       static
       symbol_type
-      make_tkSemiColon ()
+      make_EOL ()
       {
-        return symbol_type (token::tkSemiColon);
+        return symbol_type (token::EOL);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
