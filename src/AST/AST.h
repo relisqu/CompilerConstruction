@@ -174,16 +174,16 @@ struct Expression : Node {
     void print() {
         switch (value.index()) {
             case 0:
-                std::cout << get<0>(value) << std::endl;
+                std::cout << std::get<0>(value) << std::endl;
                 break;
             case 1:
-                std::cout << get<1>(value) << std::endl;
+                std::cout << std::get<1>(value) << std::endl;
                 break;
             case 2:
-                std::cout << get<2>(value) << std::endl;
+                std::cout << std::get<2>(value) << std::endl;
                 break;
             case 3:
-                std::cout << get<3>(value) << std::endl;
+                std::cout << std::get<3>(value) << std::endl;
                 break;
         }
     }

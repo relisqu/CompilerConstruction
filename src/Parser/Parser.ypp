@@ -17,6 +17,9 @@
 
 %code
 {
+    // Our program is defined here
+    sp<ast::Program> ourProgram = std::make_shared<ast::Program>();
+
     namespace yy
     {
         parser::symbol_type yylex();
@@ -32,10 +35,38 @@
 %token tkIs tkIf tkThen tkElse tkEnd tkFor tkIn tkLoop tkReverse tkDOT_DOT tkWhile tkReturn tkContinue tkBreak
 %token tkColon tkDot tkComma EOL tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
 
-%type <std::string> tkIdentifier
-%type <double> tkConstReal
-%type <int> tkConstInt
-%type <bool> tkConstBoolean
+%type <std::string> Identifier
+%type <double> ConstReal
+%type <int>  ConstInt
+%type <bool> ConstBoolean
+
+
+%type<sp<ast::Type>> Type
+%type<sp<ast::BuiltinType>> PrimitiveType
+%type<sp<ast::Array>> ArrayType
+%type<sp<ast::Record>> RecordType
+%type<sp<ast::Expression>> Expression
+%type<sp<ast::Expression>> Primary
+
+%type <sp<ast::Variable>> VariableDeclaration
+%type <sp<ast::Routine>> RoutineDeclaration
+%type <sp<ast::Block>> Body
+%type <sp<ast::Statement>> IfStatement /*TODO*/
+%type <sp<ast::Statement>> WhileLoop/*TODO*/
+%type <sp<ast::Statement>> ForLoop/*TODO*/
+%type <sp<ast::Statement>> Statement
+%type <sp<ast::ReturnStatement>> ReturnStatement /* TODO change the name to correct one */
+%type <sp<ast::Assignment>> Assignment
+%type <sp<ast::Expression>> VariableAccess
+%type <sp<ast::Expression> > ModifiablePrimary
+%type <sp<ast::RoutineCall> > RoutineCall
+%type <std::vector<sp<ast::Expression>>> Arguments
+%type <sp<ast::Variable>> ParameterDeclaration
+%type <std::vector<sp<ast::Variable>>> Parameters
+%type <std::vector<sp<ast::Variable>>> VariableDeclarationBlock
+%type <std::tuple<sp<ast::Expression>, sp<ast::Expression>, bool>> Range
+
+
 
 %left tkBoolOr
 %left tkBoolXor
@@ -154,9 +185,9 @@ _expr: _primary {}
 _args: _expr {}
 | _args tkComma _expr {}
 
-_primary: tkConstInt {}
-| tkConstReal {}
-| tkConstBoolean {}
+_primary: ConstInt {}
+| ConstReal {}
+| ConstBoolean {}
 | _modval {}
 | _routine {}
 ;
