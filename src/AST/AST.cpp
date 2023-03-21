@@ -4,7 +4,7 @@ namespace ast {
     std::unordered_map<std::string, std::shared_ptr<Type> > Type::TypeTable = {};
 
     int line = 0;
-    extern std::shared_ptr<Program> ourProgram;
+    extern sp<Program> ourProgram;
 
     void Block::addVariable(const sp<Variable> &variable) {
         variables.push_back(variable);
@@ -82,7 +82,7 @@ namespace ast {
         }
     }
 
-    void printVariable(const std::shared_ptr<Variable> &v) {
+    void printVariable(const sp<Variable> &v) {
         std::string x = v->name + "has value";
         std::cout << v->name << " ";
         if (v->value == nullptr) {

@@ -292,5 +292,5 @@ namespace ast {
 
     void dfs();
 
-    void printVariable(sp<Variable> var);
+    void printVariable(const sp<Variable> &var);
 }
