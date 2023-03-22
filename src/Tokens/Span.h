@@ -24,4 +24,9 @@ public:
     void MoveSpanToNewLine();
 
     bool operator< (const Span &a);
+
+    operator std::string() const
+    {
+        return "line " +std::to_string(lineNum)+" symbol "+std::to_string(posBegin);
+    }
 };

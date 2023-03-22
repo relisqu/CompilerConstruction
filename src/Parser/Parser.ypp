@@ -250,6 +250,6 @@ namespace yy
 
     void parser::error(const std::string& msg)
     {
-        std::cout <<msg<<"\n";
+        std::cout <<msg<<" at "<< std::string(ast::cur_span)<<"\n";
     }
 }
