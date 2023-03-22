@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
 
     yy::parser p;
     p.parse();
+    ast::dfs();
     //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }

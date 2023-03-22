@@ -3,11 +3,9 @@
 int ast::line = 0;
 extern ast::sp<ast::Program> ourProgram;
 
+std::unordered_map<std::string, std::shared_ptr<ast::Type> > ast::TypeTable = {};
 
 namespace ast {
-    std::unordered_map<std::string, std::shared_ptr<Type> > Type::TypeTable = {};
-
-
 
     void Block::addVariable(const sp<Variable> &variable) {
         variables.push_back(variable);
@@ -24,7 +22,7 @@ namespace ast {
         if (exp == nullptr) {
             return "";
         }
-        if (exp->l == nullptr && exp->l == nullptr) // this means it is a number or an identifer
+        if (exp->l == nullptr && exp->r == nullptr) // this means it is a number or an identifer
         {
             std::string temp;
             switch (exp->value.index()) {
@@ -32,17 +30,17 @@ namespace ast {
                     temp = "ident";
                     break;
                 case 1:
-                    temp = "int";
+                    temp = "integer";
                     break;
                 case 2:
-                    temp = "double";
+                    temp = "real";
                     break;
                 case 3:
-                    temp = "bool";
+                    temp = "boolean";
                     break;
             }
             if (temp == "ident") {
-                return Type::TypeTable[std::get<0>(exp->value)]->name;
+                return TypeTable[std::get<0>(exp->value)]->name;
             } else {
                 return temp;
             }
@@ -54,12 +52,12 @@ namespace ast {
         std::string left = getType(exp->l);
         std::string right = getType(exp->r);
 
-        if (left == "double" || right == "double") {
-            return "double";
-        } else if (left == "int" || right == "int") {
-            return "int";
+        if (left == "real" || right == "real") {
+            return "real";
+        } else if (left == "integer" || right == "integer") {
+            return "integer";
         } else {
-            return "bool";
+            return "boolean";
         }
     }
 

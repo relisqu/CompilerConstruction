@@ -31,6 +31,8 @@ namespace ast {
     struct Ident;
     struct Type;
 
+    extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable ;
+
     extern int line;
 
     struct Node {
@@ -45,7 +47,6 @@ namespace ast {
     };
 
     struct Type : Node {
-        static std::unordered_map<std::string, sp<Type> > TypeTable;
 
         Type() = default;
 
@@ -80,7 +81,7 @@ namespace ast {
             type = std::move(type2);
         }
 
-        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name) {
+        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name), ident(std::make_shared<Ident>(std::move(Name))) {
             value = std::move(exp);
             type = std::move(type2);
         }
@@ -216,7 +217,6 @@ namespace ast {
         std::variant<std::string, long long int, double, bool> value;
         spe l = nullptr;
         spe r = nullptr;
-
         static std::string getType(const std::shared_ptr<Expression> &exp);
 
         Expression(const std::string &newSymbol, spe first, spe second = nullptr, bool braces = false) : Node(
@@ -226,14 +226,14 @@ namespace ast {
             r = std::move(second);
         }
 
-        explicit Expression(long long int val, bool _temp) : Node("INTEGER"), value(val) {}
+        explicit Expression(long long int val, bool _temp) : Node("integer"), value(val) {}
 
-        explicit Expression(bool val) : Node("BOOLEAN"), value(val) {}
+        explicit Expression(bool val) : Node("boolean"), value(val) {}
 
-        explicit Expression(double val) : Node("REAL"), value(val) {}
+        explicit Expression(double val) : Node("real"), value(val) {}
 
         explicit Expression(const std::string &identName) :
-                Node("IDENT") {
+                Node("ident") {
             value = identName;
         }
 
