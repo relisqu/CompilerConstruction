@@ -4,12 +4,14 @@ void Span::ClearSpanPosition() {
     posEnd = 0;
     posBegin = 0;
     lineNum = 0;
+    lineEndNum = 0;
 }
 
 void Span::MoveSpanToNewLine() {
     posEnd = 0;
     posBegin = 0;
     ++lineNum;
+    ++lineEndNum;
 }
 
 Span::Span(Span span1, Span span2) {
@@ -33,4 +35,14 @@ Span::Span(Span span1, Span span2) {
             posEnd = span2.posEnd;
         }
     }
+}
+
+bool Span::operator< (const Span &a) {
+    if (lineNum < a.lineNum) {
+        return true;
+    }
+    if (lineNum == a.lineNum) {
+        return posBegin < a.posBegin;
+    }
+    return false;
 }

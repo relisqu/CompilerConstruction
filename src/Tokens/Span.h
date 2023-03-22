@@ -22,4 +22,6 @@ public:
     void ClearSpanPosition();
 
     void MoveSpanToNewLine();
+
+    bool operator< (const Span &a);
 };

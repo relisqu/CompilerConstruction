@@ -65,7 +65,7 @@ namespace ast {
     void dfs() {
         std::sort(ourProgram->variables.begin(), ourProgram->variables.end(),
                   [](const std::shared_ptr<Variable> &a, const std::shared_ptr<Variable> &b) -> bool {
-                      return a->name < b->name;
+                      return a->span < b->span;
                   });
         std::cout << "ourProgram contains:\nvariables:\n";
         for (const auto &v: ourProgram->variables) {
