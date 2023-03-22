@@ -70,21 +70,31 @@ namespace ast {
                   [](const std::shared_ptr<Variable> &a, const std::shared_ptr<Variable> &b) -> bool {
                       return a->span < b->span;
                   });
-        std::cout << "ourProgram contains:\nvariables:\n";
+        std::cout << "\nourProgram contains:";
+        std::cout << "\n=====VARIABLES=====\n";
         for (const auto &v: ourProgram->variables) {
             printVariable(v);
         }
-        std::cout << "Routines:\n";
+        std::cout << "\n=====ROUTINES=====\n";
         for (const auto &r: ourProgram->routines) {
+            std::cout << '\n';
             std::cout << r->name;
+            std::cout << " at line " << r->span.lineNum;
             std::cout << " with parameters: \n";
             for (const auto &p: r->parameters)
                 std::cout << p->name << " of type " << p->type->name << "\n";
-            std::cout << std::endl;
             std::cout << "with variables :\n";
             for (const auto &v: r->body->variables)
                 printVariable(v);
+            std::cout << "with statements :\n";
+            for (const auto &statement: r->body->statements) {
+                printStatement(statement);
+            }
         }
+    }
+
+    void printStatement(const sp<Statement> &s) {
+        std::cout << "Statement " << s->name << " at line " << s->span.lineNum << '\n';
     }
 
     void printVariable(const sp<Variable> &v) {

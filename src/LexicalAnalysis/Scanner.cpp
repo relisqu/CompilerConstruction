@@ -311,7 +311,7 @@ yy::parser::symbol_type Scanner::get_next_token() {
 
     auto token = tokens[iter];
 
-#ifdef IS_DEBUG_MODE
+#if IS_DEBUG_MODE
     std::cout << "Token line: " <<  token.getSpan().lineNum + 1 << '\n';
     std::cout<< TokenNameMap::getInstance().tokenMap[token.getTokenCode()]<<"\n";
     std::cout << "Token symbol range: " <<  token.getSpan().posBegin << " - " <<  token.getSpan().posEnd << '\n';

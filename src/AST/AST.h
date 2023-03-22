@@ -298,5 +298,6 @@ namespace ast {
 
     void dfs();
 
+    void printStatement(const sp<Statement> &statement);
     void printVariable(const sp<Variable> &var);
 }
