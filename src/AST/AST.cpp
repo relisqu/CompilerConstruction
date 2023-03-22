@@ -91,6 +91,10 @@ namespace ast {
                 printStatement(statement);
             }
         }
+        std::cout << "\n=====GLOBAL STATEMENTS=====\n";
+        for (const auto &statement : ourProgram->statements) {
+            printStatement(statement);
+        }
     }
 
     void printStatement(const sp<Statement> &s) {
