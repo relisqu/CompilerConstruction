@@ -2,6 +2,7 @@
 
 int ast::line = 0;
 extern ast::sp<ast::Program> ourProgram;
+Span ast::cur_span = Span();
 
 std::unordered_map<std::string, std::shared_ptr<ast::Type> > ast::TypeTable = {};
 
@@ -9,12 +10,12 @@ namespace ast {
 
     void Block::addVariable(const sp<Variable> &variable) {
         variables.push_back(variable);
-        end = std::max(variable->end, end);
+        variable->span = cur_span;
     }
 
     void Block::addStatement(const sp<Statement> &statement) {
         statements.push_back(statement);
-        end = std::max(statement->end, end);
+        statement->span = cur_span;
     }
 
 
@@ -91,6 +92,6 @@ namespace ast {
         } else {
             std::cout << "of type " << Expression::getType(v->value);
         }
-        std::cout << " at line " << v->start << std::endl;
+        std::cout << " at line " << v->span.lineNum << std::endl;
     }
 }

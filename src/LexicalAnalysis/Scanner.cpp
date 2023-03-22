@@ -305,6 +305,7 @@ void Scanner::GetLexicalAnalysisTokens(std::string text_file) {
 yy::parser::symbol_type Scanner::get_next_token() {
     // if we get to the end -> send signal of ending to Bison
     iter++;
+    ast::cur_span = tokens[iter].getSpan();
 
     if (iter >= tokens.size()) return yy::parser::make_YYEOF();
 

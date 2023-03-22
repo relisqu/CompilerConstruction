@@ -10,8 +10,11 @@
 #include <unordered_map>
 #include <iostream>
 #include <algorithm>
+#include "Tokens/Span.h"
 
 namespace ast {
+
+    extern Span cur_span;
 
     template<typename T> using sp = std::shared_ptr<T>;
     template<typename T> using spv = std::vector<std::shared_ptr<T>>;
@@ -37,11 +40,11 @@ namespace ast {
 
     struct Node {
         std::string name;
-        int start{}, end{};
+        Span span;
 
         Node() = default;
 
-        explicit Node(std::string s) : name(std::move(s)), start(line) {}
+        explicit Node(std::string s) : name(std::move(s)), span(cur_span) {}
 
         virtual ~Node() = default;
     };
@@ -52,8 +55,7 @@ namespace ast {
 
         explicit Type(const sp<Node> &node) {
             name = node->name;
-            start = node->start;
-            end = node->end;
+            span = cur_span;
         }
 
         explicit Type(const std::string &otherName) : Node(otherName) {}
@@ -92,14 +94,14 @@ namespace ast {
         spv<Statement> statements;
         spv<Routine> routines;
 
-        Program() { start = line; }
+        Program() { span = cur_span; }
     };
 
     struct Block : Node {
         spv<Variable> variables;
         spv<Statement> statements;
 
-        Block() { start = end = line; }
+        Block() { span = cur_span; }
 
         ~Block() override = default;
 
@@ -121,7 +123,7 @@ namespace ast {
             parameters = std::move(params);
             body = oBody;
             returnType = std::move(rtType);
-            end = oBody->end;
+            span = cur_span;
         }
 
         void print() {
@@ -151,7 +153,7 @@ namespace ast {
 
         explicit ReturnStatement(sp<Expression> exp) {
             returned = std::move(exp);
-            start = end = line;
+            span = cur_span;
         }
     };
 
@@ -160,7 +162,7 @@ namespace ast {
         sp<Block> body;
 
         WhileLoop(sp<Expression> cond, sp<Block> body) {
-            start = line;
+            span = cur_span;
             condition = std::move(cond);
             body = body;
         }
@@ -172,7 +174,7 @@ namespace ast {
         sp<Block> elseBody;
 
         IfStatement(sp<Expression> exp, sp<Block> block, sp<Block> elseBlock) :
-                condition(std::move(exp)), body(std::move(block)), elseBody(std::move(elseBlock)) { start = line; }
+                condition(std::move(exp)), body(std::move(block)), elseBody(std::move(elseBlock)) { span = cur_span; }
     };
 
     struct ForLoop : Statement {
@@ -189,7 +191,8 @@ namespace ast {
                 sp<Block> Body) :
                 rangeStart(std::get<0>(Range)), rangeEnd(std::get<1>(Range)), reversed(std::get<2>(Range)), body(std::move(Body)) {
             loopVar = std::make_shared<Variable>(LoopVar, nullptr);
-            start = line;
+
+            span = cur_span;
         }
     };
 
@@ -203,7 +206,8 @@ namespace ast {
 
         Assignment(const std::string &identName, sp<Expression> exp) :
                 rValue(std::move(exp)) {
-            start = line;
+
+            span = cur_span;
             lValue = std::make_shared<Ident>(identName);
         }
     };
