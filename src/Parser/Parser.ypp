@@ -3,6 +3,7 @@
 %define api.value.type variant
 %define api.token.constructor
 %define parse.assert
+%define parse.error detailed
 
 %code requires
 {
@@ -10,6 +11,7 @@
     #include <iostream>
     #include <string>
     #include "../AST/AST.h"
+    #define YYERROR_VERBOSE 1
 
     using namespace ast;
 
@@ -248,6 +250,6 @@ namespace yy
 
     void parser::error(const std::string& msg)
     {
-        std::cout <<"Syntax error\n";
+        std::cout <<msg<<"\n";
     }
 }
