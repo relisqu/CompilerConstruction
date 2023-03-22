@@ -8,19 +8,6 @@ enum class SymbolState {
 };
 
 /**
- * Make new span from two existing, used for tokens like '>=' '<=' ':=' and etc.
- * @param span1 : First span
- * @param span2 : Second span;
- * @return New \b Span with span1.lineNum, span1.posBegin, span2.posEnd
- *
- * @todo Add behavior when condition is false
- */
-Span MakeNewSpan(const Span& span1, const Span& span2) {
-    if (span1.lineNum == span2.lineNum) {
-        return {span1.lineNum, span1.posBegin, span2.posEnd};
-    }
-}
-/**
  * Compare span's \b lineNum or \b posBegin  to detect which span was earlier
  * @param a : First span to compare
  * @param b : Second span to compare
@@ -238,19 +225,19 @@ std::vector<Token> Scanner::finalize_tokens() {
                 if (preprocessedTokens[i - 1].get_value() == ">") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkGreaterEquals, ">=");
+                    tokens.emplace_back(Span(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkGreaterEquals, ">=");
                 } else if (preprocessedTokens[i - 1].get_value() == "<") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkLessEquals, "<=");
+                    tokens.emplace_back(Span(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkLessEquals, "<=");
                 } else if (preprocessedTokens[i - 1].get_value() == "/") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkNotEquals, "/=");
+                    tokens.emplace_back(Span(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkNotEquals, "/=");
                 } else if (preprocessedTokens[i - 1].get_value() == ":") {
                     used_preprocessed_tokens[i - 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkCOLON_EQUALS, ":=");
+                    tokens.emplace_back(Span(preprocessedTokens[i-1].get_span(), preprocessedTokens[i].get_span()), TokenCode::tkCOLON_EQUALS, ":=");
                 } else {
                     used_preprocessed_tokens[i] = true;
                     tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkEquals, preprocessedTokens[i].get_value());
@@ -263,11 +250,11 @@ std::vector<Token> Scanner::finalize_tokens() {
                         used_preprocessed_tokens[i + 1] = true;
                         std::string real_str = preprocessedTokens[i - 1].get_value() + preprocessedTokens[i].get_value() + preprocessedTokens[i + 1].get_value();
                         long double real_value = std::stold(real_str);
-                        tokens.emplace_back(MakeNewSpan(preprocessedTokens[i - 1].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkConstReal, real_str, 0,real_value);
+                        tokens.emplace_back(Span(preprocessedTokens[i - 1].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkConstReal, real_str, 0,real_value);
                 } else if (preprocessedTokens[i + 1].get_value() == ".") {
                     used_preprocessed_tokens[i + 1] = true;
                     used_preprocessed_tokens[i] = true;
-                    tokens.emplace_back(MakeNewSpan(preprocessedTokens[i].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkDOT_DOT, "..");
+                    tokens.emplace_back(Span(preprocessedTokens[i].get_span(), preprocessedTokens[i + 1].get_span()), TokenCode::tkDOT_DOT, "..");
                 } else {
                     used_preprocessed_tokens[i] = true;
                     tokens.emplace_back(preprocessedTokens[i].get_span(), TokenCode::tkDot, ".");
