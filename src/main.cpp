@@ -2,6 +2,7 @@
 #include "FileReader/FileReader.cpp"
 #include "LexicalAnalysis/Scanner.h"
 #include "LexicalAnalysis/Demonstration.h"
+#include "Debug/DebugMode.h"
 
 /**
  Compilers Construction, team A
@@ -15,8 +16,9 @@ Scanner scanner;
 //TODO: Исправить баг с пустым файлом/не найденным файлом
 int main(int argc, char *argv[]) {
     std::string text_file = ReadFile(R"(ILanguageCodeSnippets/ArraySum.imp)");
+    #if IS_DEBUG_MODE
     std::cout << text_file;
-
+    #endif
     scanner.GetLexicalAnalysisTokens(text_file);
 
     yy::parser p;

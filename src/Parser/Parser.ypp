@@ -122,7 +122,10 @@ _params: _param_dec { ($$).push_back($1); }
 | {}
 ;
 
-_param_dec: tkIdentifier tkColon _type { $$ = std::make_shared<ast::Variable>($1, $3); }
+_param_dec: tkIdentifier tkColon _type {
+    $$ = std::make_shared<ast::Variable>($1, $3);
+    TypeTable[$1] = std::make_shared<ast::Type>($3);
+}
 ;
 
 _type: tkIdentifier { $$ = std::make_shared<ast::Type>($1); }
