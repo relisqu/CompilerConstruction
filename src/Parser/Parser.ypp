@@ -82,6 +82,7 @@ program:
 | program _var_dec {  ourProgram->variables.push_back($2);  }
 | program _type_dec {}
 | program _routine_dec { ourProgram->routines.push_back($2); }
+| program _statement { ourProgram->statements.push_back($2); }
 | program EOL
 ;
 
@@ -185,8 +186,7 @@ _var_dec_block: {}
 | _var_dec_block EOL { swap($1,$$); }
 ;
 
-_expr: _primary { $$ = $1;}
-| _expr tkPlus _expr { $$ = std::make_shared<ast::Expression>("+", $1, $3);}
+_expr: _expr tkPlus _expr { $$ = std::make_shared<ast::Expression>("+", $1, $3);}
 | _expr tkMinus _expr {  $$ = std::make_shared<ast::Expression>("-", $1, $3); }
 | _expr tkMultiple _expr { $$ = std::make_shared<ast::Expression>("*", $1, $3); }
 | _expr tkMod _expr { $$ = std::make_shared<ast::Expression>("%", $1, $3); }
@@ -200,11 +200,14 @@ _expr: _primary { $$ = $1;}
 | _expr tkBoolAnd _expr { $$ = std::make_shared<ast::Expression>("and", $1, $3); }
 | _expr tkBoolOr _expr { $$ = std::make_shared<ast::Expression>("or", $1, $3); }
 | _expr tkBoolXor _expr { $$ = std::make_shared<ast::Expression>("xor", $1, $3); }
-| tkROUND_BRACKET_START _expr tkROUND_BRACKET_START {  $$ = $2; }
+| tkROUND_BRACKET_START _expr tkROUND_BRACKET_END {  $$ = $2; }
+| _primary { $$ = $1;}
 ;
 
 _args: _expr { ($$).push_back($1); }
 | _args tkComma _expr { swap($$,$1); ($$).push_back($3); }
+| {}
+;
 
 _primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
 | tkConstReal {$$ = std::make_shared<ast::Expression>($1); }

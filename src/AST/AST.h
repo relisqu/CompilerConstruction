@@ -143,6 +143,7 @@ namespace ast {
 
 
     struct Statement : Node {
+        explicit Statement(std::string name): Node(std::move(name)) {};
         ~Statement() override = default;
     };
 
@@ -151,7 +152,7 @@ namespace ast {
 
         ReturnStatement() = default;
 
-        explicit ReturnStatement(sp<Expression> exp) {
+        explicit ReturnStatement(sp<Expression> exp) : Statement("return") {
             returned = std::move(exp);
             span = cur_span;
         }
@@ -161,7 +162,7 @@ namespace ast {
         sp<Expression> condition;
         sp<Block> body;
 
-        WhileLoop(sp<Expression> cond, sp<Block> body) {
+        WhileLoop(sp<Expression> cond, sp<Block> body) : Statement("while"){
             span = cur_span;
             condition = std::move(cond);
             body = body;
@@ -174,7 +175,7 @@ namespace ast {
         sp<Block> elseBody;
 
         IfStatement(sp<Expression> exp, sp<Block> block, sp<Block> elseBlock) :
-                condition(std::move(exp)), body(std::move(block)), elseBody(std::move(elseBlock)) { span = cur_span; }
+                Statement("if"),condition(std::move(exp)), body(std::move(block)), elseBody(std::move(elseBlock)) { span = cur_span; }
     };
 
     struct ForLoop : Statement {
@@ -189,6 +190,7 @@ namespace ast {
         ForLoop(const std::string &LoopVar,
                 std::tuple<sp<Expression>, sp<Expression>, bool> Range,
                 sp<Block> Body) :
+                Statement("for"),
                 rangeStart(std::get<0>(Range)), rangeEnd(std::get<1>(Range)), reversed(std::get<2>(Range)), body(std::move(Body)) {
             loopVar = std::make_shared<Variable>(LoopVar, nullptr);
 
@@ -205,8 +207,8 @@ namespace ast {
         sp<Ident> lValue;
 
         Assignment(const std::string &identName, sp<Expression> exp) :
-                rValue(std::move(exp)) {
-
+            Statement("assign"),
+            rValue(std::move(exp)) {
             span = cur_span;
             lValue = std::make_shared<Ident>(identName);
         }
@@ -264,7 +266,7 @@ namespace ast {
     struct RoutineCall : Statement {
         spv<Expression> args;
 
-        explicit RoutineCall(const std::string &ident) { name = ident; }
+        explicit RoutineCall(const std::string &ident): Statement("Routine call"){ name = ident; }
     };
 
     struct BuiltinType : Type {

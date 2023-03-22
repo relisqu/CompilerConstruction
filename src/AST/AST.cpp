@@ -52,11 +52,14 @@ namespace ast {
         }
         std::string left = getType(exp->l);
         std::string right = getType(exp->r);
-
-        if (left == "real" || right == "real") {
-            return "real";
-        } else if (left == "integer" || right == "integer") {
-            return "integer";
+        auto* sign  = std::get_if<std::string>(&exp->value);
+        // TODO : fix this peace of ...
+        if (!(sign->compare(">") == 0 || sign->compare(">=") == 0 || sign->compare("<") == 0 || sign->compare("<=") == 0 || sign->compare("=") == 0 || sign->compare("/=") == 0|| sign->compare("and") == 0 || sign->compare("or") == 0 || sign->compare("xor") == 0)){
+            if (left == "real" || right == "real") {
+                return "real";
+            } else if (left == "integer" || right == "integer") {
+                return "integer";
+            }
         } else {
             return "boolean";
         }

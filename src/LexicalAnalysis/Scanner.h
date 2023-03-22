@@ -44,6 +44,7 @@ private:
     std::unordered_map<TokenCode, yy::parser::symbol_type> token_to_bison =
             {
                     { TokenCode::tkGreaterEquals, yy::parser::make_tkGreaterEquals() },
+                    { TokenCode::tkGreater, yy::parser::make_tkGreater()},
                     { TokenCode::tkLess, yy::parser::make_tkLess() },
                     { TokenCode::tkLessEquals, yy::parser::make_tkLessEquals() },
                     { TokenCode::tkEquals, yy::parser::make_tkEquals() },
