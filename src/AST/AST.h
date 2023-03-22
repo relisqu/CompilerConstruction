@@ -94,9 +94,10 @@ namespace ast {
         spv<Statement> statements;
         spv<Routine> routines;
 
+
+
         Program() { span = cur_span; }
     };
-
     struct Block : Node {
         spv<Variable> variables;
         spv<Statement> statements;
@@ -112,6 +113,7 @@ namespace ast {
 
     struct Routine : Node {
         sp<Block> body;
+        sp<Ident> ident;
         spv<Variable> parameters;
         sp<Type> returnType;
         spv<ReturnStatement> returnStatements;
@@ -119,8 +121,9 @@ namespace ast {
         Routine() = default;
 
         Routine(const std::string &name, spv<Variable> params, const sp<Block> &oBody,
-                sp<Type> rtType) : Node(name) {
+                sp<Type> rtType) : Node("routine"), ident(std::make_shared<Ident>(name)){
             parameters = std::move(params);
+
             body = oBody;
             returnType = std::move(rtType);
             span = cur_span;
@@ -162,10 +165,10 @@ namespace ast {
         sp<Expression> condition;
         sp<Block> body;
 
-        WhileLoop(sp<Expression> cond, sp<Block> body) : Statement("while"){
+        WhileLoop(sp<Expression> cond, sp<Block> obody) : Statement("while"){
             span = cur_span;
             condition = std::move(cond);
-            body = body;
+            body = obody;
         }
     };
 
@@ -297,6 +300,7 @@ namespace ast {
     };
 
     void dfs();
+    void show_dfs();
 
     void printStatement(const sp<Statement> &statement);
     void printVariable(const sp<Variable> &var);

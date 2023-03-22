@@ -111,4 +111,56 @@ namespace ast {
         }
         std::cout << " at line " << v->span.lineNum << std::endl;
     }
+
+    void show_dfs() {
+        spv<Node> allItems;
+        for (const auto &v : ourProgram->variables) {
+            allItems.emplace_back(v);
+        }
+        for (const auto &v : ourProgram->statements) {
+            allItems.emplace_back(v);
+        }
+        for (const auto &v : ourProgram->routines) {
+            allItems.emplace_back(v);
+        }
+        std::sort(allItems.begin(), allItems.end(),
+                  [](const auto &a, const auto &b) -> bool {
+                      return a->span < b->span;
+                  });
+
+        std::cout << "\n=====TREE=====\n";
+        for (auto &v : allItems) {
+            std::cout << v->name << " at line " << v->span.lineNum << '\n';
+            if (v->name == "while") {
+                sp<WhileLoop> whl = std::dynamic_pointer_cast<WhileLoop>(v);
+                std::cout << "with condition: " << whl->condition->l->name << " " << whl->condition->name << " " << whl->condition->r->name << '\n';
+                std::cout << "With body made of ";
+                std::cout << whl->body->variables.size() + whl->body->statements.size();
+                std::cout << " items \n";
+            }
+
+            if (v->name == "for") {
+                sp<ForLoop> whl = std::dynamic_pointer_cast<ForLoop>(v);
+                std::cout << "with range: " << whl->rangeStart->name << " " << " " << whl->rangeEnd->name << '\n';
+                std::cout << "With body made of ";
+                std::cout << whl->body->variables.size() + whl->body->statements.size();
+                std::cout << " items \n";
+            }
+
+            if (v->name == "routine") {
+                sp<Routine> r = std::dynamic_pointer_cast<Routine>(v);
+                std::cout << r->ident->name << " with parameters: \n";
+                for (const auto &p: r->parameters)
+                    std::cout << p->name << " of type " << p->type->name << "\n";
+                std::cout << "with variables :\n";
+                for (const auto &v: r->body->variables)
+                    printVariable(v);
+                std::cout << "with statements :\n";
+                for (const auto &statement: r->body->statements) {
+                    printStatement(statement);
+                }
+            }
+            std::cout << "------------\n";
+        }
+    }
 }
