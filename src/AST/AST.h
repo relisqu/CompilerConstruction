@@ -34,7 +34,7 @@ namespace ast {
     struct Ident;
     struct Type;
 
-    extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable ;
+    extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable;
 
     extern int line;
 
@@ -83,32 +83,30 @@ namespace ast {
             type = std::move(type2);
         }
 
-        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name), ident(std::make_shared<Ident>(std::move(Name))) {
+        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name),
+                                                                                ident(std::make_shared<Ident>(
+                                                                                        Name)) {
             value = std::move(exp);
             type = std::move(type2);
         }
     };
 
     struct Program : Node {
-        spv<Variable> variables;
-        spv<Statement> statements;
-        spv<Routine> routines;
-
-
+        std::vector<sp<Node>> nodes;
 
         Program() { span = cur_span; }
     };
+
     struct Block : Node {
-        spv<Variable> variables;
-        spv<Statement> statements;
+        std::vector<sp<Node>> nodes;
 
         Block() { span = cur_span; }
 
         ~Block() override = default;
 
-        void addVariable(const sp<Variable> &v);
+        void addVariable(const sp<Node> &v);
 
-        void addStatement(const sp<Statement> &s);
+        void addStatement(const sp<Node> &s);
     };
 
     struct Routine : Node {
@@ -121,7 +119,7 @@ namespace ast {
         Routine() = default;
 
         Routine(const std::string &name, spv<Variable> params, const sp<Block> &oBody,
-                sp<Type> rtType) : Node("routine"), ident(std::make_shared<Ident>(name)){
+                sp<Type> rtType) : Node("routine"), ident(std::make_shared<Ident>(name)) {
             parameters = std::move(params);
 
             body = oBody;
@@ -146,7 +144,10 @@ namespace ast {
 
 
     struct Statement : Node {
-        explicit Statement(std::string name): Node(std::move(name)) {};
+        Statement() = default;
+
+        explicit Statement(std::string name) : Node(std::move(name)) {}
+
         ~Statement() override = default;
     };
 
@@ -165,10 +166,10 @@ namespace ast {
         sp<Expression> condition;
         sp<Block> body;
 
-        WhileLoop(sp<Expression> cond, sp<Block> obody) : Statement("while"){
+        WhileLoop(sp<Expression> cond, sp<Block> obody) : Statement("while") {
             span = cur_span;
             condition = std::move(cond);
-            body = obody;
+            body = std::move(obody);
         }
     };
 
@@ -178,7 +179,8 @@ namespace ast {
         sp<Block> elseBody;
 
         IfStatement(sp<Expression> exp, sp<Block> block, sp<Block> elseBlock) :
-                Statement("if"),condition(std::move(exp)), body(std::move(block)), elseBody(std::move(elseBlock)) { span = cur_span; }
+                Statement("if"), condition(std::move(exp)), body(std::move(block)),
+                elseBody(std::move(elseBlock)) { span = cur_span; }
     };
 
     struct ForLoop : Statement {
@@ -194,7 +196,8 @@ namespace ast {
                 std::tuple<sp<Expression>, sp<Expression>, bool> Range,
                 sp<Block> Body) :
                 Statement("for"),
-                rangeStart(std::get<0>(Range)), rangeEnd(std::get<1>(Range)), reversed(std::get<2>(Range)), body(std::move(Body)) {
+                rangeStart(std::get<0>(Range)), rangeEnd(std::get<1>(Range)), reversed(std::get<2>(Range)),
+                body(std::move(Body)) {
             loopVar = std::make_shared<Variable>(LoopVar, nullptr);
 
             span = cur_span;
@@ -210,8 +213,8 @@ namespace ast {
         sp<Ident> lValue;
 
         Assignment(const std::string &identName, sp<Expression> exp) :
-            Statement("assign"),
-            rValue(std::move(exp)) {
+                Statement("assign"),
+                rValue(std::move(exp)) {
             span = cur_span;
             lValue = std::make_shared<Ident>(identName);
         }
@@ -226,6 +229,7 @@ namespace ast {
         std::variant<std::string, long long int, double, bool> value;
         spe l = nullptr;
         spe r = nullptr;
+
         static std::string getType(const std::shared_ptr<Expression> &exp);
 
         Expression(const std::string &newSymbol, spe first, spe second = nullptr, bool braces = false) : Node(
@@ -269,7 +273,7 @@ namespace ast {
     struct RoutineCall : Statement {
         spv<Expression> args;
 
-        explicit RoutineCall(const std::string &ident): Statement("Routine call"){ name = ident; }
+        explicit RoutineCall(const std::string &ident) : Statement("Routine call") { name = ident; }
     };
 
     struct BuiltinType : Type {
@@ -300,8 +304,12 @@ namespace ast {
     };
 
     void dfs();
+
     void show_dfs();
 
+    void sort_program();
+
     void printStatement(const sp<Statement> &statement);
+
     void printVariable(const sp<Variable> &var);
 }

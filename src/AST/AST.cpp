@@ -8,13 +8,13 @@ std::unordered_map<std::string, std::shared_ptr<ast::Type> > ast::TypeTable = {}
 
 namespace ast {
 
-    void Block::addVariable(const sp<Variable> &variable) {
-        variables.push_back(variable);
+    void Block::addVariable(const sp<Node> &variable) {
+        nodes.push_back(variable);
         variable->span = cur_span;
     }
 
-    void Block::addStatement(const sp<Statement> &statement) {
-        statements.push_back(statement);
+    void Block::addStatement(const sp<Node> &statement) {
+        nodes.push_back(statement);
         statement->span = cur_span;
     }
 
@@ -52,9 +52,11 @@ namespace ast {
         }
         std::string left = getType(exp->l);
         std::string right = getType(exp->r);
-        auto* sign  = std::get_if<std::string>(&exp->value);
+        auto *sign = std::get_if<std::string>(&exp->value);
         // TODO : fix this peace of ...
-        if (!(sign->compare(">") == 0 || sign->compare(">=") == 0 || sign->compare("<") == 0 || sign->compare("<=") == 0 || sign->compare("=") == 0 || sign->compare("/=") == 0|| sign->compare("and") == 0 || sign->compare("or") == 0 || sign->compare("xor") == 0)){
+        if (!(sign->compare(">") == 0 || sign->compare(">=") == 0 || sign->compare("<") == 0 ||
+              sign->compare("<=") == 0 || sign->compare("=") == 0 || sign->compare("/=") == 0 ||
+              sign->compare("and") == 0 || sign->compare("or") == 0 || sign->compare("xor") == 0)) {
             if (left == "real" || right == "real") {
                 return "real";
             } else if (left == "integer" || right == "integer") {
@@ -92,7 +94,7 @@ namespace ast {
             }
         }
         std::cout << "\n=====GLOBAL STATEMENTS=====\n";
-        for (const auto &statement : ourProgram->statements) {
+        for (const auto &statement: ourProgram->statements) {
             printStatement(statement);
         }
     }
@@ -114,13 +116,13 @@ namespace ast {
 
     void show_dfs() {
         spv<Node> allItems;
-        for (const auto &v : ourProgram->variables) {
+        for (const auto &v: ourProgram->variables) {
             allItems.emplace_back(v);
         }
-        for (const auto &v : ourProgram->statements) {
+        for (const auto &v: ourProgram->statements) {
             allItems.emplace_back(v);
         }
-        for (const auto &v : ourProgram->routines) {
+        for (const auto &v: ourProgram->routines) {
             allItems.emplace_back(v);
         }
         std::sort(allItems.begin(), allItems.end(),
@@ -129,11 +131,12 @@ namespace ast {
                   });
 
         std::cout << "\n=====TREE=====\n";
-        for (auto &v : allItems) {
+        for (auto &v: allItems) {
             std::cout << v->name << " at line " << v->span.lineNum << '\n';
             if (v->name == "while") {
                 sp<WhileLoop> whl = std::dynamic_pointer_cast<WhileLoop>(v);
-                std::cout << "with condition: " << whl->condition->l->name << " " << whl->condition->name << " " << whl->condition->r->name << '\n';
+                std::cout << "with condition: " << whl->condition->l->name << " " << whl->condition->name << " "
+                          << whl->condition->r->name << '\n';
                 std::cout << "With body made of ";
                 std::cout << whl->body->variables.size() + whl->body->statements.size();
                 std::cout << " items \n";
@@ -162,5 +165,17 @@ namespace ast {
             }
             std::cout << "------------\n";
         }
+    }
+
+
+    void sort_program() {
+        spv<Node> allItems;
+        for (const auto &node: ourProgram->nodes) {
+            allItems.emplace_back(node);
+        }
+        std::sort(allItems.begin(), allItems.end(),
+                  [](const auto &a, const auto &b) -> bool {
+                      return a->span < b->span;
+                  });
     }
 }
