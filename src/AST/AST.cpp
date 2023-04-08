@@ -67,37 +67,37 @@ namespace ast {
         }
     }
 
-    void dfs() {
-        std::sort(ourProgram->variables.begin(), ourProgram->variables.end(),
+    /*void dfs() {
+        std::sort(ourProgram->nodes.begin(), ourProgram->nodes.end(),
                   [](const std::shared_ptr<Variable> &a, const std::shared_ptr<Variable> &b) -> bool {
                       return a->span < b->span;
                   });
         std::cout << "\nourProgram contains:";
         std::cout << "\n=====VARIABLES=====\n";
-        for (const auto &v: ourProgram->variables) {
-            printVariable(v);
+        for (const auto &v: ourProgram->nodes) {
+            //printVariable(v);
         }
         std::cout << "\n=====ROUTINES=====\n";
-        for (const auto &r: ourProgram->routines) {
+        for (const auto &r: ourProgram->nodes) {
             std::cout << '\n';
             std::cout << r->name;
             std::cout << " at line " << r->span.lineNum;
             std::cout << " with parameters: \n";
-            for (const auto &p: r->parameters)
+            for (const auto &p: std::static_pointer_cast<Routine>(r)->parameters)
                 std::cout << p->name << " of type " << p->type->name << "\n";
-            std::cout << "with variables :\n";
-            for (const auto &v: r->body->variables)
-                printVariable(v);
+            std::cout << "with nodes :\n";
+            for (const auto &v: std::static_pointer_cast<Routine>(r)->body->nodes)
+                //printVariable(v);
             std::cout << "with statements :\n";
-            for (const auto &statement: r->body->statements) {
-                printStatement(statement);
+            for (const auto &statement: std::static_pointer_cast<Routine>(r)->body->nodes) {
+                //printStatement(statement);
             }
         }
         std::cout << "\n=====GLOBAL STATEMENTS=====\n";
-        for (const auto &statement: ourProgram->statements) {
-            printStatement(statement);
+        for (const auto &statement: ourProgram->nodes) {
+            //printStatement(statement);
         }
-    }
+    }*/
 
     void printStatement(const sp<Statement> &s) {
         std::cout << "Statement " << s->name << " at line " << s->span.lineNum << '\n';
@@ -116,13 +116,7 @@ namespace ast {
 
     void show_dfs() {
         spv<Node> allItems;
-        for (const auto &v: ourProgram->variables) {
-            allItems.emplace_back(v);
-        }
-        for (const auto &v: ourProgram->statements) {
-            allItems.emplace_back(v);
-        }
-        for (const auto &v: ourProgram->routines) {
+        for (const auto &v: ourProgram->nodes) {
             allItems.emplace_back(v);
         }
         std::sort(allItems.begin(), allItems.end(),
@@ -138,7 +132,7 @@ namespace ast {
                 std::cout << "with condition: " << whl->condition->l->name << " " << whl->condition->name << " "
                           << whl->condition->r->name << '\n';
                 std::cout << "With body made of ";
-                std::cout << whl->body->variables.size() + whl->body->statements.size();
+                std::cout << whl->body->nodes.size() + whl->body->nodes.size();
                 std::cout << " items \n";
             }
 
@@ -146,7 +140,7 @@ namespace ast {
                 sp<ForLoop> whl = std::dynamic_pointer_cast<ForLoop>(v);
                 std::cout << "with range: " << whl->rangeStart->name << " " << " " << whl->rangeEnd->name << '\n';
                 std::cout << "With body made of ";
-                std::cout << whl->body->variables.size() + whl->body->statements.size();
+                std::cout << whl->body->nodes.size() + whl->body->nodes.size();
                 std::cout << " items \n";
             }
 
@@ -155,12 +149,12 @@ namespace ast {
                 std::cout << r->ident->name << " with parameters: \n";
                 for (const auto &p: r->parameters)
                     std::cout << p->name << " of type " << p->type->name << "\n";
-                std::cout << "with variables :\n";
-                for (const auto &v: r->body->variables)
-                    printVariable(v);
+                std::cout << "with nodes :\n";
+                for (const auto &v: r->body->nodes)
+                    //printVariable(v);
                 std::cout << "with statements :\n";
-                for (const auto &statement: r->body->statements) {
-                    printStatement(statement);
+                for (const auto &statement: r->body->nodes) {
+                    //printStatement(statement);
                 }
             }
             std::cout << "------------\n";
