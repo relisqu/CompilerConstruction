@@ -11,6 +11,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Tokens/Span.h"
+#include "Visitor.h"
 
 namespace ast {
 
@@ -38,36 +39,7 @@ namespace ast {
 
     extern int line;
 
-    class Visitor {
-    public:
-        virtual void visit(const Node &node) = 0;
 
-        virtual void visit(const Block &node) = 0;
-
-        virtual void visit(const Routine &node) = 0;
-
-        virtual void visit(const Statement &node) = 0;
-
-        virtual void visit(const ReturnStatement &node) = 0;
-
-        virtual void visit(const WhileLoop &node) = 0;
-
-        virtual void visit(const IfStatement &node) = 0;
-
-        virtual void visit(const ForLoop &node) = 0;
-
-        virtual void visit(const Declaration &node) = 0;
-
-        virtual void visit(const Assignment &node) = 0;
-
-        virtual void visit(const Expression &node) = 0;
-
-        virtual void visit(const RoutineCall &node) = 0;
-
-        virtual void visit(const Ident &node) = 0;
-
-        virtual void visit(const Type &node) = 0;
-    };
 
     struct Node {
         std::string name;
