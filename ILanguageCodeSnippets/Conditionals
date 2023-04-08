@@ -1,0 +1,7 @@
+var MyNumber1 : integer is 10;
+
+if MyNumber1 % 2 = 0 or MyNumber1 > 2 then
+    MyNumber1 := 10;
+else
+    MyNumber1 := 12;
+end;
