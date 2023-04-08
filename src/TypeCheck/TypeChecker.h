@@ -14,6 +14,28 @@ namespace ast {
         void visit(const Block &node) override;
 
         void visit(const Routine &node) override;
+
+        void visit(const Statement &node) override;
+
+        void visit(const ReturnStatement &node) override;
+
+        void visit(const WhileLoop &node) override;
+
+        void visit(const IfStatement &node) override;
+
+        void visit(const ForLoop &node) override;
+
+        void visit(const Declaration &node) override;
+
+        void visit(const Assignment &node) override;
+
+        void visit(const Expression &node) override;
+
+        void visit(const RoutineCall &node) override;
+
+        void visit(const Ident &node) override;
+
+        void visit(const Type &node) override;
     };
 }
 
