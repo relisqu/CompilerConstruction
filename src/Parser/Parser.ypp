@@ -99,7 +99,7 @@ _var_dec : tkVar tkIdentifier tkColon _type {
     $$ = temp;
 }
 | tkVar tkIdentifier tkIs _expr {
-    auto temp = std::make_shared<ast::Variable>($2, $4);
+    auto temp = std::make_shared<ast::Variable>(std::string($2), $4);
     $$ = temp;
     }
 ;

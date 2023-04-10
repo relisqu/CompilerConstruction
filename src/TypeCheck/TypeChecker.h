@@ -4,11 +4,11 @@
 
 #ifndef COMPILERCONSTRUCTION_TYPECHECKER_H
 #define COMPILERCONSTRUCTION_TYPECHECKER_H
-#include "AST/Visitor.h"
 #include "AST/AST.h"
 
 namespace ast {
-    class TypeChecker : Visitor {
+    class TypeChecker : public Visitor {
+    public:
         void visit(const Node &node) override;
 
         void visit(const Block &node) override;
@@ -36,6 +36,8 @@ namespace ast {
         void visit(const Ident &node) override;
 
         void visit(const Type &node) override;
+
+        TypeChecker();
     };
 }
 

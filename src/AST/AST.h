@@ -11,7 +11,6 @@
 #include <iostream>
 #include <algorithm>
 #include "Tokens/Span.h"
-#include "Visitor.h"
 
 namespace ast {
 
@@ -39,6 +38,37 @@ namespace ast {
 
     extern int line;
 
+    class Visitor {
+    public:
+        virtual void visit(const Node &node) = 0;
+
+        virtual void visit(const Block &node) = 0;
+
+        virtual void visit(const Routine &node) = 0;
+
+        virtual void visit(const Statement &node) = 0;
+
+        virtual void visit(const ReturnStatement &node) = 0;
+
+        virtual void visit(const WhileLoop &node) = 0;
+
+        virtual void visit(const IfStatement &node) = 0;
+
+        virtual void visit(const ForLoop &node) = 0;
+
+        virtual void visit(const Declaration &node) = 0;
+
+        virtual void visit(const Assignment &node) = 0;
+
+        virtual void visit(const Expression &node) = 0;
+
+        virtual void visit(const RoutineCall &node) = 0;
+
+        virtual void visit(const Ident &node) = 0;
+
+        virtual void visit(const Type &node) = 0;
+    };
+
     struct Node {
         std::string name;
         Span span;
@@ -49,8 +79,8 @@ namespace ast {
 
         virtual ~Node() = default;
 
-        virtual void accept(Visitor &v) const {
-            v.visit(*this);
+        virtual void accept(Visitor *v) const {
+            v->visit(*this);
         }
     };
 
@@ -75,8 +105,8 @@ namespace ast {
 
         Type &operator=(Type &&) = default;
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -87,9 +117,15 @@ namespace ast {
 
         Variable() = default;
 
+        Variable(const std::string &Name) : Type(Name) {}
+
         Variable(const std::string &Name, sp<Type> type2) :
                 Type(Name) {
             type = std::move(type2);
+        }
+
+        Variable(const std::string &Name, sp<Expression> exp) : Type(Name) {
+            value = std::move(exp);
         }
 
         Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name),
@@ -99,8 +135,8 @@ namespace ast {
             type = std::move(type2);
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -109,8 +145,8 @@ namespace ast {
 
         Program() { span = cur_span; }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -125,8 +161,8 @@ namespace ast {
 
         void addStatement(const sp<Node> &s);
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -162,8 +198,8 @@ namespace ast {
                 std::cout << a->name << " " << a->type->name << std::endl;
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -186,8 +222,8 @@ namespace ast {
             span = cur_span;
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -201,8 +237,8 @@ namespace ast {
             body = std::move(obody);
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -215,8 +251,8 @@ namespace ast {
                 Statement("if"), condition(std::move(exp)), body(std::move(block)),
                 elseBody(std::move(elseBlock)) { span = cur_span; }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -235,21 +271,21 @@ namespace ast {
                 Statement("for"),
                 rangeStart(std::get<0>(Range)), rangeEnd(std::get<1>(Range)), reversed(std::get<2>(Range)),
                 body(std::move(Body)) {
-            loopVar = std::make_shared<Variable>(LoopVar, nullptr);
+            loopVar = std::make_shared<Variable>(LoopVar);
 
             span = cur_span;
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
     struct Declaration : Statement {
         sp<Type> type;
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -264,16 +300,16 @@ namespace ast {
             lValue = std::make_shared<Ident>(identName);
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
     struct Ident : Node {
         explicit Ident(const std::string &s) : Node(s) {}
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -322,8 +358,8 @@ namespace ast {
             }
         }
 
-        virtual void accept(Visitor &v) const {
-            v.visit(*this);
+        virtual void accept(Visitor *v) const {
+            v->visit(*this);
         }
     };
 
@@ -340,8 +376,8 @@ namespace ast {
             name = otherName;
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -352,16 +388,16 @@ namespace ast {
             fields = std::move(Fields);
         }
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
     struct Alias : Type {
         sp<Type> type;
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 
@@ -371,8 +407,8 @@ namespace ast {
 
         explicit Array(const std::string &name) : Type(name) {}
 
-        void accept(Visitor &v) const override {
-            v.visit(*this);
+        void accept(Visitor *v) const override {
+            v->visit(*this);
         }
     };
 

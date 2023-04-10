@@ -9,6 +9,7 @@ namespace ast {
     void TypeChecker::visit(const Node &node) {}
 
     void TypeChecker::visit(const Block &node) {
+        std::cout << "Visiting block at " << node.span.lineNum << ":" << node.span.posBegin << '\n';
         for (auto n : node.nodes) {
             n->accept(this);
         }
@@ -112,4 +113,6 @@ namespace ast {
             node.returned->accept(this);
         }
     }
+
+    TypeChecker::TypeChecker() {}
 }
