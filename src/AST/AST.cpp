@@ -8,6 +8,10 @@ std::unordered_map<std::string, std::shared_ptr<ast::Type> > ast::TypeTable = {}
 
 namespace ast {
 
+    sp<Program> getProgram() {
+        return ourProgram;
+    }
+
     void Block::addVariable(const sp<Node> &variable) {
         nodes.push_back(variable);
         variable->span = cur_span;

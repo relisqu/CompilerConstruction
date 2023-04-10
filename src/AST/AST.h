@@ -39,8 +39,6 @@ namespace ast {
 
     extern int line;
 
-
-
     struct Node {
         std::string name;
         Span span;
@@ -377,6 +375,8 @@ namespace ast {
             v.visit(*this);
         }
     };
+
+    sp<Program> getProgram();
 
     void dfs();
 
