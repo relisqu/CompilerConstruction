@@ -386,6 +386,10 @@ namespace ast {
         spv<Expression> args;
 
         explicit RoutineCall(const std::string &ident) : Statement("Routine call") { name = ident; }
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
     };
 
     struct BuiltinType : Type {

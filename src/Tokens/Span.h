@@ -27,6 +27,7 @@ public:
 
     operator std::string() const
     {
-        return "line " +std::to_string(lineNum)+" symbol "+std::to_string(posBegin);
+        return std::to_string(lineNum)+":"+std::to_string(posBegin)+'-'+
+               std::to_string(lineEndNum)+":"+std::to_string(posEnd);
     }
 };

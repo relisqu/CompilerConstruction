@@ -27,7 +27,7 @@ namespace ast {
     void TypeChecker::visit(const Node &node) {
         increaseDepth();
         printOffset();
-        std::cout << "WARNING UNRESOLVED NODE: Visiting generic node\n";
+        std::cout << "WARNING UNRESOLVED NODE: Visiting generic node " << node.name << " at " << std::string(node.span) << '\n';
         decreaseDepth();
     }
 
