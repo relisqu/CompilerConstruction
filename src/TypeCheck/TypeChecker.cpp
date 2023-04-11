@@ -41,7 +41,7 @@ namespace ast {
     void TypeChecker::visit(const Routine &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting Routine " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting Routine " << node.name << " at " << std::string(node.span) << '\n';
         if (node.ident) {
             node.ident->accept(this);
         }
@@ -77,7 +77,7 @@ namespace ast {
     void TypeChecker::visit(const ForLoop &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.span) << '\n';
         if (node.rangeStart) {
             node.rangeStart->accept(this);
         }
@@ -103,7 +103,7 @@ namespace ast {
     void TypeChecker::visit(const WhileLoop &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.span) << '\n';
         if (node.condition) {
             node.condition->accept(this);
         }
@@ -116,7 +116,7 @@ namespace ast {
     void TypeChecker::visit(const Assignment &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.span) << '\n';
         if (node.lValue) {
             node.lValue->accept(this);
         }
@@ -152,7 +152,7 @@ namespace ast {
     void TypeChecker::visit(const IfStatement &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.span) << '\n';
         if (node.condition) {
             node.condition->accept(this);
         }
@@ -168,7 +168,7 @@ namespace ast {
     void TypeChecker::visit(const RoutineCall &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting RoutineCall " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting RoutineCall " << node.name << " at " << std::string(node.span) << '\n';
 
         for (const auto& n : node.args) {
             n->accept(this);
@@ -179,7 +179,7 @@ namespace ast {
     void TypeChecker::visit(const ReturnStatement &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.name) << '\n';
+        std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.span) << '\n';
         if (node.returned) {
             node.returned->accept(this);
         }
