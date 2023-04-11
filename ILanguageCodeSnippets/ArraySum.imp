@@ -1,1 +1,3 @@
-var abc is 1>=2;
+var MyArray : array [5] real;
+
+MyArray[1] := 3.21;
