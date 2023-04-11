@@ -1,19 +1,14 @@
-/*
-	First part of this file will cover the
-	work of routines on usertype.
-*/
-
 type Human is record
-var age : integer,
-var weight : real,
-var gender : boolean is 1 // Default is male
+var age : integer;
+var weight : real;
+var gender : boolean is 1;
 end;
 
 routine HumanConstructor (age : integer, weight : real, gender : boolean) is
         var Result : Human;
-Result.age = age;
-Result.weight = weight;
-Result.gender = gender;
+Result.age := age;
+Result.weight := weight;
+Result.gender := gender;
 return Result;
 end;
 
@@ -23,7 +18,6 @@ var Charlie : Human is HumanConstructor(15, 81.5, false);
 var Dave : Human is HumanConstructor(17, 90.1, true);
 
 var People : array [4] Human;
-// Assigning people to array;
 People[1] := Bob;
 People[2] := Alice;
 People[3] := Charlie;
@@ -58,13 +52,9 @@ end;
 
 agePeople(People);
 
-/*
-	After this point there will be demonstrations of
-	arithmetics and simple operations.
-*/
-
 routine arithmeticsDemo(a : real, b : real, c : integer, d : integer) : real is
 return (a - b + (c % d * 4) * 0.35) / a;
+end;
 
 var mathDemo is arithmeticsDemo(5.2, 3.1, 29, 17);
 
