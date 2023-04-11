@@ -6,11 +6,13 @@
 #include "AST/AST.h"
 
 namespace ast {
-    void TypeChecker::visit(const Node &node) {}
+    void TypeChecker::visit(const Node &node) {
+        std::cout << "Visiting generic node\n";
+    }
 
     void TypeChecker::visit(const Block &node) {
         std::cout << "Visiting block at " << node.span.lineNum << ":" << node.span.posBegin << '\n';
-        for (auto n : node.nodes) {
+        for (const auto& n : node.nodes) {
             n->accept(this);
         }
     }
@@ -19,13 +21,13 @@ namespace ast {
         if (node.ident) {
             node.ident->accept(this);
         }
-        for (auto n : node.parameters) {
+        for (const auto& n : node.parameters) {
             n->accept(this);
         }
         if (node.body) {
             node.body->accept(this);
         }
-        for (auto n : node.returnStatements) {
+        for (const auto& n : node.returnStatements) {
             n->accept(this);
         }
         if (node.returnType) {
@@ -103,7 +105,7 @@ namespace ast {
 
     void TypeChecker::visit(const RoutineCall &node) {
         // Routine call needs ident of routine?
-        for (auto n : node.args) {
+        for (const auto& n : node.args) {
             n->accept(this);
         }
     }
@@ -111,6 +113,13 @@ namespace ast {
     void TypeChecker::visit(const ReturnStatement &node) {
         if (node.returned) {
             node.returned->accept(this);
+        }
+    }
+
+    void TypeChecker::visit(const Program &program) {
+        std::cout << "Visiting program.\n";
+        for (const auto& n : program.nodes) {
+            n->accept(this);
         }
     }
 

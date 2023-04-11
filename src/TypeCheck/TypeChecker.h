@@ -9,6 +9,8 @@
 namespace ast {
     class TypeChecker : public Visitor {
     public:
+        void visit(const Program &program) override;
+
         void visit(const Node &node) override;
 
         void visit(const Block &node) override;

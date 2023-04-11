@@ -19,6 +19,7 @@ namespace ast {
     template<typename T> using sp = std::shared_ptr<T>;
     template<typename T> using spv = std::vector<std::shared_ptr<T>>;
 
+    struct Program;
     struct Node;
     struct Block;
     struct Routine;
@@ -40,6 +41,8 @@ namespace ast {
 
     class Visitor {
     public:
+        virtual void visit(const Program &node) = 0;
+
         virtual void visit(const Node &node) = 0;
 
         virtual void visit(const Block &node) = 0;
