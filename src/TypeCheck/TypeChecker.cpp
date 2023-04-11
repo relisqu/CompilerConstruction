@@ -6,18 +6,42 @@
 #include "AST/AST.h"
 
 namespace ast {
-    void TypeChecker::visit(const Node &node) {
-        std::cout << "Visiting generic node\n";
+    TypeChecker::TypeChecker() {}
+
+    int currentDepth = 0;
+
+    void increaseDepth() {
+        currentDepth++;
     }
 
-    void TypeChecker::visit(const Block &node) {
-        std::cout << "Visiting block at " << node.span.lineNum << ":" << node.span.posBegin << '\n';
-        for (const auto& n : node.nodes) {
-            n->accept(this);
+    void decreaseDepth() {
+        currentDepth--;
+    }
+
+    void printOffset() {
+        for (int i = 0; i < currentDepth; i++) {
+            std::cout << "  ";
         }
     }
 
+    void TypeChecker::visit(const Node &node) {
+        std::cout << "WARNING UNRESOLVED NODE: Visiting generic node\n";
+    }
+
+    void TypeChecker::visit(const Block &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting block at " << std::string(node.span) << '\n';
+        for (const auto& n : node.nodes) {
+            n->accept(this);
+        }
+        decreaseDepth();
+    }
+
     void TypeChecker::visit(const Routine &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Routine " << node.name << " at " << std::string(node.name) << '\n';
         if (node.ident) {
             node.ident->accept(this);
         }
@@ -33,14 +57,27 @@ namespace ast {
         if (node.returnType) {
             node.returnType->accept(this);
         }
-
+        decreaseDepth();
     }
 
-    void TypeChecker::visit(const Type &node) {}
+    void TypeChecker::visit(const Type &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Type " << node.name << " at " << std::string(node.span) << '\n';
+        decreaseDepth();
+    }
 
-    void TypeChecker::visit(const Ident &node) {}
+    void TypeChecker::visit(const Ident &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Ident " << node.name << " at " << std::string(node.span) << '\n';
+        decreaseDepth();
+    }
 
     void TypeChecker::visit(const ForLoop &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.name) << '\n';
         if (node.rangeStart) {
             node.rangeStart->accept(this);
         }
@@ -53,45 +90,69 @@ namespace ast {
         if (node.body) {
             node.body->accept(this);
         }
+        decreaseDepth();
     }
 
-    void TypeChecker::visit(const Statement &node) {}
+    void TypeChecker::visit(const Statement &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Statement " << node.name << " at " << std::string(node.span) << '\n';
+        decreaseDepth();
+    }
 
     void TypeChecker::visit(const WhileLoop &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.name) << '\n';
         if (node.condition) {
             node.condition->accept(this);
         }
         if (node.body) {
             node.body->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const Assignment &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.name) << '\n';
         if (node.lValue) {
             node.lValue->accept(this);
         }
         if (node.rValue) {
             node.rValue->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const Expression &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Expression " << node.name << " at " << std::string(node.span) << '\n';
         if (node.l) {
             node.l->accept(this);
         }
         if (node.r) {
             node.r->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const Declaration &node) {
-        // Declaration needs ident of declared item?
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Declaration " << node.name << " at " << std::string(node.span) << '\n';
         if (node.type) {
             node.type->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const IfStatement &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.name) << '\n';
         if (node.condition) {
             node.condition->accept(this);
         }
@@ -101,27 +162,61 @@ namespace ast {
         if (node.elseBody) {
             node.elseBody->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const RoutineCall &node) {
-        // Routine call needs ident of routine?
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting RoutineCall " << node.name << " at " << std::string(node.name) << '\n';
+
         for (const auto& n : node.args) {
             n->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const ReturnStatement &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.name) << '\n';
         if (node.returned) {
             node.returned->accept(this);
         }
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const Program &program) {
+        increaseDepth();
+        printOffset();
         std::cout << "Visiting program.\n";
         for (const auto& n : program.nodes) {
             n->accept(this);
         }
+        decreaseDepth();
     }
 
-    TypeChecker::TypeChecker() {}
+    void TypeChecker::visit(const Variable &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Variable at " << std::string(node.span) << '\n';
+
+        if (node.type) {
+            node.type->accept(this);
+        }
+        if (node.ident) {
+            node.ident->accept(this);
+        }
+        if (node.value) {
+            node.value->accept(this);
+        }
+        decreaseDepth();
+    }
+
+    void TypeChecker::visit(const BuiltinType &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting BuiltinType " << node.name << " at " << std::string(node.span) << '\n';
+        decreaseDepth();
+    }
 }

@@ -39,6 +39,10 @@ namespace ast {
 
         void visit(const Type &node) override;
 
+        void visit(const Variable &node) override;
+
+        void visit(const BuiltinType &node) override;
+
         TypeChecker();
     };
 }

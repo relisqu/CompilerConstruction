@@ -34,6 +34,8 @@ namespace ast {
     struct RoutineCall;
     struct Ident;
     struct Type;
+    struct Variable;
+    struct BuiltinType;
 
     extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable;
 
@@ -70,6 +72,10 @@ namespace ast {
         virtual void visit(const Ident &node) = 0;
 
         virtual void visit(const Type &node) = 0;
+
+        virtual void visit(const Variable &node) = 0;
+
+        virtual void visit(const BuiltinType &node) = 0;
     };
 
     struct Node {
