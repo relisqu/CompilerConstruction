@@ -67,9 +67,7 @@
 %type <spv<Variable>> _params
 %type <spv<Variable>> _var_dec_block
 %type <std::tuple<sp<Expression>, sp<Expression>, bool>> _range
-%type <sp<Type>> _type_dec
 %type <sp<Record>> _record_dec
-
 
 %left tkBoolOr
 %left tkBoolXor
@@ -105,11 +103,6 @@ _var_dec : tkVar tkIdentifier tkColon _type {
     }
 ;
 
-_type_dec: tkType tkIdentifier tkIs _type { /*TO DO?*/
-    $$ = std::make_shared<Type>($4);
-}
-;
-
 _record_dec: tkType tkIdentifier tkIs tkRecord _var_dec_block tkEnd {
     $$ = std::make_shared<Record>(std::string($2), $5);
 }
@@ -133,10 +126,10 @@ _param_dec: tkIdentifier tkColon _type {
 }
 ;
 
-_type: tkIdentifier { $$ = std::make_shared<ast::Type>($1); }
-| _irb_type {  $$ = $1; }
+_type: _irb_type {  $$ = $1; }
 | _arr_type { $$ = $1; }
 | _rec_type { $$ = $1; }
+| tkIdentifier { $$ = std::make_shared<ast::Type>($1); }
 ;
 
 _irb_type: tkInt { $$ = std::make_shared<ast::BuiltinType>("integer"); }  //irb = integer, real, bool
@@ -147,14 +140,14 @@ _irb_type: tkInt { $$ = std::make_shared<ast::BuiltinType>("integer"); }  //irb 
 _rec_type: tkRecord _var_dec_block tkEnd {  $$ = std::make_shared<ast::Record>("Record", $2); }
 ;
 
-_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>("Array"); }
-| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>("Array"); }
+_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>(std::string("Array"), $5, $3); }
+| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>(std::string("Array"), $4); }
 ;
 
 _body: { $$ = std::make_shared<ast::Block>(); }
-| _body _var_dec { ($1)->addVariable($2); $$ = $1; }
-| _body _type_dec {}
-| _body _statement { ($1)->addStatement($2); $$ = $1; }
+| _body _var_dec { ($1)->nodes.push_back($2); $$ = $1; }
+| _body _record_dec { ($1)->nodes.push_back($2); $$ = $1; }
+| _body _statement { ($1)->nodes.push_back($2); $$ = $1; }
 | _body EOL
 ;
 

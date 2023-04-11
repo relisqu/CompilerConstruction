@@ -45,6 +45,8 @@ namespace ast {
 
         void visit(const Record &node) override;
 
+        void visit(const Array &node) override;
+
         TypeChecker();
     };
 }

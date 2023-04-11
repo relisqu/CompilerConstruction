@@ -247,4 +247,17 @@ namespace ast {
         }
         decreaseDepth();
     }
+
+    void TypeChecker::visit(const Array &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Array " << node.name << " at " << std::string(node.span) << '\n';
+        if (node.size) {
+            node.size->accept(this);
+        }
+        if (node.type) {
+            node.type->accept(this);
+        }
+        decreaseDepth();
+    }
 }

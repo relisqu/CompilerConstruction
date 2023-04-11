@@ -37,6 +37,7 @@ namespace ast {
     struct Variable;
     struct BuiltinType;
     struct Record;
+    struct Array;
 
     extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable;
 
@@ -79,6 +80,8 @@ namespace ast {
         virtual void visit(const BuiltinType &node) = 0;
 
         virtual void visit(const Record &node) = 0;
+
+        virtual void visit(const Array &node) = 0;
     };
 
     struct Node {
@@ -425,10 +428,20 @@ namespace ast {
     };
 
     struct Array : Type {
-        int size = 0;
+        sp <Expression> size;
+        bool hasSize = false;
         sp<Type> type;
 
         explicit Array(const std::string &name) : Type(name) {}
+
+        Array(const std::string& _name, const sp<Type>& _type) : Type(_name) {
+            type = _type;
+        }
+
+        Array(const std::string& _name, const sp<Type>& _type, const sp<Expression>& _size) : Array(_name, _type) {
+            size = _size;
+            hasSize = true;
+        }
 
         void accept(Visitor *v) const override {
             v->visit(*this);
