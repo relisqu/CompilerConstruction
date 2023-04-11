@@ -67,7 +67,8 @@
 %type <spv<Variable>> _params
 %type <spv<Variable>> _var_dec_block
 %type <std::tuple<sp<Expression>, sp<Expression>, bool>> _range
-
+%type <sp<Type>> _type_dec
+%type <sp<Record>> _record_dec
 
 
 %left tkBoolOr
@@ -82,7 +83,7 @@
 
 program:
 | program _var_dec {  ourProgram->nodes.push_back($2);  }
-| program _type_dec {}
+| program _record_dec { ourProgram->nodes.push_back($2); }
 | program _routine_dec { ourProgram->nodes.push_back($2); }
 | program _statement { ourProgram->nodes.push_back($2); }
 | program EOL
@@ -104,12 +105,19 @@ _var_dec : tkVar tkIdentifier tkColon _type {
     }
 ;
 
-_type_dec: tkType tkIdentifier tkIs _type { /*TO DO?*/ }
+_type_dec: tkType tkIdentifier tkIs _type { /*TO DO?*/
+    $$ = std::make_shared<Type>($4);
+}
 ;
+
+_record_dec: tkType tkIdentifier tkIs tkRecord _var_dec_block tkEnd {
+    $$ = std::make_shared<Record>(std::string($2), $5);
+}
 
 _routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd {
 $$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);
 }
+
 | tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd {
  $$ = std::make_shared<ast::Routine>($2, $4, $9, $7);
 }
@@ -162,7 +170,7 @@ _return: tkReturn EOL{   $$ = std::make_shared<ast::ReturnStatement>(nullptr);  
 | tkReturn _expr {     $$ = std::make_shared<ast::ReturnStatement>($2);   }
 ;
 
-_assign: _modval tkCOLON_EQUALS _expr { $$ = std::make_shared<ast::Assignment>(std::get<0>(($1)->value), $3); }
+_assign: _modval tkCOLON_EQUALS _expr { $$ = std::make_shared<ast::Assignment>($1, $3); }
 ;
 
 _routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END { $$ = std::make_shared<ast::RoutineCall>($1); ($$)->args = std::move($3); }
@@ -216,20 +224,27 @@ _primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
 | _routine { $$ = std::make_shared<ast::Expression>(($1)->name); }
 ;
 
-_getvar: {$$ = nullptr;};
+_getvar: {$$ = nullptr;}
 | _getvar tkDot tkIdentifier {
-sp<ast::Expression> temp = std::make_shared<ast::Expression>($3);
-$$ = std::make_shared<ast::Expression>(".",temp, $1);
+    if ($1 == nullptr) {
+        $$ = std::make_shared<ast::Expression>($3);
+    } else {
+        sp<ast::Expression> temp = std::make_shared<ast::Expression>($3);
+        $$ = std::make_shared<ast::Expression>(".", $1, temp);
+    }
 }
 | _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {
-$$ = std::make_shared<ast::Expression>(".",$3, $1, true);
+if ($1 == nullptr) {
+    $$ = $3;
+} else {
+    $$ = std::make_shared<ast::Expression>(".", $1, $3);
+}
 }
 
 ;
 
 
 _modval: tkIdentifier _getvar {
-
 sp<ast::Expression> temp = std::make_shared<ast::Expression>($1);
 if($2 != nullptr)
   $$ = std::make_shared<ast::Expression>(".",temp, $2);

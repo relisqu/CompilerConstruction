@@ -36,6 +36,7 @@ namespace ast {
     struct Type;
     struct Variable;
     struct BuiltinType;
+    struct Record;
 
     extern std::unordered_map<std::string, std::shared_ptr<Type> > TypeTable;
 
@@ -76,6 +77,8 @@ namespace ast {
         virtual void visit(const Variable &node) = 0;
 
         virtual void visit(const BuiltinType &node) = 0;
+
+        virtual void visit(const Record &node) = 0;
     };
 
     struct Node {
@@ -299,14 +302,21 @@ namespace ast {
     };
 
     struct Assignment : Statement {
+        sp<Expression> lValue;
         sp<Expression> rValue;
-        sp<Ident> lValue;
 
         Assignment(const std::string &identName, sp<Expression> exp) :
                 Statement("assign"),
                 rValue(std::move(exp)) {
             span = cur_span;
-            lValue = std::make_shared<Ident>(identName);
+            lValue = std::make_shared<Expression>(identName);
+        }
+
+        Assignment(sp<Expression> _lValue, sp<Expression> _rValue) :
+                Statement("assign"),
+                lValue(std::move(_lValue)),
+                rValue(std::move(_rValue)){
+            span = cur_span;
         }
 
         void accept(Visitor *v) const override {
@@ -330,7 +340,7 @@ namespace ast {
 
         static std::string getType(const std::shared_ptr<Expression> &exp);
 
-        Expression(const std::string &newSymbol, spe first, spe second = nullptr, bool braces = false) : Node(
+        Expression(const std::string &newSymbol, spe first, spe second = nullptr) : Node(
                 "Operation") {
             value = newSymbol;
             l = std::move(first);

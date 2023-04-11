@@ -43,6 +43,8 @@ namespace ast {
 
         void visit(const BuiltinType &node) override;
 
+        void visit(const Record &node) override;
+
         TypeChecker();
     };
 }

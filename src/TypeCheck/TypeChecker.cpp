@@ -25,7 +25,10 @@ namespace ast {
     }
 
     void TypeChecker::visit(const Node &node) {
+        increaseDepth();
+        printOffset();
         std::cout << "WARNING UNRESOLVED NODE: Visiting generic node\n";
+        decreaseDepth();
     }
 
     void TypeChecker::visit(const Block &node) {
@@ -129,7 +132,22 @@ namespace ast {
     void TypeChecker::visit(const Expression &node) {
         increaseDepth();
         printOffset();
-        std::cout << "Visiting Expression " << node.name << " at " << std::string(node.span) << '\n';
+        std::cout << "Visiting Expression " << node.name << " ";
+        switch (node.value.index()) {
+            case 0:
+                std::cout << std::get<0>(node.value);
+                break;
+            case 1:
+                std::cout << std::get<1>(node.value);
+                break;
+            case 2:
+                std::cout << std::get<2>(node.value);
+                break;
+            case 3:
+                std::cout << std::get<3>(node.value);
+                break;
+        }
+        std::cout << " at " << std::string(node.span) << '\n';
         if (node.l) {
             node.l->accept(this);
         }
@@ -217,6 +235,16 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting BuiltinType " << node.name << " at " << std::string(node.span) << '\n';
+        decreaseDepth();
+    }
+
+    void TypeChecker::visit(const Record &node) {
+        increaseDepth();
+        printOffset();
+        std::cout << "Visiting Record " << node.name << " at " << std::string(node.span) << '\n';
+        for (auto const &n : node.fields) {
+            n->accept(this);
+        }
         decreaseDepth();
     }
 }
