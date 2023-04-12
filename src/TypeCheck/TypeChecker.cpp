@@ -214,12 +214,32 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.span) << '\n';
+        int startSize = contextStack.size();
+        StoredType lval = ST_NULL;
+        StoredType rval = ST_NULL;
         if (node.lValue) {
             node.lValue->accept(this);
+            lval = contextStack.back();
         }
         if (node.rValue) {
             node.rValue->accept(this);
+            rval = contextStack.back();
         }
+
+        if (lval.tag == Tag::tagIdent) {
+            lval = resolveIdent(lval);
+        }
+        if (rval.tag == Tag::tagIdent) {
+            rval = resolveIdent(rval);
+        }
+
+        if (lval != rval) {
+            printOffset();
+            std::cout << "Assignment type mismatch";
+            exit(1);
+        }
+
+        cutContextStack(startSize);
         decreaseDepth();
     }
 
