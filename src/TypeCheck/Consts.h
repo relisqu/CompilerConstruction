@@ -14,5 +14,6 @@ const StoredType ST_REAL = StoredType(Tag::tagReal);
 const StoredType ST_BOOLEAN = StoredType(Tag::tagBool);
 
 const StoredType ST_IDENT = StoredType(Tag::tagIdent);
+const StoredType ST_RECORD = StoredType(Tag::tagRecord);
 
 #endif //COMPILERCONSTRUCTION_CONSTS_H

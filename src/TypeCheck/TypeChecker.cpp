@@ -67,6 +67,18 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Type " << node.name << " at " << std::string(node.span) << '\n';
+        if (identMap[node.name].empty()) {
+            printOffset();
+            std::cout << "Undeclared record type " << node.name;
+            exit(1);
+        } else {
+            if (identMap[node.name].back().tag != Tag::tagRecord) {
+                std::cout << "Non-record " << node.name << " as type";
+                exit(1);
+            } else {
+                contextStack.push_back(identMap[node.name].back());
+            }
+        }
         decreaseDepth();
     }
 
@@ -452,9 +464,17 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Record " << node.name << " at " << std::string(node.span) << '\n';
+        int startSize = contextStack.size();
         for (auto const &n : node.fields) {
             n->accept(this);
         }
+        std::vector <StoredType> content(contextStack.begin() + startSize, contextStack.end());
+        cutContextStack(startSize);
+
+        StoredType result = ST_RECORD;
+        result.content = content;
+        identMap[node.name].push_back(result);
+
         decreaseDepth();
     }
 
