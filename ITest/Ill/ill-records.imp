@@ -1,0 +1,3 @@
+var age : integer
+var weight : real
+var gender : boolean is 1

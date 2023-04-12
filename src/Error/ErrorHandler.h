@@ -14,6 +14,6 @@ public:
      */
     inline static void ThrowError(const std::string &errorMessage, Span errorSpan) {
         std::cout << errorMessage;
-        exit(-1);
+        exit(1);
     }
 };

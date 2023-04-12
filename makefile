@@ -1,2 +1,2 @@
 test:
-	cd cmake-build-debug &&  ctest -V
+	cd cmake-build-debug && ctest -V
