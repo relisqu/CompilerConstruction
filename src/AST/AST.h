@@ -132,7 +132,7 @@ namespace ast {
 
         Variable() = default;
 
-        Variable(const std::string &Name) : Type(Name) {}
+        explicit Variable(const std::string &Name) : Type(Name) {}
 
         Variable(const std::string &Name, sp<Type> type2) :
                 Type(Name) {
@@ -218,19 +218,64 @@ namespace ast {
         }
     };
 
+    struct Expression : Node {
+        using spe = sp<Expression>;
+        std::variant<std::string, long long int, double, bool> value;
+        spe l = nullptr;
+        spe r = nullptr;
 
-    struct Statement : Node {
-        Statement() = default;
+        static std::string getType(const std::shared_ptr<Expression> &exp);
 
-        explicit Statement(std::string name) : Node(std::move(name)) {}
+        Expression(const std::string &newSymbol, spe first, spe second = nullptr) : Node(
+                "Operation") {
+            value = newSymbol;
+            l = std::move(first);
+            r = std::move(second);
+        }
+
+        explicit Expression(long long int val, bool _temp) : Node("integer"), value(val) {}
+
+        explicit Expression(bool val) : Node("boolean"), value(val) {}
+
+        explicit Expression(double val) : Node("real"), value(val) {}
+
+        explicit Expression(const std::string &identName) :
+                Node("ident") {
+            value = identName;
+        }
+
+        ~Expression() override = default;
+
+        void print() {
+            switch (value.index()) {
+                case 0:
+                    std::cout << std::get<0>(value) << std::endl;
+                    break;
+                case 1:
+                    std::cout << std::get<1>(value) << std::endl;
+                    break;
+                case 2:
+                    std::cout << std::get<2>(value) << std::endl;
+                    break;
+                case 3:
+                    std::cout << std::get<3>(value) << std::endl;
+                    break;
+            }
+        }
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+    };
+
+    struct Statement : Expression {
+        explicit Statement(const std::string& name) : Expression(name) {}
 
         ~Statement() override = default;
     };
 
     struct ReturnStatement : Statement {
         sp<Expression> returned = nullptr;
-
-        ReturnStatement() = default;
 
         explicit ReturnStatement(sp<Expression> exp) : Statement("return") {
             returned = std::move(exp);
@@ -277,8 +322,6 @@ namespace ast {
         sp<Expression> rangeEnd;
         sp<Variable> loopVar;
         bool reversed = false;
-
-        ForLoop() = default;
 
         ForLoop(const std::string &LoopVar,
                 std::tuple<sp<Expression>, sp<Expression>, bool> Range,
@@ -331,56 +374,6 @@ namespace ast {
         explicit Ident(const std::string &s) : Node(s) {}
 
         void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
-    };
-
-    struct Expression : Node {
-        using spe = sp<Expression>;
-        std::variant<std::string, long long int, double, bool> value;
-        spe l = nullptr;
-        spe r = nullptr;
-
-        static std::string getType(const std::shared_ptr<Expression> &exp);
-
-        Expression(const std::string &newSymbol, spe first, spe second = nullptr) : Node(
-                "Operation") {
-            value = newSymbol;
-            l = std::move(first);
-            r = std::move(second);
-        }
-
-        explicit Expression(long long int val, bool _temp) : Node("integer"), value(val) {}
-
-        explicit Expression(bool val) : Node("boolean"), value(val) {}
-
-        explicit Expression(double val) : Node("real"), value(val) {}
-
-        explicit Expression(const std::string &identName) :
-                Node("ident") {
-            value = identName;
-        }
-
-        ~Expression() override = default;
-
-        void print() {
-            switch (value.index()) {
-                case 0:
-                    std::cout << std::get<0>(value) << std::endl;
-                    break;
-                case 1:
-                    std::cout << std::get<1>(value) << std::endl;
-                    break;
-                case 2:
-                    std::cout << std::get<2>(value) << std::endl;
-                    break;
-                case 3:
-                    std::cout << std::get<3>(value) << std::endl;
-                    break;
-            }
-        }
-
-        virtual void accept(Visitor *v) const {
             v->visit(*this);
         }
     };

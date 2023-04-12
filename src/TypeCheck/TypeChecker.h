@@ -5,10 +5,34 @@
 #ifndef COMPILERCONSTRUCTION_TYPECHECKER_H
 #define COMPILERCONSTRUCTION_TYPECHECKER_H
 #include "AST/AST.h"
+#include <map>
+#include <vector>
+#include "StoredType.h"
+#include "Consts.h"
 
 namespace ast {
     class TypeChecker : public Visitor {
     public:
+        std::map<std::string, std::vector<StoredType> > identMap;
+
+        std::vector<StoredType> contextStack = {};
+
+        void cutContextStack(int targetSize) {
+            while (contextStack.size() > targetSize) {
+                contextStack.pop_back();
+            }
+        }
+
+        StoredType resolveIdent(const StoredType& ident) {
+            if (ident.tag != Tag::tagIdent) {
+                return ST_NULL;
+            }
+            if (!identMap[ident.ident].empty()) {
+                return identMap[ident.ident].back();
+            }
+            return ST_NULL;
+        }
+
         void visit(const Program &program) override;
 
         void visit(const Node &node) override;
