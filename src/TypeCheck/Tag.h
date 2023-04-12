@@ -6,6 +6,7 @@
 #define COMPILERCONSTRUCTION_TAG_H
 
 enum Tag {
+    tagPlaceholder, // Tag intended to be replaced during typecheck.
     tagNull, // Bad tag for specifying something went wrong
     tagIdent,
     tagInteger,

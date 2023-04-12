@@ -16,6 +16,7 @@ namespace ast {
         std::map<std::string, std::vector<StoredType> > identMap;
 
         std::vector<StoredType> contextStack = {};
+        std::vector<StoredType> expectedReturnTypes = {ST_INTEGER};
 
         void cutContextStack(int targetSize) {
             while (contextStack.size() > targetSize) {
@@ -29,6 +30,13 @@ namespace ast {
             }
             if (!identMap[ident.ident].empty()) {
                 return identMap[ident.ident].back();
+            }
+            return ST_NULL;
+        }
+
+        StoredType resolveIdent(const std::string &ident) {
+            if (!identMap[ident].empty()) {
+                return identMap[ident].back();
             }
             return ST_NULL;
         }

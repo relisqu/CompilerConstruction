@@ -50,13 +50,13 @@ simulateAging(peopleArray[i], targetAge);
 end;
 end;
 
-agePeople(People);
+agePeople(People, 80);
 
-routine arithmeticsDemo(a : real, b : real, c : integer, d : integer) : real is
-return (a - b + (c % d * 4) * 0.35) / a;
+routine arithmeticsDemo(a : integer, b : integer, c : integer, d : integer) : integer is
+return (a - b + (c % d * 4) * 2) / a;
 end;
 
-var mathDemo is arithmeticsDemo(5.2, 3.1, 29, 17);
+var mathDemo is arithmeticsDemo(5, 3, 29, 17);
 
 routine gcd(a : integer, b : integer) : integer is
 if b = 0 then

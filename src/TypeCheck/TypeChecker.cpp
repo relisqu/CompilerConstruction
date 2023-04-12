@@ -45,21 +45,64 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Routine " << node.name << " at " << std::string(node.span) << '\n';
+        int startSize = contextStack.size();
+
+        StoredType expected = ST_PLACEHOLDER;
+        StoredType ident = ST_NULL;
         if (node.ident) {
             node.ident->accept(this);
+            ident = contextStack.back();
         }
+        std::vector <StoredType> inTypes = {};
+        std::vector<StoredType> outTypes = {};
+
         for (const auto& n : node.parameters) {
             n->accept(this);
+            inTypes.push_back(contextStack.back());
         }
+
+        if (node.returnType) {
+            node.returnType->accept(this);
+            expected = contextStack.back();
+            outTypes.push_back(expected);
+        }
+
+        expectedReturnTypes.push_back(expected);
+
+        StoredType result = ST_ROUTINE;
+
+        result.inTypes = inTypes;
+        result.outTypes = outTypes;
+        result.ident = ident.ident;
+
+        int index = identMap[result.ident].size();
+        identMap[result.ident].push_back(result);
         if (node.body) {
+            //BODY
             node.body->accept(this);
         }
         for (const auto& n : node.returnStatements) {
+            // FUCKING EMPTY WHAT THE FUCK
             n->accept(this);
         }
-        if (node.returnType) {
-            node.returnType->accept(this);
+        if (expectedReturnTypes.back() == ST_PLACEHOLDER) {
+            // if no return statements happened, then we can assume routine is void.
+            expectedReturnTypes.back() = ST_NULL;
         }
+
+        if (outTypes.empty())
+            outTypes.push_back(expectedReturnTypes.back());
+        else
+            outTypes.back() = expectedReturnTypes.back();
+        expectedReturnTypes.pop_back();
+        cutContextStack(startSize);
+
+        result.inTypes = inTypes;
+        result.outTypes = outTypes;
+        result.ident = ident.ident;
+
+        identMap[result.ident][index] = result;
+
         decreaseDepth();
     }
 
@@ -240,31 +283,45 @@ namespace ast {
                     std::cout << "Type mismatch: non-int at square bracket access";
                     exit(1);
                 }
-                contextStack.push_back(leftType.content.back());
+                StoredType _result = leftType.content.back();
+                contextStack.push_back(_result);
             } else if (operation == ".") {
-                leftType = resolveIdent(leftType);
-                if (leftType.tag != Tag::tagRecord) {
-                    printOffset();
-                    std::cout << "Type mismatch: dot access of non-record";
-                    exit(1);
+                if (leftType.tag == Tag::tagIdent) {
+                    leftType = resolveIdent(leftType);
                 }
-                if (rightType.tag != Tag::tagIdent) {
-                    printOffset();
-                    std::cout << "Type mismatch: malformed dot access of record";
-                    exit(1);
-                }
-                bool found = false;
-                for (auto & i : leftType.content) {
-                    if (i.ident == rightType.ident) {
-                        contextStack.push_back(i);
-                        found = true;
-                        break;
+                if (rightType.tag == Tag::tagIdent && rightType.ident == "size") {
+                    if (leftType.tag != Tag::tagArray) {
+                        printOffset();
+                        std::cout << "Obtaining size from non-array";
+                        exit(1);
+                    } else {
+                        contextStack.push_back(ST_INTEGER);
                     }
                 }
-                if (!found) {
-                    printOffset();
-                    std::cout << "Type mismatch: no such component of record";
-                    exit(1);
+                else {
+                    if (leftType.tag != Tag::tagRecord) {
+                        printOffset();
+                        std::cout << "Type mismatch: dot access of non-record";
+                        exit(1);
+                    }
+                    if (rightType.tag != Tag::tagIdent) {
+                        printOffset();
+                        std::cout << "Type mismatch: malformed dot access of record";
+                        exit(1);
+                    }
+                    bool found = false;
+                    for (auto &i: leftType.content) {
+                        if (i.ident == rightType.ident) {
+                            contextStack.push_back(i);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        printOffset();
+                        std::cout << "Type mismatch: no such component of record";
+                        exit(1);
+                    }
                 }
             } else if (operation == "and" ||
                        operation == "or" ||
@@ -375,9 +432,25 @@ namespace ast {
         printOffset();
         std::cout << "Visiting RoutineCall " << node.name << " at " << std::string(node.span) << '\n';
 
+        int startSize = contextStack.size();
+        std::vector<StoredType> inTypes;
         for (const auto& n : node.args) {
             n->accept(this);
+            StoredType cur = contextStack.back();
+            if (cur.tag == Tag::tagIdent) {
+                cur = resolveIdent(cur);
+            }
+            inTypes.push_back(cur);
         }
+        StoredType expectedRoutine = resolveIdent(node.name);
+        if (expectedRoutine.inTypes != inTypes) {
+            printOffset();
+            std::cout << "RoutineCall argument mismatch";
+            exit(1);
+        }
+        cutContextStack(startSize);
+
+        contextStack.push_back(expectedRoutine.outTypes.back());
         decreaseDepth();
     }
 
@@ -385,9 +458,25 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.span) << '\n';
+        int startSize = contextStack.size();
+        StoredType result = ST_NULL;
         if (node.returned) {
             node.returned->accept(this);
+            result = contextStack.back();
+            if (result.tag == Tag::tagIdent) {
+                result = resolveIdent(result);
+            }
         }
+        if (expectedReturnTypes.back() == ST_PLACEHOLDER) {
+            expectedReturnTypes.back() = result;
+        } else {
+            if (expectedReturnTypes.back() != result) {
+                printOffset();
+                std::cout << "Expected return type mismatch";
+                exit(1);
+            }
+        }
+        cutContextStack(startSize);
         decreaseDepth();
     }
 
@@ -482,12 +571,41 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Array " << node.name << " at " << std::string(node.span) << '\n';
+        int startSize = contextStack.size();
+        StoredType result = ST_ARRAY;
+        StoredType size = ST_NULL;
         if (node.size) {
             node.size->accept(this);
+            size = contextStack.back();
+            if (size.tag == Tag::tagIdent) {
+                size = resolveIdent(size);
+            }
+            if (size.tag != Tag::tagInteger) {
+                printOffset();
+                std::cout << "Array size is non int.";
+                exit(1);
+            }
         }
+        StoredType type = ST_NULL;
         if (node.type) {
             node.type->accept(this);
+            type = contextStack.back();
+            if (type.tag == Tag::tagIdent) {
+                printOffset();
+                std::cout << "Array type is non-type";
+                exit(1);
+            }
         }
+        if (type == ST_NULL) {
+            printOffset();
+            std::cout << "No array type specified";
+            exit(1);
+        }
+        result.content.push_back(type);
+
+        cutContextStack(startSize);
+
+        contextStack.push_back(result);
         decreaseDepth();
     }
 }
