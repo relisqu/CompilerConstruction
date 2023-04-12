@@ -18,7 +18,16 @@ Scanner scanner;
 
 //TODO: Исправить баг с пустым файлом/не найденным файлом
 int main(int argc, char *argv[]) {
-    std::string text_file = ReadFile(R"(ILanguageCodeSnippets/ArraySum.imp)");
+
+    std::string text_file = "";
+    if (argc < 2) {
+        std::cerr << "dog: missing input file!\n"
+                  << "usage: dog <input_file>\n";
+        return EXIT_FAILURE;
+    } else {
+        text_file = ReadFile(std::string(argv[1]));
+    }
+
     #if IS_DEBUG_MODE
     std::cout << text_file;
     #endif

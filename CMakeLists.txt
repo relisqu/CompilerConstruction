@@ -8,3 +8,27 @@ include_directories(src)
 add_subdirectory(src)
 add_subdirectory(tst)
 add_subdirectory(lib/googletest)
+
+set(BINARY ${CMAKE_PROJECT_NAME})
+
+
+include(CTest)
+include(CPack)
+enable_testing()
+
+file(GLOB Ills "${CMAKE_CURRENT_SOURCE_DIR}/ITest/Ill/*.imp")
+file(GLOB Wells "${CMAKE_CURRENT_SOURCE_DIR}/ITest/Well/*.imp")
+
+foreach(file ${Ills})
+    STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" name ${file})
+    add_test(NAME ${name}
+            COMMAND ${BINARY}_run ${file})
+    set_tests_properties(${name} PROPERTIES WILL_FAIL TRUE)
+endforeach()
+
+foreach(file ${Wells})
+    STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" name ${file})
+    add_test(NAME ${name}
+            COMMAND ${BINARY}_run ${file})
+    set_tests_properties(${name} PROPERTIES WILL_FAIL FALSE)
+endforeach()
