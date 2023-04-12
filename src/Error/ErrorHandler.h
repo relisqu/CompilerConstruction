@@ -13,7 +13,11 @@ public:
      *  @todo Implement throwing errors and showing errorSpan
      */
     inline static void ThrowError(const std::string &errorMessage, Span errorSpan) {
-        std::cout << errorMessage;
+        std::cout << errorMessage << " at "<< std::string(errorSpan) << std::endl;
+        exit(1);
+    }
+    inline static void ThrowError(const std::string &errorMessage) {
+        std::cout << errorMessage << std::endl;
         exit(1);
     }
 };

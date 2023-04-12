@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     std::string text_file = "";
     if (argc < 2) {
         std::cerr << "dog: missing input file!\n"
-                  << "usage: dog <input_file>\n";
+                  << "usage: CompilerConstruction_run <input_file>\n";
         return EXIT_FAILURE;
     } else {
         text_file = ReadFile(std::string(argv[1]));

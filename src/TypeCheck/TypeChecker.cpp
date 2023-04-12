@@ -467,6 +467,7 @@ namespace ast {
             StoredType cur = contextStack.back();
             if (cur.tag == Tag::tagIdent) {
                 cur = resolveIdent(cur);
+
             }
             inTypes.push_back(cur);
         }
@@ -635,4 +636,5 @@ namespace ast {
         contextStack.push_back(result);
         decreaseDepth();
     }
+
 }

@@ -9,6 +9,7 @@
 #include <vector>
 #include "StoredType.h"
 #include "Consts.h"
+#include "Error/ErrorHandler.h"
 
 namespace ast {
     class TypeChecker : public Visitor {
@@ -24,14 +25,22 @@ namespace ast {
             }
         }
 
+        //void printOffset();
+
         StoredType resolveIdent(const StoredType& ident) {
+            StoredType result = ST_NULL;
+            result.ident = ident.ident;
             if (ident.tag != Tag::tagIdent) {
-                return ST_NULL;
+                return result;
             }
             if (!identMap[ident.ident].empty()) {
                 return identMap[ident.ident].back();
             }
-            return ST_NULL;
+            if (result == ST_NULL) {
+                //printOffset();
+                ErrorHandler::ThrowError("Ident type mismatch: no such ident defined \"" + result.ident+"\"");
+            }
+            return result;
         }
 
         StoredType resolveIdent(const std::string &ident) {
