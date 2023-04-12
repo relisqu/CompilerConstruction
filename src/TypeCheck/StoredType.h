@@ -57,7 +57,21 @@ public:
     bool operator!= (const StoredType &other) const {
         return !(*this == other);
     }
+
 };
 
 
+inline std::string ToString(const std::vector<StoredType>&  t)
+{
+    std::string types;
+    for (const auto& type : t) {
+        types+= ToString(type.tag)+ ", ";
+
+    }
+    if(types.length()>=2){
+        types.pop_back();
+        types.pop_back();
+    }
+    return types;
+}
 #endif //COMPILERCONSTRUCTION_STOREDTYPE_H

@@ -4,6 +4,7 @@
 
 #include "TypeChecker.h"
 #include "AST/AST.h"
+#include "Error/ErrorHandler.h"
 
 namespace ast {
     TypeChecker::TypeChecker() {}
@@ -112,11 +113,11 @@ namespace ast {
         std::cout << "Visiting Type " << node.name << " at " << std::string(node.span) << '\n';
         if (identMap[node.name].empty()) {
             printOffset();
-            std::cout << "Undeclared record type " << node.name;
+            ErrorHandler::ThrowError("Undeclared record type: "+ node.name,node.span);
             exit(1);
         } else {
             if (identMap[node.name].back().tag != Tag::tagRecord) {
-                std::cout << "Non-record " << node.name << " as type";
+                ErrorHandler::ThrowError("Got non-record " + node.name + " as type",node.span);
                 exit(1);
             } else {
                 contextStack.push_back(identMap[node.name].back());
@@ -165,7 +166,7 @@ namespace ast {
         }
         if (start.tag != Tag::tagInteger ||
             end.tag != Tag::tagInteger) {
-            std::cout << "Loop range types must be integers";
+            ErrorHandler::ThrowError("Loop range types expected to be integer, got "+ ToString(start.tag)+" and "+ ToString(end.tag),node.span);
             exit(1);
         }
         cutContextStack(startSize);
@@ -201,8 +202,7 @@ namespace ast {
         }
         if (cond.tag != tagBool) {
             printOffset();
-            std::cout << "While condition is non-bool";
-            exit(1);
+            ErrorHandler::ThrowError("While condition expected to be bool , got "+ ToString(cond.tag),node.span);
         }
         if (node.body) {
             node.body->accept(this);
@@ -272,7 +272,8 @@ namespace ast {
                 leftType = resolveIdent(leftType);
                 if (leftType.tag != Tag::tagArray) {
                     printOffset();
-                    std::cout << "Type mismatch: square bracket access of non-array";
+                    ErrorHandler::ThrowError("Type mismatch: square bracket access expected to be for array, got "+
+                                             ToString(leftType.tag),node.span);
                     exit(1);
                 }
                 if (rightType.tag == Tag::tagIdent) {
@@ -280,7 +281,9 @@ namespace ast {
                 }
                 if (rightType.tag != Tag::tagInteger) {
                     printOffset();
-                    std::cout << "Type mismatch: non-int at square bracket access";
+                    //if(leftTy)
+                    ErrorHandler::ThrowError("Type mismatch: square bracket access expected to be int, got "+
+                                             ToString(rightType.tag),node.span);
                     exit(1);
                 }
                 StoredType _result = leftType.content.back();
@@ -292,7 +295,8 @@ namespace ast {
                 if (rightType.tag == Tag::tagIdent && rightType.ident == "size") {
                     if (leftType.tag != Tag::tagArray) {
                         printOffset();
-                        std::cout << "Obtaining size from non-array";
+                        ErrorHandler::ThrowError("Type mismatch: expected to obtain size from array, got from: "+
+                                                 ToString(leftType.tag),node.span);
                         exit(1);
                     } else {
                         contextStack.push_back(ST_INTEGER);
@@ -301,12 +305,14 @@ namespace ast {
                 else {
                     if (leftType.tag != Tag::tagRecord) {
                         printOffset();
-                        std::cout << "Type mismatch: dot access of non-record";
+                        ErrorHandler::ThrowError("Type mismatch: expected dot access of record, got of: "+
+                                                 ToString(leftType.tag),node.span);
                         exit(1);
                     }
                     if (rightType.tag != Tag::tagIdent) {
                         printOffset();
-                        std::cout << "Type mismatch: malformed dot access of record";
+                        ErrorHandler::ThrowError("Type mismatch: expected identifier, got: "+
+                                                 ToString(rightType.tag),node.span);
                         exit(1);
                     }
                     bool found = false;
@@ -319,7 +325,7 @@ namespace ast {
                     }
                     if (!found) {
                         printOffset();
-                        std::cout << "Type mismatch: no such component of record";
+                        ErrorHandler::ThrowError("Type mismatch: no such component of record ",node.span);
                         exit(1);
                     }
                 }
@@ -334,7 +340,8 @@ namespace ast {
                 }
                 if (leftType.tag != Tag::tagBool || rightType.tag != Tag::tagBool) {
                     printOffset();
-                    std::cout << "Type mismatch: boolean operation on non-bool";
+                    ErrorHandler::ThrowError("Type mismatch: expected: "+ ToString(Tag::tagBool)+ ", got: "
+                                             + ToString(leftType.tag)+" and"+ ToString(rightType.tag),node.span);
                     exit(1);
                 }
                 contextStack.push_back(ST_BOOLEAN);
@@ -354,7 +361,7 @@ namespace ast {
                     rightType.tag == Tag::tagBool ||
                     leftType.tag != rightType.tag) {
                     printOffset();
-                    std::cout << "Type mismatch: comparison operation on non-real or non-integer, or mismatching types";
+                    ErrorHandler::ThrowError("Type mismatch: comparison operation on non-real or non-integer, or mismatching types",node.span);
                     exit(1);
                 }
                 contextStack.push_back(ST_BOOLEAN);
@@ -373,7 +380,7 @@ namespace ast {
                     rightType.tag == Tag::tagBool ||
                     leftType.tag != rightType.tag) {
                     printOffset();
-                    std::cout << "Type mismatch: arithmetic operation on non-real or non-integer, or mismatching types";
+                    ErrorHandler::ThrowError("Type mismatch: arithmetic operation on non-real or non-integer, or mismatching types",node.span);
                     exit(1);
                 }
                 contextStack.push_back(leftType);
@@ -414,8 +421,8 @@ namespace ast {
         }
         if (cond.tag != tagBool) {
             printOffset();
-            std::cout << "If condition is non-bool";
-            exit(1);
+            ErrorHandler::ThrowError("If condition mismatch: expected: "+ ToString(Tag::tagBool)+", got: "+
+                                     ToString(cond.tag),node.span);
         }
         if (node.body) {
             node.body->accept(this);
@@ -445,8 +452,8 @@ namespace ast {
         StoredType expectedRoutine = resolveIdent(node.name);
         if (expectedRoutine.inTypes != inTypes) {
             printOffset();
-            std::cout << "RoutineCall argument mismatch";
-            exit(1);
+            ErrorHandler::ThrowError("RoutineCall argument mismatch: expected: "+ ToString(expectedRoutine.inTypes)+", got: "+
+                                     ToString(inTypes),node.span);
         }
         cutContextStack(startSize);
 
@@ -472,8 +479,8 @@ namespace ast {
         } else {
             if (expectedReturnTypes.back() != result) {
                 printOffset();
-                std::cout << "Expected return type mismatch";
-                exit(1);
+                ErrorHandler::ThrowError("Expected return type mismatch: expected: "+ ToString(expectedReturnTypes.back().tag)+", got: "+
+                                         ToString(result.tag),node.span);
             }
         }
         cutContextStack(startSize);
@@ -518,8 +525,8 @@ namespace ast {
             if (val.tag != Tag::tagNull) {
                 if (expected != val) {
                     printOffset();
-                    std::cout << "Variable declaration type mismatch";
-                    exit(1);
+                    ErrorHandler::ThrowError("Variable declaration type mismatch: expected: "+ ToString(expected.tag)+", got: "+
+                                                                                                                      ToString(val.tag),node.span);
                 }
             } else {
                 val = expected;
@@ -582,8 +589,7 @@ namespace ast {
             }
             if (size.tag != Tag::tagInteger) {
                 printOffset();
-                std::cout << "Array size is non int.";
-                exit(1);
+                ErrorHandler::ThrowError("Expected array size to be int, got " + ToString(size.tag),node.span);
             }
         }
         StoredType type = ST_NULL;
@@ -592,13 +598,13 @@ namespace ast {
             type = contextStack.back();
             if (type.tag == Tag::tagIdent) {
                 printOffset();
-                std::cout << "Array type is non-type";
-                exit(1);
+                ErrorHandler::ThrowError( "Array type is " + type.ident + ", this is not supported", node.span);
             }
+
         }
         if (type == ST_NULL) {
             printOffset();
-            std::cout << "No array type specified";
+            ErrorHandler::ThrowError("No array type specified.", node.span);
             exit(1);
         }
         result.content.push_back(type);
