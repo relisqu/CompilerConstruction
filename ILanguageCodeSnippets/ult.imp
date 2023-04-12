@@ -1,7 +1,7 @@
 type Human is record
 var age : integer;
 var weight : real;
-var gender : boolean is 1;
+var gender : boolean is true;
 end;
 
 routine HumanConstructor (age : integer, weight : real, gender : boolean) is

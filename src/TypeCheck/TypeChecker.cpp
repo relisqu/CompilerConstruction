@@ -396,34 +396,35 @@ namespace ast {
 
         int startSize = contextStack.size();
         int lastSize = startSize;
+
+        StoredType expected = ST_NULL;
+        StoredType val = ST_NULL;
+
         if (node.type) {
             node.type->accept(this);
-        }
-        StoredType expected = ST_NULL;
-        if (contextStack.size() == startSize + 1) {
             expected = contextStack.back();
-            lastSize = startSize + 1;
         }
         if (node.value) {
             node.value->accept(this);
-        }
-        StoredType val = ST_NULL;
-        if (contextStack.size() == lastSize + 1) {
             val = contextStack.back();
         }
         if (node.ident) {
             node.ident->accept(this);
         }
+        cutContextStack(startSize);
 
         if (expected.tag != Tag::tagNull) {
-            if (expected != val) {
-                printOffset();
-                std::cout << "Variable declaration type mismatch";
-                exit(1);
+            if (val.tag != Tag::tagNull) {
+                if (expected != val) {
+                    printOffset();
+                    std::cout << "Variable declaration type mismatch";
+                    exit(1);
+                }
+            } else {
+                val = expected;
             }
         }
 
-        cutContextStack(startSize);
         identMap[node.name].push_back(val);
         val.ident = node.name;
         contextStack.push_back(val);
