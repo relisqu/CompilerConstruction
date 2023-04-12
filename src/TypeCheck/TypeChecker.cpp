@@ -235,7 +235,8 @@ namespace ast {
 
         if (lval != rval) {
             printOffset();
-            std::cout << "Assignment type mismatch";
+            ErrorHandler::ThrowError("Assignment type mismatch: expected types to be equal, got: "+
+                    ToString(lval.tag)+" and "+ ToString(rval.tag), node.span);
             exit(1);
         }
 
