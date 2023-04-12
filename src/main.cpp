@@ -3,6 +3,9 @@
 #include "LexicalAnalysis/Scanner.h"
 #include "LexicalAnalysis/Demonstration.h"
 #include "Debug/DebugMode.h"
+#include "AST/AST.h"
+#include "TypeCheck/TypeChecker.h"
+#include "Parser/Parser.tab.hpp"
 
 /**
  Compilers Construction, team A
@@ -23,7 +26,10 @@ int main(int argc, char *argv[]) {
 
     yy::parser p;
     p.parse();
-    ast::dfs();
+    //ast::show_dfs();
+    sp<Program> ourProgram = ast::getProgram();
+    ourProgram->accept(new ast::TypeChecker());
+
     //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }
