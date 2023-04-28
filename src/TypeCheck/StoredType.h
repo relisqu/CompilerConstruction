@@ -11,11 +11,13 @@
 #include <vector>
 #include "Tag.h"
 
+static int globalScope = 0;
+
 class StoredType {
 public:
     Tag tag;
     std::string ident;
-    int current_scope = 0;
+    int current_scope = globalScope;
 
     std::vector<StoredType> inTypes = {};
     std::vector<StoredType> outTypes = {};
