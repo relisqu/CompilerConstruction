@@ -10,6 +10,20 @@ namespace ast {
 
     int currentDepth = 0;
 
+    void TypeChecker::increaseScope() {
+        globalScope++;
+    }
+
+    void TypeChecker::decreaseScope() {
+        globalScope--;
+        for (auto it = identMap.begin(); it != identMap.end(); it++) {
+            while (!it->second.empty() && it->second.back().current_scope > globalScope) {
+                it->second.pop_back();
+            }
+        }
+
+    }
+
     void increaseDepth() {
         currentDepth++;
     }
@@ -32,6 +46,7 @@ namespace ast {
     }
 
     void TypeChecker::visit(const Block &node) {
+        increaseScope();
         increaseDepth();
         printOffset();
         std::cout << "Visiting block at " << std::string(node.span) << '\n';
@@ -39,6 +54,7 @@ namespace ast {
             n->accept(this);
         }
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Routine &node) {
