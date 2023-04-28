@@ -24,10 +24,12 @@ public:
     std::vector<StoredType> content = {};
 
     StoredType() {
+        current_scope = globalScope;
         tag = Tag::tagNull;
     }
 
     explicit StoredType(Tag _tag) {
+        current_scope = globalScope;
         tag = _tag;
     }
 
