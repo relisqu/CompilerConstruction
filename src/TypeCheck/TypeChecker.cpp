@@ -79,11 +79,9 @@ namespace ast {
         int index = identMap[result.ident].size();
         identMap[result.ident].push_back(result);
         if (node.body) {
-            //BODY
             node.body->accept(this);
         }
         for (const auto& n : node.returnStatements) {
-            // FUCKING EMPTY WHAT THE FUCK
             n->accept(this);
         }
         if (expectedReturnTypes.back() == ST_PLACEHOLDER) {
@@ -307,6 +305,7 @@ namespace ast {
                                              ToString(rightType.tag),node.span);
                     exit(1);
                 }
+
                 StoredType _result = leftType.content.back();
                 contextStack.push_back(_result);
             } else if (operation == ".") {
