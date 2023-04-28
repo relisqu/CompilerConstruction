@@ -59,6 +59,7 @@ namespace ast {
     }
 
     void TypeChecker::visit(const Routine &node) {
+        increaseScope();
         increaseDepth();
         printOffset();
         std::cout << "Visiting Routine " << node.name << " at " << std::string(node.span) << '\n';
@@ -119,6 +120,7 @@ namespace ast {
         identMap[result.ident][index] = result;
 
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Type &node) {
@@ -154,6 +156,7 @@ namespace ast {
 
     void TypeChecker::visit(const ForLoop &node) {
         increaseDepth();
+        increaseScope();
         printOffset();
         std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.span) << '\n';
         StoredType start = ST_NULL;
@@ -192,6 +195,7 @@ namespace ast {
 
 
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Statement &node) {
@@ -203,6 +207,7 @@ namespace ast {
 
     void TypeChecker::visit(const WhileLoop &node) {
         increaseDepth();
+        increaseScope();
         printOffset();
         std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
@@ -222,6 +227,7 @@ namespace ast {
             node.body->accept(this);
         }
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Assignment &node) {
@@ -443,6 +449,7 @@ namespace ast {
     }
 
     void TypeChecker::visit(const IfStatement &node) {
+        increaseScope();
         increaseDepth();
         printOffset();
         std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.span) << '\n';
@@ -468,6 +475,7 @@ namespace ast {
         }
         cutContextStack(startSize);
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const RoutineCall &node) {
@@ -525,6 +533,7 @@ namespace ast {
     }
 
     void TypeChecker::visit(const Program &program) {
+        increaseScope();
         increaseDepth();
         printOffset();
         std::cout << "Visiting program.\n";
@@ -532,10 +541,12 @@ namespace ast {
             n->accept(this);
         }
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Variable &node) {
         increaseDepth();
+
         printOffset();
         std::cout << "Visiting Variable " << node.name << " at " << std::string(node.span) << '\n';
 
@@ -595,6 +606,7 @@ namespace ast {
 
     void TypeChecker::visit(const Record &node) {
         increaseDepth();
+        increaseScope();
         printOffset();
         std::cout << "Visiting Record " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
@@ -609,6 +621,7 @@ namespace ast {
         identMap[node.name].push_back(result);
 
         decreaseDepth();
+        decreaseScope();
     }
 
     void TypeChecker::visit(const Array &node) {
