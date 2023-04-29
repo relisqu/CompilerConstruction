@@ -1,4 +1,7 @@
-var MyArray : array [5] integer;
+var n is 12;
+
+
+var MyArray : array [n] integer;
 
 MyArray[1] := 3;
 

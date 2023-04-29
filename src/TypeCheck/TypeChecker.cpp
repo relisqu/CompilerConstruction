@@ -67,6 +67,8 @@ namespace ast {
 
         StoredType expected = ST_PLACEHOLDER;
         StoredType ident = ST_NULL;
+        ident.setScope();
+        expected.setScope();
         if (node.ident) {
             node.ident->accept(this);
             ident = contextStack.back();
@@ -76,19 +78,20 @@ namespace ast {
 
         for (const auto& n : node.parameters) {
             n->accept(this);
+            contextStack.back().setScope();
             inTypes.push_back(contextStack.back());
         }
 
         if (node.returnType) {
             node.returnType->accept(this);
             expected = contextStack.back();
+            expected.setScope();
             outTypes.push_back(expected);
         }
 
         expectedReturnTypes.push_back(expected);
 
         StoredType result = ST_ROUTINE;
-
         result.inTypes = inTypes;
         result.outTypes = outTypes;
         result.ident = ident.ident;
@@ -116,7 +119,7 @@ namespace ast {
         result.inTypes = inTypes;
         result.outTypes = outTypes;
         result.ident = ident.ident;
-
+        result.setScope();
         identMap[result.ident][index] = result;
 
         decreaseDepth();
@@ -148,6 +151,7 @@ namespace ast {
         std::cout << "Visiting Ident " << node.name << " at " << std::string(node.span) << '\n';
 
         StoredType result = ST_IDENT;
+        result.setScope();
         result.ident = node.name;
         contextStack.push_back(result);
 
@@ -160,8 +164,11 @@ namespace ast {
         printOffset();
         std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.span) << '\n';
         StoredType start = ST_NULL;
+        start.setScope();
         StoredType end = ST_NULL;
+        end.setScope();
         StoredType var = ST_NULL;
+        var.setScope();
         int startSize = contextStack.size();
         if (node.rangeStart) {
             node.rangeStart->accept(this);
@@ -212,6 +219,7 @@ namespace ast {
         std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
         StoredType cond = ST_NULL;
+        cond.setScope();
         if (node.condition) {
             node.condition->accept(this);
             cond = contextStack.back();
@@ -236,7 +244,9 @@ namespace ast {
         std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
         StoredType lval = ST_NULL;
+        lval.setScope();
         StoredType rval = ST_NULL;
+        rval.setScope();
         if (node.lValue) {
             node.lValue->accept(this);
             lval = contextStack.back();
@@ -271,6 +281,7 @@ namespace ast {
         printOffset();
         std::cout << "Visiting Expression " << node.name << " ";
         StoredType result = ST_NULL;
+        result.setScope();
         std::string operation = "";
         switch (node.value.index()) {
             case 0:
@@ -292,7 +303,9 @@ namespace ast {
         }
         std::cout << " at " << std::string(node.span) << '\n';
         StoredType leftType = ST_NULL;
+        leftType.setScope();
         StoredType rightType = ST_NULL;
+        rightType.setScope();
         int startSize = contextStack.size();
         if (node.l) {
             node.l->accept(this);
@@ -428,6 +441,7 @@ namespace ast {
                 contextStack.push_back(leftType);
             } else if (node.name == "ident") {
                 StoredType ret = ST_IDENT;
+                ret.setScope();
                 ret.ident = operation;
                 contextStack.push_back(ret);
             }
@@ -454,6 +468,7 @@ namespace ast {
         printOffset();
         std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.span) << '\n';
         StoredType cond = ST_NULL;
+        cond.setScope();
         int startSize = contextStack.size();
         if (node.condition) {
             node.condition->accept(this);
@@ -512,6 +527,7 @@ namespace ast {
         std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
         StoredType result = ST_NULL;
+        result.setScope();
         if (node.returned) {
             node.returned->accept(this);
             result = contextStack.back();
@@ -581,6 +597,9 @@ namespace ast {
             }
         }
 
+        val.setScope();
+        expected.setScope();
+
         identMap[node.name].push_back(val);
         val.ident = node.name;
         contextStack.push_back(val);
@@ -618,6 +637,7 @@ namespace ast {
 
         StoredType result = ST_RECORD;
         result.content = content;
+        result.setScope();
         identMap[node.name].push_back(result);
 
         decreaseDepth();
@@ -631,6 +651,8 @@ namespace ast {
         int startSize = contextStack.size();
         StoredType result = ST_ARRAY;
         StoredType size = ST_NULL;
+        size.setScope();
+        result.setScope();
         if (node.size) {
             node.size->accept(this);
             size = contextStack.back();
@@ -643,6 +665,7 @@ namespace ast {
             }
         }
         StoredType type = ST_NULL;
+        type.setScope();
         if (node.type) {
             node.type->accept(this);
             type = contextStack.back();

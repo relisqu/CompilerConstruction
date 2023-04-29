@@ -62,6 +62,12 @@ public:
         return !(*this == other);
     }
 
+    void setScope(){
+
+        current_scope = globalScope;
+    }
+
+
 };
 
 
