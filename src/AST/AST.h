@@ -389,7 +389,7 @@ namespace ast {
     };
 
     struct BuiltinType : Type {
-        std::variant<long long int, double, bool> iValue, rValue, bValue;
+        std::variant<long long int, double, bool> Value;
 
         explicit BuiltinType(const std::string &otherName) : Type(otherName) {
             name = otherName;

@@ -6,6 +6,7 @@
 #include "AST/AST.h"
 #include "TypeCheck/TypeChecker.h"
 #include "Parser/Parser.tab.hpp"
+#include "CodeGeneration/ICodeGeneratable.h"
 
 /**
  Compilers Construction, team A
@@ -39,6 +40,8 @@ int main(int argc, char *argv[]) {
     sp<Program> ourProgram = ast::getProgram();
     ourProgram->accept(new ast::TypeChecker());
 
+    std::cout<<"AAAAAAAAAAAAAAAAAAAAAAA\n";
+    std::cout<< ICodeGeneratable::generate(*ourProgram)<<"\n";
     //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }

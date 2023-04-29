@@ -9,5 +9,3 @@ MyArray[1] := 3;
 routine HumanConstructor (age : integer, weight : real, gender : boolean) is
         age:= 5;
 end;
-
-age:= 3;
