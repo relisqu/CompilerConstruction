@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     ourProgram->accept(new ast::TypeChecker());
 
     std::cout<<"AAAAAAAAAAAAAAAAAAAAAAA\n";
-    std::cout<< ICodeGeneratable::generate(*ourProgram)<<"\n";
+    std::cout<< ourProgram->generateCode()<<"\n";
     //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }

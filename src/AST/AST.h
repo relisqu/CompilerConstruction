@@ -97,125 +97,20 @@ namespace ast {
         virtual void accept(Visitor *v) const {
             v->visit(*this);
         }
-    };
-
-    struct Type : Node {
-
-        Type() = default;
-
-        explicit Type(const sp<Node> &node) {
-            name = node->name;
-            span = cur_span;
+        virtual std::string generateCode() {
+            return {};
         }
-
-        explicit Type(const std::string &otherName) : Node(otherName) {}
-
-        ~Type() override = default;
-
-        Type(Type &&) = default;
-
-        Type(Type &) = default;
-
-        Type &operator=(const Type &other) = default;
-
-        Type &operator=(Type &&) = default;
+    };
+    struct Ident : Node {
+        explicit Ident(const std::string &s) : Node(s) {}
 
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
-    };
 
-    struct Variable : Type {
-        sp<Type> type;
-        sp<Ident> ident;
-        sp<Expression> value = nullptr;
-
-        Variable() = default;
-
-        explicit Variable(const std::string &Name) : Type(Name) {}
-
-        Variable(const std::string &Name, sp<Type> type2) :
-                Type(Name) {
-            type = std::move(type2);
-        }
-
-        Variable(const std::string &Name, sp<Expression> exp) : Type(Name) {
-            value = std::move(exp);
-        }
-
-        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name),
-                                                                                ident(std::make_shared<Ident>(
-                                                                                        Name)) {
-            value = std::move(exp);
-            type = std::move(type2);
-        }
-
-        void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
-    };
-
-    struct Program : Node {
-        std::vector<sp<Node>> nodes;
-
-        Program() { span = cur_span; }
-
-        void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
-    };
-
-    struct Block : Node {
-        std::vector<sp<Node>> nodes;
-
-        Block() { span = cur_span; }
-
-        ~Block() override = default;
-
-        void addVariable(const sp<Node> &v);
-
-        void addStatement(const sp<Node> &s);
-
-        void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
-    };
-
-    struct Routine : Node {
-        sp<Block> body;
-        sp<Ident> ident;
-        spv<Variable> parameters;
-        sp<Type> returnType;
-        spv<ReturnStatement> returnStatements;
-
-        Routine() = default;
-
-        Routine(const std::string &name, spv<Variable> params, const sp<Block> &oBody,
-                sp<Type> rtType) : Node("routine"), ident(std::make_shared<Ident>(name)) {
-            parameters = std::move(params);
-
-            body = oBody;
-            returnType = std::move(rtType);
-            span = cur_span;
-        }
-
-        void print() {
-            std::cout << "Routine " << name << " with type : ";
-            if (returnType != nullptr) {
-                std::cout << returnType->name;
-            } else {
-                std::cout << "void";
-            }
-            std::cout << std::endl;
-            std::cout << "vector size : ";
-            std::cout << parameters.size() << std::endl;
-            for (const auto &a: parameters)
-                std::cout << a->name << " " << a->type->name << std::endl;
-        }
-
-        void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
+        std::string generateCode() override{
+            return " "+ name+" ";
+        };
     };
 
     struct Expression : Node {
@@ -266,12 +161,159 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            std::string operation;
+            switch (value.index()) {
+                case 0:
+                    operation = std::get<0>(value);
+                    break;
+                case 1:
+                    std::cout << std::get<1>(value);
+                    break;
+                case 2:
+                    std::cout << std::get<2>(value);
+                    break;
+                case 3:
+                    std::cout << std::get<3>(value);
+                    break;
+            }
+            std::string left;
+            std::string right;
+            if(l){
+                left=l->generateCode();
+            }
+            if(r){
+                right=r->generateCode();
+            }
+           // return left+ operation+right +";\n";
+           std::cout<<"\n-- l:" +left<<" ,n:"<<name<<" ,r:"<<right<<" ,o:"<<operation<<"----\n";
+            return left;
+        };
+    };
+    struct Type : Node {
+
+        Type() = default;
+
+        explicit Type(const sp<Node> &node) {
+            name = node->name;
+            span = cur_span;
+        }
+
+        explicit Type(const std::string &otherName) : Node(otherName) {}
+
+        ~Type() override = default;
+
+        Type(Type &&) = default;
+
+        Type(Type &) = default;
+
+        Type &operator=(const Type &other) = default;
+
+        Type &operator=(Type &&) = default;
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+
+        virtual std::string generateCode() override{
+            return " "+name+" ";
+        };
+    };
+
+    struct Variable : Type {
+        sp<Type> type;
+        sp<Ident> ident;
+        sp<Expression> value = nullptr;
+
+        Variable() = default;
+
+        explicit Variable(const std::string &Name) : Type(Name) {}
+
+        Variable(const std::string &Name, sp<Type> type2) :
+                Type(Name) {
+            type = std::move(type2);
+        }
+
+        Variable(const std::string &Name, sp<Expression> exp) : Type(Name) {
+            value = std::move(exp);
+        }
+
+        Variable(const std::string &Name, sp<Expression> exp, sp<Type> type2) : Type(Name),
+                                                                                ident(std::make_shared<Ident>(
+                                                                                        Name)) {
+            value = std::move(exp);
+            type = std::move(type2);
+        }
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+
+        std::string generateCode() override{
+            std::string typeStr;
+            std::string valueStr;
+            if(type){
+                typeStr=type->generateCode();
+            }
+            if(value){
+                valueStr=value->generateCode();
+
+            }
+
+            return valueStr;
+        };
+    };
+
+    struct Program : Node {
+        std::vector<sp<Node>> nodes;
+
+        Program() { span = cur_span; }
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+        std::string generateCode() override{
+            std::string innerCommands;
+
+            for (auto &node: nodes) {
+                std::string nodeStr=node->generateCode();
+                innerCommands+= nodeStr;
+            }
+            return "int main() { \n"+innerCommands+"\n return 0; \n}";
+        }
+    };
+
+    struct Block : Node {
+        std::vector<sp<Node>> nodes;
+
+        Block() { span = cur_span; }
+
+        ~Block() override = default;
+
+        void addVariable(const sp<Node> &v);
+
+        void addStatement(const sp<Node> &s);
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+        std::string generateCode() override{
+            std::string commands;
+            for (auto &innerNode: nodes) {
+                commands+= innerNode->generateCode()+"\n";
+            }
+            return commands;
+        };
     };
 
     struct Statement : Expression {
         explicit Statement(const std::string& name) : Expression(name) {}
 
         ~Statement() override = default;
+        std::string generateCode() override{
+            return "";
+        };
     };
 
     struct ReturnStatement : Statement {
@@ -300,6 +342,15 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            std::string conditionStr= condition->generateCode();
+            std::string bodyStr;
+            if(body){
+                bodyStr= body->generateCode();
+            }
+            return "while( "+conditionStr+" ){\n"+bodyStr+"}\n";
+        };
     };
 
     struct IfStatement : Statement {
@@ -314,6 +365,27 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+         std::string generateCode() override{
+            std::string conditionStr;
+            std::string ifBranch;
+            std::string elseBranch;
+
+            if (condition) {
+                conditionStr= condition->generateCode();
+            }
+
+            if (body) {
+                ifBranch=body->generateCode();
+            }
+
+            std::string ifStr= "if ("+conditionStr+"){\n "+ifBranch+" }";
+            if(elseBody){
+                ifStr+= "\nelse {\n "+elseBody->generateCode()+" }";
+            }
+            return ifStr;
+        };
+
     };
 
     struct ForLoop : Statement {
@@ -337,6 +409,30 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+        std::string generateCode() override{
+            std::string start;
+            std::string end;
+            std::string loop;
+            std::string bodyStr;
+            if (rangeStart) {
+                start= rangeStart->generateCode();
+            }
+
+            if (rangeEnd) {
+                end= rangeEnd->generateCode();
+            }
+            if (loopVar) {
+                loop= loopVar->generateCode();
+            }
+
+            if(reversed){
+                std::swap(end,start);
+            }
+            if (body) {
+                bodyStr= body->generateCode();
+            }
+            return "for ("+start+end+loop+") {\n"+bodyStr+"}\n";
+        };
     };
 
     struct Declaration : Statement {
@@ -345,6 +441,10 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            return type->generateCode();
+        };
     };
 
     struct Assignment : Statement {
@@ -368,15 +468,11 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+        std::string generateCode() override{
+            return lValue->generateCode() +" = "+ rValue->generateCode() +";";
+        };
     };
 
-    struct Ident : Node {
-        explicit Ident(const std::string &s) : Node(s) {}
-
-        void accept(Visitor *v) const override {
-            v->visit(*this);
-        }
-    };
 
     struct RoutineCall : Statement {
         spv<Expression> args;
@@ -386,6 +482,16 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+        std::string generateCode() override{
+
+            std::string nameStr=name;
+            std::string params;
+
+            for (const auto& n : args) {
+                params+= n->generateCode()+" ";
+            }
+            return nameStr+"("+params+");\n";
+        };
     };
 
     struct BuiltinType : Type {
@@ -398,6 +504,20 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            /*if (name == "integer") {
+                std::cout<<std::get<0>(Value)<<name<<"\n";
+                return std::to_string(std::get<0>(Value));
+            }
+            else if (name == "real") {
+                return std::to_string(std::get<1>(Value));
+            }
+            else if (name == "boolean") {
+                return std::to_string(std::get<2>(Value));
+            }*/
+            return " "+name+" ";
+        };
     };
 
     struct Record : Type {
@@ -410,6 +530,15 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            std::string params;
+            for (auto const &n : fields) {
+                params+= n->generateCode()+" ";
+            }
+            return "struct "+name+" {\n"+params+"};\n";
+        };
+
     };
 
     struct Alias : Type {
@@ -418,6 +547,70 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+    };
+
+
+    struct Routine : Node {
+        sp<Block> body;
+        sp<Ident> ident;
+        spv<Variable> parameters;
+        sp<Type> returnType;
+        spv<ReturnStatement> returnStatements;
+
+        Routine() = default;
+
+        Routine(const std::string &name, spv<Variable> params, const sp<Block> &oBody,
+                sp<Type> rtType) : Node("routine"), ident(std::make_shared<Ident>(name)) {
+            parameters = std::move(params);
+
+            body = oBody;
+            returnType = std::move(rtType);
+            span = cur_span;
+        }
+
+        void print() {
+            std::cout << "Routine " << name << " with type : ";
+            if (returnType != nullptr) {
+                std::cout << returnType->name;
+            } else {
+                std::cout << "void";
+            }
+            std::cout << std::endl;
+            std::cout << "vector size : ";
+            std::cout << parameters.size() << std::endl;
+            for (const auto &a: parameters)
+                std::cout << a->name << " " << a->type->name << std::endl;
+        }
+
+        void accept(Visitor *v) const override {
+            v->visit(*this);
+        }
+
+
+        std::string generateCode() override{
+
+            std::string type="void";
+            std::string name;
+            std::string params;
+            std::string bodyStr;
+            std::string returnStr="return ";
+
+            if (returnType) {
+                type= returnType->generateCode();
+            }
+            name= ident->generateCode();
+
+            for (const auto& n : parameters) {
+                params+= n->generateCode()+" ";
+            }
+
+            bodyStr= body->generateCode();
+
+            for (const auto& n : returnStatements) {
+                returnStr+=n->generateCode();
+            }
+            return type+" "+name+"("+params+"){\n"+bodyStr+returnStr+";}\n";
+        };
     };
 
     struct Array : Type {
@@ -439,6 +632,15 @@ namespace ast {
         void accept(Visitor *v) const override {
             v->visit(*this);
         }
+
+        std::string generateCode() override{
+            "int myNumbers[] = {25, 50, 75, 100};" ;
+            std::string sizeStr;
+            if(size){
+                sizeStr=size->generateCode();
+            }
+            return type->generateCode()+" "+name+"["+sizeStr+"];\n";
+        };
     };
 
     sp<Program> getProgram();

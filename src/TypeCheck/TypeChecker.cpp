@@ -595,6 +595,7 @@ namespace ast {
                 }
             } else {
                 val = expected;
+                //node.type = std::make_shared<Type>(ToString(val.tag));
             }
         }
 
