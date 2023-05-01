@@ -12,6 +12,8 @@
 #include "Tag.h"
 
 static int globalScope = 0;
+class StoredType;
+inline std::string ToString(const std::vector<StoredType>&  t);
 
 class StoredType {
 public:
@@ -63,10 +65,22 @@ public:
     }
 
     void setScope(){
-
         current_scope = globalScope;
     }
 
+    void setScope(int targetScope) {
+        current_scope = targetScope;
+    }
+
+    void print() {
+        std::cout << ToString(tag) << '\n';
+        std::cout << ident << '\n';
+        std::cout << current_scope << '\n';
+
+        std::cout << "InTypes: " << ToString(inTypes) << '\n';
+        std::cout << "OutTypes: " << ToString(outTypes) << '\n';
+        std::cout << "Content: " << ToString(content) << '\n';
+    }
 
 };
 

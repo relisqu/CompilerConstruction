@@ -18,7 +18,7 @@ namespace ast {
     void TypeChecker::decreaseScope() {
         globalScope--;
         for (auto it = identMap.begin(); it != identMap.end(); it++) {
-            std::cout<<it->first<<" "<<it->second.back().current_scope<<"\n";
+            std::cout<< "Purged: " << it->first<<" "<<it->second.back().current_scope<<"\n";
             while (!it->second.empty() && it->second.back().current_scope > globalScope) {
                 it->second.pop_back();
             }
@@ -120,7 +120,7 @@ namespace ast {
         result.inTypes = inTypes;
         result.outTypes = outTypes;
         result.ident = ident.ident;
-        result.setScope();
+        result.setScope(globalScope - 1);
         identMap[result.ident][index] = result;
 
         decreaseDepth();
@@ -634,12 +634,11 @@ namespace ast {
         for (auto const &n : node.fields) {
             n->accept(this);
         }
+        StoredType result = ST_RECORD;
         std::vector <StoredType> content(contextStack.begin() + startSize, contextStack.end());
         cutContextStack(startSize);
-
-        StoredType result = ST_RECORD;
         result.content = content;
-        result.setScope();
+        result.setScope(globalScope - 1);
         identMap[node.name].push_back(result);
 
         decreaseDepth();
