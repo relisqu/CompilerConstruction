@@ -15,7 +15,6 @@ namespace ast {
     class TypeChecker : public Visitor {
     public:
 
-        std::vector<StoredType> expectedReturnTypes = {ST_INTEGER};
 
         int currentDepth = 0;
 

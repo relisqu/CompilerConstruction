@@ -91,6 +91,7 @@ namespace ast {
         }
 
         std::vector<StoredType> contextStack = {};
+        std::vector<StoredType> expectedReturnTypes = {ST_INTEGER};
 
         void cutContextStack(int targetSize) {
             while (contextStack.size() > targetSize) {
