@@ -9,37 +9,6 @@
 namespace ast {
     TypeChecker::TypeChecker() {}
 
-    int currentDepth = 0;
-
-    void TypeChecker::increaseScope() {
-        globalScope++;
-    }
-
-    void TypeChecker::decreaseScope() {
-        globalScope--;
-        for (auto it = identMap.begin(); it != identMap.end(); it++) {
-            std::cout<< "Purged: " << it->first<<" "<<it->second.back().current_scope<<"\n";
-            while (!it->second.empty() && it->second.back().current_scope > globalScope) {
-                it->second.pop_back();
-            }
-        }
-
-    }
-
-    void increaseDepth() {
-        currentDepth++;
-    }
-
-    void decreaseDepth() {
-        currentDepth--;
-    }
-
-    void printOffset() {
-        for (int i = 0; i < currentDepth; i++) {
-            std::cout << "  ";
-        }
-    }
-
     void TypeChecker::visit(const Node &node) {
         increaseDepth();
         printOffset();

@@ -10,7 +10,11 @@
 #include <unordered_map>
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include "Tokens/Span.h"
+#include "StoredType.h"
+#include "Consts.h"
+#include "Error/ErrorHandler.h"
 
 namespace ast {
 
@@ -45,6 +49,55 @@ namespace ast {
 
     class Visitor {
     public:
+
+        std::map<std::string, std::vector<StoredType> > identMap;
+
+        void increaseScope() {
+            globalScope++;
+        }
+
+        void decreaseScope() {
+            globalScope--;
+            for (auto it = identMap.begin(); it != identMap.end(); it++) {
+                std::cout<< "Purged: " << it->first<<" "<<it->second.back().current_scope<<"\n";
+                while (!it->second.empty() && it->second.back().current_scope > globalScope) {
+                    it->second.pop_back();
+                }
+            }
+
+        }
+
+        StoredType resolveIdent(const StoredType& ident) {
+            StoredType result = ST_NULL;
+            result.ident = ident.ident;
+            if (ident.tag != Tag::tagIdent) {
+                return result;
+            }
+            if (!identMap[ident.ident].empty()) {
+                return identMap[ident.ident].back();
+            }
+            if (result == ST_NULL) {
+                //printOffset();
+                ErrorHandler::ThrowError("Ident type mismatch: no such ident defined \"" + result.ident+"\"");
+            }
+            return result;
+        }
+
+        StoredType resolveIdent(const std::string &ident) {
+            if (!identMap[ident].empty()) {
+                return identMap[ident].back();
+            }
+            return ST_NULL;
+        }
+
+        std::vector<StoredType> contextStack = {};
+
+        void cutContextStack(int targetSize) {
+            while (contextStack.size() > targetSize) {
+                contextStack.pop_back();
+            }
+        }
+
         virtual void visit(const Program &node) = 0;
 
         virtual void visit(const Node &node) = 0;
@@ -164,18 +217,22 @@ namespace ast {
 
         std::string generateCode() override{
             std::string operation;
+            std::string strValue = "NOTCONSTVAL";
             switch (value.index()) {
                 case 0:
                     operation = std::get<0>(value);
                     break;
                 case 1:
                     std::cout << std::get<1>(value);
+                    strValue = std::to_string(std::get<1>(value));
                     break;
                 case 2:
                     std::cout << std::get<2>(value);
+                    strValue = std::to_string(std::get<2>(value));
                     break;
                 case 3:
                     std::cout << std::get<3>(value);
+                    strValue = std::to_string(std::get<3>(value));
                     break;
             }
             std::string left;
@@ -186,9 +243,12 @@ namespace ast {
             if(r){
                 right=r->generateCode();
             }
-           // return left+ operation+right +";\n";
-           std::cout<<"\n-- l:" +left<<" ,n:"<<name<<" ,r:"<<right<<" ,o:"<<operation<<"----\n";
-            return left;
+            // return left+ operation+right +";\n";
+            if (left + operation + right == "") {
+                return strValue;
+            }
+            std::cout<<"\n-- l:" +left<<" ,n:"<<name<<" ,r:"<<right<<" ,o:"<<operation<<"----\n";
+            return left + operation + right;
         };
     };
     struct Type : Node {
@@ -253,15 +313,23 @@ namespace ast {
         std::string generateCode() override{
             std::string typeStr;
             std::string valueStr;
+            std::string result;
+
             if(type){
                 typeStr=type->generateCode();
+                result += typeStr + " ";
             }
+            result += name;
             if(value){
+                result += " = ";
                 valueStr=value->generateCode();
-
+                result += valueStr;
+                if (!type) {
+                    result = "auto " + result;
+                }
             }
-
-            return valueStr;
+            result += ";\n";
+            return result;
         };
     };
 
@@ -312,7 +380,7 @@ namespace ast {
 
         ~Statement() override = default;
         std::string generateCode() override{
-            return "";
+            return "STATEMENT";
         };
     };
 
@@ -431,7 +499,12 @@ namespace ast {
             if (body) {
                 bodyStr= body->generateCode();
             }
-            return "for ("+start+end+loop+") {\n"+bodyStr+"}\n";
+            loop.pop_back(); // remove \n
+            loop.pop_back(); // remove ;
+            if (!reversed)
+                return "for (int "+loop+"="+start+";"+loop+"<"+end + ";"+loop+"++"+") {\n"+bodyStr+"}\n";
+            else
+                return "for (int "+loop+"="+start+";"+loop+">"+end + ";"+loop+"--"+") {\n"+bodyStr+"}\n";
         };
     };
 

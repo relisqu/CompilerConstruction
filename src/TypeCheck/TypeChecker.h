@@ -14,45 +14,27 @@
 namespace ast {
     class TypeChecker : public Visitor {
     public:
-        std::map<std::string, std::vector<StoredType> > identMap;
 
-        std::vector<StoredType> contextStack = {};
         std::vector<StoredType> expectedReturnTypes = {ST_INTEGER};
 
-        void increaseScope();
+        int currentDepth = 0;
 
-        void decreaseScope();
+        void increaseDepth() {
+            currentDepth++;
+        }
 
-        void cutContextStack(int targetSize) {
-            while (contextStack.size() > targetSize) {
-                contextStack.pop_back();
+        void decreaseDepth() {
+            currentDepth--;
+        }
+
+        void printOffset() {
+            for (int i = 0; i < currentDepth; i++) {
+                std::cout << "  ";
             }
         }
 
         //void printOffset();
 
-        StoredType resolveIdent(const StoredType& ident) {
-            StoredType result = ST_NULL;
-            result.ident = ident.ident;
-            if (ident.tag != Tag::tagIdent) {
-                return result;
-            }
-            if (!identMap[ident.ident].empty()) {
-                return identMap[ident.ident].back();
-            }
-            if (result == ST_NULL) {
-                //printOffset();
-                ErrorHandler::ThrowError("Ident type mismatch: no such ident defined \"" + result.ident+"\"");
-            }
-            return result;
-        }
-
-        StoredType resolveIdent(const std::string &ident) {
-            if (!identMap[ident].empty()) {
-                return identMap[ident].back();
-            }
-            return ST_NULL;
-        }
 
         void visit(const Program &program) override;
 
