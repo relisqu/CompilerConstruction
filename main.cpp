@@ -6,7 +6,6 @@
 #include "AST/AST.h"
 #include "TypeCheck/TypeChecker.h"
 #include "Parser/Parser.tab.hpp"
-#include "CodeGeneration/ICodeGeneratable.h"
 
 /**
  Compilers Construction, team A
