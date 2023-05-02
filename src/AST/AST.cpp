@@ -71,37 +71,6 @@ namespace ast {
         }
     }
 
-    /*void dfs() {
-        std::sort(ourProgram->nodes.begin(), ourProgram->nodes.end(),
-                  [](const std::shared_ptr<Variable> &a, const std::shared_ptr<Variable> &b) -> bool {
-                      return a->span < b->span;
-                  });
-        std::cout << "\nourProgram contains:";
-        std::cout << "\n=====VARIABLES=====\n";
-        for (const auto &v: ourProgram->nodes) {
-            //printVariable(v);
-        }
-        std::cout << "\n=====ROUTINES=====\n";
-        for (const auto &r: ourProgram->nodes) {
-            std::cout << '\n';
-            std::cout << r->name;
-            std::cout << " at line " << r->span.lineNum;
-            std::cout << " with parameters: \n";
-            for (const auto &p: std::static_pointer_cast<Routine>(r)->parameters)
-                std::cout << p->name << " of type " << p->type->name << "\n";
-            std::cout << "with nodes :\n";
-            for (const auto &v: std::static_pointer_cast<Routine>(r)->body->nodes)
-                //printVariable(v);
-            std::cout << "with statements :\n";
-            for (const auto &statement: std::static_pointer_cast<Routine>(r)->body->nodes) {
-                //printStatement(statement);
-            }
-        }
-        std::cout << "\n=====GLOBAL STATEMENTS=====\n";
-        for (const auto &statement: ourProgram->nodes) {
-            //printStatement(statement);
-        }
-    }*/
 
     void printStatement(const sp<Statement> &s) {
         std::cout << "Statement " << s->name << " at line " << s->span.lineNum << '\n';

@@ -40,14 +40,12 @@ int main(int argc, char *argv[]) {
     sp<Program> ourProgram = ast::getProgram();
     ourProgram->accept(new ast::TypeChecker());
 
-    std::cout<<"AAAAAAAAAAAAAAAAAAAAAAA\n";
     auto *myCodegen = new ast::CodeGenerator();
     ourProgram->accept(myCodegen);
-    std::cout << "CODE GENERATED:";
+    std::cout << "\n\nCODE GENERATED:";
     std::cout << "\n----------------\n";
     std::cout << myCodegen->returnStack.back();
     std::cout << "\n----------------\n";
-    //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }
 

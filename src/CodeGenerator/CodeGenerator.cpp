@@ -18,7 +18,6 @@ namespace ast {
         std::string resultCode = "{\n";
 
         increaseScope();
-        std::cout << "Visiting block at " << std::string(node.span) << '\n';
         for (const auto& n : node.nodes) {
             n->accept(this);
             resultCode += (returnStack.back() + ";\n");
@@ -39,7 +38,6 @@ namespace ast {
         std::string bodyCode;
 
         increaseScope();
-        std::cout << "Visiting Routine " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
         StoredType expected = ST_PLACEHOLDER;
         StoredType ident = ST_NULL;
@@ -49,7 +47,6 @@ namespace ast {
             node.ident->accept(this);
             ident = contextStack.back();
 
-            identCode = returnStack.back();
             returnStack.pop_back();
         }
         std::vector <StoredType> inTypes = {};
@@ -124,14 +121,12 @@ namespace ast {
 
     void CodeGenerator::visit(const Type &node) {
 
-        std::cout << "Visiting Type " << node.name << " at " << std::string(node.span) << '\n';
         contextStack.push_back(identMap[node.name].back());
 
         returnStack.push_back("struct " + node.name);
     }
 
     void CodeGenerator::visit(const Ident &node) {
-        std::cout << "Visiting Ident " << node.name << " at " << std::string(node.span) << '\n';
 
         StoredType result = ST_IDENT;
         result.setScope();
@@ -148,8 +143,7 @@ namespace ast {
         std::string bodyCode;
         
         increaseScope();
-        
-        std::cout << "Visiting ForLoop " << node.name << " at " << std::string(node.span) << '\n';
+
         StoredType start = ST_NULL;
         start.setScope();
         StoredType end = ST_NULL;
@@ -160,9 +154,6 @@ namespace ast {
         if (node.rangeStart) {
             node.rangeStart->accept(this);
             start = contextStack.back();
-            if (start.tag == Tag::tagIdent) {
-                start = resolveIdent(start);
-            }
 
             rangeStartCode = returnStack.back();
             returnStack.pop_back();
@@ -170,9 +161,6 @@ namespace ast {
         if (node.rangeEnd) {
             node.rangeEnd->accept(this);
             end = contextStack.back();
-            if (end.tag == Tag::tagIdent) {
-                end = resolveIdent(end);
-            }
 
             rangeEndCode = returnStack.back();
             returnStack.pop_back();
@@ -211,7 +199,7 @@ namespace ast {
     }
 
     void CodeGenerator::visit(const Statement &node) {
-        std::cout << "Visiting Statement " << node.name << " at " << std::string(node.span) << '\n';
+
     }
 
     void CodeGenerator::visit(const WhileLoop &node) {
@@ -220,9 +208,7 @@ namespace ast {
         std::string bodyCode;
         
         increaseScope();
-        
-        std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.span) << '\n';
-        int startSize = contextStack.size();
+
         StoredType cond = ST_NULL;
         cond.setScope();
         if (node.condition) {
@@ -252,8 +238,7 @@ namespace ast {
         std::string resultCode;
         std::string lvalCode;
         std::string rvalCode;
-        
-        std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.span) << '\n';
+
         int startSize = contextStack.size();
         StoredType lval = ST_NULL;
         lval.setScope();
@@ -261,25 +246,17 @@ namespace ast {
         rval.setScope();
         if (node.lValue) {
             node.lValue->accept(this);
-            lval = contextStack.back();
 
             lvalCode = returnStack.back();
             returnStack.pop_back();
         }
         if (node.rValue) {
             node.rValue->accept(this);
-            rval = contextStack.back();
 
             rvalCode = returnStack.back();
             returnStack.pop_back();
         }
 
-        if (lval.tag == Tag::tagIdent) {
-            lval = resolveIdent(lval);
-        }
-        if (rval.tag == Tag::tagIdent) {
-            rval = resolveIdent(rval);
-        }
 
         cutContextStack(startSize);
 
@@ -297,33 +274,27 @@ namespace ast {
         std::string valueCode;
         bool isSizeOp = false;
 
-        std::cout << "Visiting Expression " << node.name << " ";
         StoredType result = ST_NULL;
         result.setScope();
-        std::string operation = "";
+        std::string operation;
         switch (node.value.index()) {
             case 0:
                 operation = std::get<0>(node.value);
-                std::cout << operation;
                 valueCode = operation;
                 break;
             case 1:
-                std::cout << std::get<1>(node.value);
                 result = ST_INTEGER;
                 valueCode = std::to_string(std::get<1>(node.value));
                 break;
             case 2:
-                std::cout << std::get<2>(node.value);
                 result = ST_REAL;
                 valueCode = std::to_string(std::get<2>(node.value));
                 break;
             case 3:
-                std::cout << std::get<3>(node.value);
                 result = ST_BOOLEAN;
                 valueCode = std::to_string(std::get<3>(node.value));
                 break;
         }
-        std::cout << " at " << std::string(node.span) << '\n';
         StoredType leftType = ST_NULL;
         leftType.setScope();
         StoredType rightType = ST_NULL;
@@ -446,7 +417,6 @@ namespace ast {
     void CodeGenerator::visit(const Declaration &node) {
         std::string resultCode;
 
-        std::cout << "Visiting Declaration " << node.name << " at " << std::string(node.span) << '\n';
         if (node.type) {
             node.type->accept(this);
             resultCode = returnStack.back();
@@ -464,7 +434,6 @@ namespace ast {
 
         increaseScope();
 
-        std::cout << "Visiting IfStatement " << node.name << " at " << std::string(node.span) << '\n';
         StoredType cond = ST_NULL;
         cond.setScope();
         int startSize = contextStack.size();
@@ -506,7 +475,6 @@ namespace ast {
         std::string resultCode;
         std::string argsCode;
 
-        std::cout << "Visiting RoutineCall " << node.name << " at " << std::string(node.span) << '\n';
 
         int startSize = contextStack.size();
         std::vector<StoredType> inTypes;
@@ -537,7 +505,6 @@ namespace ast {
         std::string resultCode;
         std::string returnedCode;
 
-        std::cout << "Visiting ReturnStatement " << node.name << " at " << std::string(node.span) << '\n';
         int startSize = contextStack.size();
         StoredType result = ST_NULL;
         result.setScope();
@@ -562,15 +529,14 @@ namespace ast {
 
     void CodeGenerator::visit(const Program &program) {
         std::string resultCode;
-        resultCode += "#define and &\n";
-        resultCode += "#define or |\n";
+        resultCode += "#define and &&\n";
+        resultCode += "#define or ||\n";
         resultCode += "#define xor ^\n";
         resultCode += "int main() {\n";
 
 
         increaseScope();
-        
-        std::cout << "Visiting program.\n";
+
         for (const auto& n : program.nodes) {
             n->accept(this);
             resultCode += returnStack.back() + ";\n";
@@ -590,10 +556,8 @@ namespace ast {
         std::string identCode;
         std::string sizeCode;
 
-        std::cout << "Visiting Variable " << node.name << " at " << std::string(node.span) << '\n';
 
         int startSize = contextStack.size();
-        int lastSize = startSize;
 
         StoredType expected = ST_NULL;
         StoredType val = ST_NULL;
@@ -657,19 +621,18 @@ namespace ast {
 
     void CodeGenerator::visit(const BuiltinType &node) {
         
-        
-        std::cout << "Visiting BuiltinType " << node.name << " at " << std::string(node.span) << '\n';
+
         if (node.name == "integer") {
             contextStack.push_back(ST_INTEGER);
-            returnStack.push_back("int");
+            returnStack.emplace_back("int");
         }
         else if (node.name == "real") {
             contextStack.push_back(ST_REAL);
-            returnStack.push_back("double");
+            returnStack.emplace_back("double");
         }
         else if (node.name == "boolean") {
             contextStack.push_back(ST_BOOLEAN);
-            returnStack.push_back("int");
+            returnStack.emplace_back("int");
         }
     }
 
@@ -678,8 +641,7 @@ namespace ast {
         std::string fieldsCode;
         
         increaseScope();
-        
-        std::cout << "Visiting Record " << node.name << " at " << std::string(node.span) << '\n';
+
         int startSize = contextStack.size();
         for (auto const &n : node.fields) {
             n->accept(this);
@@ -706,8 +668,7 @@ namespace ast {
         std::string resultCode;
         std::string sizeCode;
         std::string typeCode;
-        
-        std::cout << "Visiting Array " << node.name << " at " << std::string(node.span) << '\n';
+
         int startSize = contextStack.size();
         StoredType result = ST_ARRAY;
         StoredType size = ST_NULL;
@@ -716,9 +677,6 @@ namespace ast {
         if (node.size) {
             node.size->accept(this);
             size = contextStack.back();
-            if (size.tag == Tag::tagIdent) {
-                size = resolveIdent(size);
-            }
 
             sizeCode = returnStack.back();
             returnStack.pop_back();

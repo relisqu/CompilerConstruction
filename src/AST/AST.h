@@ -580,16 +580,6 @@ namespace ast {
         }
 
         std::string generateCode() override{
-            /*if (name == "integer") {
-                std::cout<<std::get<0>(Value)<<name<<"\n";
-                return std::to_string(std::get<0>(Value));
-            }
-            else if (name == "real") {
-                return std::to_string(std::get<1>(Value));
-            }
-            else if (name == "boolean") {
-                return std::to_string(std::get<2>(Value));
-            }*/
             return " "+name+" ";
         };
     };
