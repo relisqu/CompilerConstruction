@@ -1,0 +1,5 @@
+var a is 10
+var b is a
+var c is b
+var d is b + c
+var e is (b > c)

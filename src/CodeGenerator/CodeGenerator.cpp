@@ -584,8 +584,13 @@ namespace ast {
         }
         cutContextStack(startSize);
 
+        StoredType oldVal = val;
+
         if (expected.tag != Tag::tagNull) {
             val = expected;
+        }
+        if (val.tag == Tag::tagIdent) {
+            val = resolveIdent(val.ident);
         }
 
         val.setScope();
@@ -595,7 +600,10 @@ namespace ast {
         val.ident = node.name;
         contextStack.push_back(val);
         if (typeCode.empty() && !valueCode.empty()) {
-            typeCode = val.getType();
+            if (oldVal.tag == Tag::tagIdent) {
+                oldVal = resolveIdent(oldVal.ident);
+            }
+            typeCode = oldVal.getType();
         }
         //Handling declaration of arrays
         if (val.tag == Tag::tagArray) {
