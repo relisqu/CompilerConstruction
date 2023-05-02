@@ -41,7 +41,12 @@ int main(int argc, char *argv[]) {
     ourProgram->accept(new ast::TypeChecker());
 
     std::cout<<"AAAAAAAAAAAAAAAAAAAAAAA\n";
-    ourProgram->accept(new ast::CodeGenerator());
+    auto *myCodegen = new ast::CodeGenerator();
+    ourProgram->accept(myCodegen);
+    std::cout << "CODE GENERATED:";
+    std::cout << "\n----------------\n";
+    std::cout << myCodegen->returnStack.back();
+    std::cout << "\n----------------\n";
     //DemonstrateLexer(scanner.get_tokens());
     return 0;
 }

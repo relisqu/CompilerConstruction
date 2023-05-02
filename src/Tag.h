@@ -49,4 +49,38 @@ inline std::string ToString(Tag tag)
             break;
     }
 }
+
+inline std::string ToCode(Tag tag)
+{
+    switch (tag)
+    {
+        case tagPlaceholder:
+            return "PLACEHOLDER";
+            break;
+        case tagNull:
+            return "void";
+            break;
+        case tagIdent:
+            return "IDENT";
+            break;
+        case tagInteger:
+            return "int";
+            break;
+        case tagReal:
+            return "double";
+            break;
+        case tagBool:
+            return "int";
+            break;
+        case tagRecord:
+            return "struct";
+            break;
+        case tagArray:
+            return "ARRAY";
+            break;
+        case tagRoutine:
+            return "ROUTINE";
+            break;
+    }
+}
 #endif //COMPILERCONSTRUCTION_TAG_H

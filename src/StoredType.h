@@ -20,6 +20,7 @@ public:
     Tag tag;
     std::string ident;
     int current_scope = globalScope;
+    std::string typeName; // For records;
 
     std::vector<StoredType> inTypes = {};
     std::vector<StoredType> outTypes = {};
@@ -62,6 +63,14 @@ public:
 
     bool operator!= (const StoredType &other) const {
         return !(*this == other);
+    }
+
+    std::string getType() {
+        if (tag == Tag::tagRecord) {
+            return "struct " + typeName;
+        } else {
+            return ToCode(tag);
+        }
     }
 
     void setScope(){
