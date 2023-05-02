@@ -8,6 +8,7 @@
 
 namespace ast {
 
+    bool variableHasCompileTimeCallings;
     CodeGenerator::CodeGenerator() {}
 
     void CodeGenerator::visit(const Node &node) {
@@ -20,10 +21,10 @@ namespace ast {
         increaseScope();
         for (const auto& n : node.nodes) {
             n->accept(this);
-            resultCode += (returnStack.back() + ";\n");
+            resultCode +=(returnStack.back() + ";\n");
             returnStack.pop_back();
         }
-        resultCode += "}\n";
+        resultCode += "}";
 
         decreaseScope();
 
@@ -398,7 +399,14 @@ namespace ast {
         resultCode = leftCode + " " + operationCode + " " + rightCode;
         // Accessing array field
         if (operationCode == "[]") {
-            resultCode = leftCode + "[" + rightCode + "]";
+            if(is_number(rightCode)){
+
+                resultCode = leftCode + "[" +  std::to_string(std::stoi( rightCode )-1) + "]";
+            }else{
+
+                resultCode = leftCode + "[" + rightCode + "-1  ]";
+            }
+
         }
         // Accessing record field
         if (operationCode == ".") {
@@ -475,7 +483,7 @@ namespace ast {
     void CodeGenerator::visit(const RoutineCall &node) {
         std::string resultCode;
         std::string argsCode;
-
+        variableHasCompileTimeCallings=true;
 
         int startSize = contextStack.size();
         std::vector<StoredType> inTypes;
@@ -540,8 +548,13 @@ namespace ast {
         mainCode += "int main() {\n";
         for (const auto& n : program.nodes) {
             n->accept(this);
-            mainCode += returnStack.back() + ";\n";
-            returnStack.pop_back();
+
+            if(returnStack.back().length() <= 0){
+                returnStack.pop_back();
+            }else{
+                mainCode += returnStack.back() + ";\n";
+                returnStack.pop_back();
+            }
         }
         mainCode += "}\n";
         for (auto n: declarationStack){
@@ -560,6 +573,7 @@ namespace ast {
         std::string identCode;
         std::string sizeCode;
 
+        variableHasCompileTimeCallings=false;
 
         int startSize = contextStack.size();
 
@@ -597,6 +611,7 @@ namespace ast {
             val = resolveIdent(val.ident);
         }
 
+
         val.setScope();
         expected.setScope();
 
@@ -625,10 +640,19 @@ namespace ast {
             identCode = node.name;
         }
         resultCode = typeCode + " " + identCode + sizeCode;
+
         if (!valueCode.empty()) {
             resultCode += " = " + valueCode;
         }
-        returnStack.push_back(resultCode);
+
+
+        if(globalScope==1 && !variableHasCompileTimeCallings){
+
+            declarationStack.push_back(resultCode);
+            returnStack.emplace_back("");
+        }else{
+            returnStack.push_back(resultCode);
+        }
     }
 
     void CodeGenerator::visit(const BuiltinType &node) {

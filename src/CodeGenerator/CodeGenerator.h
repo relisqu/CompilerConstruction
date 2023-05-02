@@ -24,6 +24,15 @@ namespace ast {
             }
         }
 
+        bool is_number(const std::string& s) {
+            try {
+                std::stoi(s);
+            } catch (std::exception& e) {
+                return false;
+            }
+            return true;
+        }
+
         void visit(const Program &program) override;
 
         void visit(const Node &node) override;

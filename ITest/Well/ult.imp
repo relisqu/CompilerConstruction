@@ -1,8 +1,17 @@
+
+var counter is 0;
+
+routine rout() is
+    counter := counter + 1;
+end;
+
 type Human is record
 var age : integer;
 var weight : real;
 var gender : boolean is true;
 end;
+
+
 
 routine HumanConstructor (age : integer, weight : real, gender : boolean) is
         var Result : Human;
