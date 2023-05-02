@@ -116,7 +116,8 @@ namespace ast {
                      result.ident +
                      "(" + parametersCode + ")" +
                      bodyCode;
-        returnStack.push_back(resultCode);
+        declarationStack.push_back(resultCode);
+        returnStack.emplace_back("");
     }
 
     void CodeGenerator::visit(const Type &node) {
@@ -528,25 +529,28 @@ namespace ast {
     }
 
     void CodeGenerator::visit(const Program &program) {
-        std::string resultCode;
-        resultCode += "#define and &&\n";
-        resultCode += "#define or ||\n";
-        resultCode += "#define xor ^\n";
-        resultCode += "int main() {\n";
+        std::string mainCode;
+        std::string declarations;
+        std::string defines = "#define and &&\n";
+        defines += "#define or ||\n";
+        defines += "#define xor ^\n";
 
 
         increaseScope();
-
+        mainCode += "int main() {\n";
         for (const auto& n : program.nodes) {
             n->accept(this);
-            resultCode += returnStack.back() + ";\n";
+            mainCode += returnStack.back() + ";\n";
             returnStack.pop_back();
         }
-        resultCode += "}\n";
+        mainCode += "}\n";
+        for (auto n: declarationStack){
+            declarations+=n+";\n";
+        }
         
         decreaseScope();
 
-        returnStack.push_back(resultCode);
+        returnStack.push_back(defines+declarations+mainCode);
     }
 
     void CodeGenerator::visit(const Variable &node) {
@@ -669,7 +673,8 @@ namespace ast {
 
         fieldsCode = "{\n" + fieldsCode + "}";
         resultCode = "struct " + result.typeName + fieldsCode;
-        returnStack.push_back(resultCode);
+        declarationStack.push_back(resultCode);
+        returnStack.emplace_back("");
     }
 
     void CodeGenerator::visit(const Array &node) {

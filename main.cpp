@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
     auto *myCodegen = new ast::CodeGenerator();
     ourProgram->accept(myCodegen);
-    std::cout << "\n\nCODE GENERATED:";
+    std::cout << "\n\nGenerated C code:";
     std::cout << "\n----------------\n";
     std::cout << myCodegen->returnStack.back();
     std::cout << "\n----------------\n";

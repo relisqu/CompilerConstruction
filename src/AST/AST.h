@@ -59,8 +59,7 @@ namespace ast {
         void decreaseScope() {
             globalScope--;
             for (auto it = identMap.begin(); it != identMap.end(); it++) {
-                std::cout<< "Purged: " << it->first<<" "<<it->second.back().current_scope<<"\n";
-                while (!it->second.empty() && it->second.back().current_scope > globalScope) {
+               while (!it->second.empty() && it->second.back().current_scope > globalScope) {
                     it->second.pop_back();
                 }
             }

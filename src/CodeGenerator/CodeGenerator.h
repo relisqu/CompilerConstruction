@@ -15,6 +15,7 @@ namespace ast {
 
     class CodeGenerator : public Visitor {
     public:
+        std::vector<std::string> declarationStack;
         std::vector<std::string> returnStack;
 
         void cutReturnStack(int targetSize) {
