@@ -32,3 +32,9 @@ foreach(file ${Wells})
             COMMAND ${BINARY}_run ${file})
     set_tests_properties(${name} PROPERTIES WILL_FAIL FALSE)
 endforeach()
+
+add_executable(result cmake-build-debug/src/result.c)
+target_compile_options(result PRIVATE -std=c11)
+
+add_custom_command(TARGET result POST_BUILD COMMAND gcc -g ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug/src/result.c -o result)
+

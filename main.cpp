@@ -46,6 +46,11 @@ int main(int argc, char *argv[]) {
     std::cout << "\n----------------\n";
     std::cout << myCodegen->returnStack.back();
     std::cout << "\n----------------\n";
+
+    std::ofstream outfile("result.c");
+    outfile << myCodegen->returnStack.back() << std::endl;
+    outfile.close();
+
     return 0;
 }
 
