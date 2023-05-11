@@ -12,11 +12,16 @@
 #include "Error/ErrorHandler.h"
 
 namespace ast {
+    /**
+     * @brief Class which checks types of all nodes in AST for semantic error detection and uses Visitor pattern
+     * @see Visitor.h
+     * @see AST.h
+     */
     class TypeChecker : public Visitor {
     public:
 
 
-        int currentDepth = 0;
+        int currentDepth = 0; // depth is used for printing offset
 
         void increaseDepth() {
             currentDepth++;
@@ -26,13 +31,11 @@ namespace ast {
             currentDepth--;
         }
 
-        void printOffset() {
+        void printOffset() const {
             for (int i = 0; i < currentDepth; i++) {
                 std::cout << "  ";
             }
         }
-
-        //void printOffset();
 
 
         void visit(const Program &program) override;
@@ -79,4 +82,4 @@ namespace ast {
 
 
 
-#endif //COMPILERCONSTRUCTION_TYPECHECKER_H
+#endif

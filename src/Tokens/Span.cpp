@@ -37,7 +37,7 @@ Span::Span(Span span1, Span span2) {
     }
 }
 
-bool Span::operator< (const Span &a) {
+bool Span::operator< (const Span &a) const {
     if (lineNum < a.lineNum) {
         return true;
     }

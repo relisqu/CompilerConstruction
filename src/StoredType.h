@@ -11,10 +11,14 @@
 #include <vector>
 #include "Tag.h"
 
-static int globalScope = 0;
+
+static int globalScope = 0;//global scope is variable which is changed during code generation and is used to determine scope of node
+
 class StoredType;
 inline std::string ToString(const std::vector<StoredType>&  t);
-
+/**
+ * @brief StoredType is class which stores type information with name of node, type, tag,its scope etc.
+ */
 class StoredType {
 public:
     Tag tag;
@@ -65,7 +69,7 @@ public:
         return !(*this == other);
     }
 
-    std::string getType() {
+    [[nodiscard]] std::string getType() const {
         if (tag == Tag::tagRecord) {
             return "struct " + typeName;
         } else {
@@ -81,7 +85,7 @@ public:
         current_scope = targetScope;
     }
 
-    void print() {
+    void print() const {
         std::cout << ToString(tag) << '\n';
         std::cout << ident << '\n';
         std::cout << current_scope << '\n';
@@ -93,7 +97,9 @@ public:
 
 };
 
-
+/**
+ * @brief Function which converts vector of StoredTypes to string for printing, debugging
+ */
 inline std::string ToString(const std::vector<StoredType>&  t)
 {
     std::string types;

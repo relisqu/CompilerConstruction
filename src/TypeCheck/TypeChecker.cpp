@@ -1,13 +1,10 @@
-//
-// Created by justsomedude on 08.04.23.
-//
 
 #include "TypeChecker.h"
 #include "AST/AST.h"
 #include "Error/ErrorHandler.h"
 
 namespace ast {
-    TypeChecker::TypeChecker() {}
+    TypeChecker::TypeChecker() = default;
 
     void TypeChecker::visit(const Node &node) {
         increaseDepth();
@@ -187,7 +184,6 @@ namespace ast {
         increaseScope();
         printOffset();
         std::cout << "Visiting WhileLoop " << node.name << " at " << std::string(node.span) << '\n';
-        int startSize = contextStack.size();
         StoredType cond = ST_NULL;
         cond.setScope();
         if (node.condition) {
@@ -212,6 +208,7 @@ namespace ast {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Assignment " << node.name << " at " << std::string(node.span) << '\n';
+
         int startSize = contextStack.size();
         StoredType lval = ST_NULL;
         lval.setScope();
@@ -244,15 +241,14 @@ namespace ast {
         decreaseDepth();
     }
 
-    // TO-DO
-    // This is a clusterfuck. Redo the tree structure to make it more bearable
+
     void TypeChecker::visit(const Expression &node) {
         increaseDepth();
         printOffset();
         std::cout << "Visiting Expression " << node.name << " ";
         StoredType result = ST_NULL;
         result.setScope();
-        std::string operation = "";
+        std::string operation = ""; //getting the type of operation
         switch (node.value.index()) {
             case 0:
                 operation = std::get<0>(node.value);
@@ -292,7 +288,7 @@ namespace ast {
         cutContextStack(startSize);
 
         if (!operation.empty()) {
-            if (operation == "[]") {
+            if (operation == "[]") {  // accessing the array
                 leftType = resolveIdent(leftType);
                 if (leftType.tag != Tag::tagArray) {
                     printOffset();
@@ -305,7 +301,6 @@ namespace ast {
                 }
                 if (rightType.tag != Tag::tagInteger) {
                     printOffset();
-                    //if(leftTy)
                     ErrorHandler::ThrowError("Type mismatch: square bracket access expected to be int, got "+
                                              ToString(rightType.tag),node.span);
                     exit(1);
@@ -313,7 +308,7 @@ namespace ast {
 
                 StoredType _result = leftType.content.back();
                 contextStack.push_back(_result);
-            } else if (operation == ".") {
+            } else if (operation == ".") { // accessing the field
                 if (leftType.tag == Tag::tagIdent) {
                     leftType = resolveIdent(leftType);
                 }
@@ -354,7 +349,7 @@ namespace ast {
                         exit(1);
                     }
                 }
-            } else if (operation == "and" ||
+            } else if (operation == "and" || //binary operations between booleans
                        operation == "or" ||
                        operation == "xor") {
                 if (leftType.tag == Tag::tagIdent) {
@@ -370,7 +365,7 @@ namespace ast {
                     exit(1);
                 }
                 contextStack.push_back(ST_BOOLEAN);
-            } else if (operation == "<" ||
+            } else if (operation == "<" ||  //comparation operations
                        operation == "<=" ||
                        operation == ">" ||
                        operation == ">=" ||
@@ -391,7 +386,7 @@ namespace ast {
                 }
                 contextStack.push_back(ST_BOOLEAN);
             } else if (operation == "*" ||
-                       operation == "/" ||
+                       operation == "/" ||   //arithmetic operations
                        operation == "%" ||
                        operation == "+" ||
                        operation == "-") {
@@ -537,7 +532,6 @@ namespace ast {
         std::cout << "Visiting Variable " << node.name << " at " << std::string(node.span) << '\n';
 
         int startSize = contextStack.size();
-        int lastSize = startSize;
 
         StoredType expected = ST_NULL;
         StoredType val = ST_NULL;
@@ -564,7 +558,6 @@ namespace ast {
                 }
             } else {
                 val = expected;
-                //node.type = std::make_shared<Type>(ToString(val.tag));
             }
         }
 

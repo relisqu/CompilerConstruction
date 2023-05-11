@@ -40,7 +40,9 @@ private:
     std::vector<PreprocessedToken> preprocessedTokens;
 
 
-
+    /**
+     * @brief Map from TokenCode to yy::parser::symbol_type for bison parser
+    */
     std::unordered_map<TokenCode, yy::parser::symbol_type> token_to_bison =
             {
                     { TokenCode::tkGreaterEquals, yy::parser::make_tkGreaterEquals() },

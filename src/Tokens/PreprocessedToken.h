@@ -5,7 +5,7 @@
 #include "Span.h"
 /**
  * Class PreprocessedToken is class for first iteration of lexical analysis.
- * Stores \b value, \b token \b state and \b span
+ * Stores \b value, \b token, \b state and \b span
  */
 class PreprocessedToken {
 

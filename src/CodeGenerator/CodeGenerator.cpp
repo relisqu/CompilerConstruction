@@ -8,8 +8,10 @@
 
 namespace ast {
 
+    // this is a hack to move the variables which are needed at compile time to the main method.
     bool variableHasCompileTimeCallings;
-    CodeGenerator::CodeGenerator() {}
+
+    CodeGenerator::CodeGenerator() = default;
 
     void CodeGenerator::visit(const Node &node) {
         std::cout << "WARNING UNRESOLVED NODE: Visiting generic node " << node.name << " at " << std::string(node.span) << '\n';
@@ -30,6 +32,7 @@ namespace ast {
 
         returnStack.push_back(resultCode);
     }
+
 
     void CodeGenerator::visit(const Routine &node) {
         std::string resultCode;
@@ -70,8 +73,6 @@ namespace ast {
             expected = contextStack.back();
             expected.setScope();
             outTypes.push_back(expected);
-
-            returnTypeCode += returnStack.back();
             returnStack.pop_back();
         }
 
@@ -155,14 +156,12 @@ namespace ast {
         int startSize = contextStack.size();
         if (node.rangeStart) {
             node.rangeStart->accept(this);
-            start = contextStack.back();
 
             rangeStartCode = returnStack.back();
             returnStack.pop_back();
         }
         if (node.rangeEnd) {
             node.rangeEnd->accept(this);
-            end = contextStack.back();
 
             rangeEndCode = returnStack.back();
             returnStack.pop_back();
@@ -179,7 +178,6 @@ namespace ast {
 
         if (node.body) {
             node.body->accept(this);
-
             bodyCode = returnStack.back();
             returnStack.pop_back();
         }
@@ -266,8 +264,6 @@ namespace ast {
         returnStack.push_back(resultCode);
     }
 
-    // TO-DO
-    // This is a clusterfuck. Redo the tree structure to make it more bearable
     void CodeGenerator::visit(const Expression &node) {
         std::string resultCode;
         std::string operationCode;
@@ -278,7 +274,7 @@ namespace ast {
 
         StoredType result = ST_NULL;
         result.setScope();
-        std::string operation;
+        std::string operation;// getting the operation and the value of expression
         switch (node.value.index()) {
             case 0:
                 operation = std::get<0>(node.value);
@@ -297,6 +293,7 @@ namespace ast {
                 valueCode = std::to_string(std::get<3>(node.value));
                 break;
         }
+
         StoredType leftType = ST_NULL;
         leftType.setScope();
         StoredType rightType = ST_NULL;
@@ -319,17 +316,18 @@ namespace ast {
             rightType = contextStack.back();
         }
         cutContextStack(startSize);
-
+        //if the operation is not empty, then it is some special case
         if (!operation.empty()) {
-            if (operation == "[]") {
+            if (operation == "[]") { // Here we have an array access
                 leftType = resolveIdent(leftType);
                 if (rightType.tag == Tag::tagIdent) {
-                    rightType = resolveIdent(rightType);
+                    resolveIdent(rightType);
                 }
 
                 StoredType _result = leftType.content.back();
                 contextStack.push_back(_result);
-            } else if (operation == ".") {
+
+            } else if (operation == ".") { // Here we have access of a field
                 if (leftType.tag == Tag::tagIdent) {
                     leftType = resolveIdent(leftType);
                 }
@@ -346,17 +344,17 @@ namespace ast {
                         }
                     }
                 }
-            } else if (operation == "and" ||
+            } else if (operation == "and" || //binary operations
                        operation == "or" ||
                        operation == "xor") {
                 if (leftType.tag == Tag::tagIdent) {
                     leftType = resolveIdent(leftType);
                 }
                 if (rightType.tag == Tag::tagIdent) {
-                    rightType = resolveIdent(rightType);
+                    resolveIdent(rightType);
                 }
                 contextStack.push_back(ST_BOOLEAN);
-            } else if (operation == "<" ||
+            } else if (operation == "<" || //comparison operations
                        operation == "<=" ||
                        operation == ">" ||
                        operation == ">=" ||
@@ -366,10 +364,10 @@ namespace ast {
                     leftType = resolveIdent(leftType);
                 }
                 if (rightType.tag == Tag::tagIdent) {
-                    rightType = resolveIdent(rightType);
+                    resolveIdent(rightType);
                 }
                 contextStack.push_back(ST_BOOLEAN);
-            } else if (operation == "*" ||
+            } else if (operation == "*" ||  //arithmetic operations
                        operation == "/" ||
                        operation == "%" ||
                        operation == "+" ||
@@ -378,9 +376,10 @@ namespace ast {
                     leftType = resolveIdent(leftType);
                 }
                 if (rightType.tag == Tag::tagIdent) {
-                    rightType = resolveIdent(rightType);
+                    resolveIdent(rightType);
                 }
                 contextStack.push_back(leftType);
+
             } else if (node.name == "ident") {
                 StoredType ret = ST_IDENT;
                 ret.setScope();
@@ -399,7 +398,7 @@ namespace ast {
         resultCode = leftCode + " " + operationCode + " " + rightCode;
         // Accessing array field
         if (operationCode == "[]") {
-            if(is_number(rightCode)){
+            if(isNumber(rightCode)){
 
                 resultCode = leftCode + "[" +  std::to_string(std::stoi( rightCode )-1) + "]";
             }else{
@@ -416,7 +415,7 @@ namespace ast {
         if (resultCode == "  ") {
             resultCode = valueCode;
         }
-        // Case of calling .size.
+        // Case of calling .size.  (C language does not have size() function)
         if (isSizeOp) {
             resultCode = "(sizeof(" + leftCode + ") / sizeof(" + leftType.content[0].getType() + "))";
         }
@@ -454,7 +453,7 @@ namespace ast {
             returnStack.pop_back();
         }
         if (cond.tag == Tag::tagIdent) {
-            cond = resolveIdent(cond);
+            resolveIdent(cond);
         }
         if (node.body) {
             node.body->accept(this);
@@ -536,10 +535,14 @@ namespace ast {
         returnStack.push_back(resultCode);
     }
 
+    /**
+     * @brief The start point of code generation
+     * @param program the program node which represents a whole AST
+     */
     void CodeGenerator::visit(const Program &program) {
         std::string mainCode;
         std::string declarations;
-        std::string defines = "#define and &&\n";
+        std::string defines = "#define and &&\n"; //Defines are need for simpler code generation of boolean operations
         defines += "#define or ||\n";
         defines += "#define xor ^\n";
 
@@ -557,7 +560,8 @@ namespace ast {
             }
         }
         mainCode += "}\n";
-        for (auto n: declarationStack){
+        //declarations are needed for variables that are needed to be declared before main function
+        for (const auto& n: declarationStack){
             declarations+=n+";\n";
         }
         
@@ -602,7 +606,7 @@ namespace ast {
         }
         cutContextStack(startSize);
 
-        StoredType oldVal = val;
+        StoredType oldVal = val; //this type checking part is needed as we have variables with auto type and we can't have this in C language.
 
         if (expected.tag != Tag::tagNull) {
             val = expected;
@@ -646,7 +650,7 @@ namespace ast {
         }
 
 
-        if(globalScope==1 && !variableHasCompileTimeCallings){
+        if(globalScope==1 && !variableHasCompileTimeCallings){ //here we decide if the variable stays global.
 
             declarationStack.push_back(resultCode);
             returnStack.emplace_back("");
@@ -655,6 +659,10 @@ namespace ast {
         }
     }
 
+    /**
+     * @brief Generates code for a constant types
+     * @param node the constant node
+     */
     void CodeGenerator::visit(const BuiltinType &node) {
         
 
@@ -713,7 +721,7 @@ namespace ast {
         result.setScope();
         if (node.size) {
             node.size->accept(this);
-            size = contextStack.back();
+            contextStack.back();
 
             sizeCode = returnStack.back();
             returnStack.pop_back();

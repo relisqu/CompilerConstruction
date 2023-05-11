@@ -12,16 +12,6 @@ namespace ast {
         return ourProgram;
     }
 
-    void Block::addVariable(const sp<Node> &variable) {
-        nodes.push_back(variable);
-        variable->span = cur_span;
-    }
-
-    void Block::addStatement(const sp<Node> &statement) {
-        nodes.push_back(statement);
-        statement->span = cur_span;
-    }
-
 
     std::string Expression::getType(const std::shared_ptr<Expression> &exp) {
         if (exp == nullptr) {
@@ -57,10 +47,10 @@ namespace ast {
         std::string left = getType(exp->l);
         std::string right = getType(exp->r);
         auto *sign = std::get_if<std::string>(&exp->value);
-        // TODO : fix this peace of ...
-        if (!(sign->compare(">") == 0 || sign->compare(">=") == 0 || sign->compare("<") == 0 ||
-              sign->compare("<=") == 0 || sign->compare("=") == 0 || sign->compare("/=") == 0 ||
-              sign->compare("and") == 0 || sign->compare("or") == 0 || sign->compare("xor") == 0)) {
+
+        if (!(*sign == ">" || *sign == ">=" || *sign == "<" ||
+              *sign == "<=" || *sign == "=" || *sign == "/=" ||
+              *sign == "and" || *sign == "or" || *sign == "xor")) {
             if (left == "real" || right == "real") {
                 return "real";
             } else if (left == "integer" || right == "integer") {
@@ -69,80 +59,7 @@ namespace ast {
         } else {
             return "boolean";
         }
+        return "";
     }
 
-
-    void printStatement(const sp<Statement> &s) {
-        std::cout << "Statement " << s->name << " at line " << s->span.lineNum << '\n';
-    }
-
-    void printVariable(const sp<Variable> &v) {
-        std::string x = v->name + "has value";
-        std::cout << v->name << " ";
-        if (v->value == nullptr) {
-            std::cout << "(no value yet)";
-        } else {
-            std::cout << "of type " << Expression::getType(v->value);
-        }
-        std::cout << " at line " << v->span.lineNum << std::endl;
-    }
-
-    void show_dfs() {
-        spv<Node> allItems;
-        for (const auto &v: ourProgram->nodes) {
-            allItems.emplace_back(v);
-        }
-        std::sort(allItems.begin(), allItems.end(),
-                  [](const auto &a, const auto &b) -> bool {
-                      return a->span < b->span;
-                  });
-
-        std::cout << "\n=====TREE=====\n";
-        for (auto &v: allItems) {
-            std::cout << v->name << " at line " << v->span.lineNum << '\n';
-            if (v->name == "while") {
-                sp<WhileLoop> whl = std::dynamic_pointer_cast<WhileLoop>(v);
-                std::cout << "with condition: " << whl->condition->l->name << " " << whl->condition->name << " "
-                          << whl->condition->r->name << '\n';
-                std::cout << "With body made of ";
-                std::cout << whl->body->nodes.size() + whl->body->nodes.size();
-                std::cout << " items \n";
-            }
-
-            if (v->name == "for") {
-                sp<ForLoop> whl = std::dynamic_pointer_cast<ForLoop>(v);
-                std::cout << "with range: " << whl->rangeStart->name << " " << " " << whl->rangeEnd->name << '\n';
-                std::cout << "With body made of ";
-                std::cout << whl->body->nodes.size() + whl->body->nodes.size();
-                std::cout << " items \n";
-            }
-
-            if (v->name == "routine") {
-                sp<Routine> r = std::dynamic_pointer_cast<Routine>(v);
-                std::cout << r->ident->name << " with parameters: \n";
-                for (const auto &p: r->parameters)
-                    std::cout << p->name << " of type " << p->type->name << "\n";
-                std::cout << "with nodes :\n";
-                for (const auto &v: r->body->nodes)
-                    //printVariable(v);
-                std::cout << "with statements :\n";
-                for (const auto &statement: r->body->nodes) {
-                    //printStatement(statement);
-                }
-            }
-            std::cout << "------------\n";
-        }
-    }
-
-
-    void sort_program() {
-        spv<Node> allItems;
-        for (const auto &node: ourProgram->nodes) {
-            allItems.emplace_back(node);
-        }
-        std::sort(allItems.begin(), allItems.end(),
-                  [](const auto &a, const auto &b) -> bool {
-                      return a->span < b->span;
-                  });
-    }
 }

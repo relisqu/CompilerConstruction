@@ -47,25 +47,40 @@ namespace ast {
 
     extern int line;
 
+    /**
+     * @brief Visitor class for AST
+     * @details Visitor class for AST - used for type checking and code generation by visiting each node of AST
+     * @see Visitor.h
+     */
     class Visitor {
     public:
-
         std::map<std::string, std::vector<StoredType> > identMap;
 
-        void increaseScope() {
+
+        static void increaseScope() {
             globalScope++;
         }
 
+        /**
+         * @brief Decreases scope of identMap
+         * @details Used for removing variables from identMap when exiting scope for proper type checking
+         */
         void decreaseScope() {
             globalScope--;
-            for (auto it = identMap.begin(); it != identMap.end(); it++) {
-               while (!it->second.empty() && it->second.back().current_scope > globalScope) {
-                    it->second.pop_back();
+            for (auto & it : identMap) {
+               while (!it.second.empty() && it.second.back().current_scope > globalScope) {
+                    it.second.pop_back();
                 }
             }
 
         }
 
+        /**
+         * @brief Checks if ident is defined in current context
+         * @details Used for checking if ident is defined in current context by checking if ident is in identMap
+         * @param ident : \b StoredType of ident we want to check
+         * @return stored information if found, \b ST_NULL otherwise
+         */
         StoredType resolveIdent(const StoredType& ident) {
             StoredType result = ST_NULL;
             result.ident = ident.ident;
@@ -76,12 +91,17 @@ namespace ast {
                 return identMap[ident.ident].back();
             }
             if (result == ST_NULL) {
-                //printOffset();
                 ErrorHandler::ThrowError("Ident type mismatch: no such ident defined \"" + result.ident+"\"");
             }
             return result;
         }
 
+        /**
+         * @brief Checks if ident is defined in current context
+         * @details Used for checking if ident is defined in current context by checking if ident is in identMap
+         * @param ident : \b string of ident we want to check
+         * @return stored information if found, \b ST_NULL otherwise
+         */
         StoredType resolveIdent(const std::string &ident) {
             if (!identMap[ident].empty()) {
                 return identMap[ident].back();
@@ -91,6 +111,7 @@ namespace ast {
 
         std::vector<StoredType> contextStack = {};
         std::vector<StoredType> expectedReturnTypes = {ST_INTEGER};
+
 
         void cutContextStack(int targetSize) {
             while (contextStack.size() > targetSize) {
@@ -137,6 +158,10 @@ namespace ast {
         virtual void visit(const Array &node) = 0;
     };
 
+    /**
+     * @brief Program node of AST
+     * @details This node is root of AST and default type which other would inherit from.
+     */
     struct Node {
         std::string name;
         Span span;
@@ -150,10 +175,16 @@ namespace ast {
         virtual void accept(Visitor *v) const {
             v->visit(*this);
         }
+        /**
+         * @brief Generates code for node
+         * @details Generates c# code for node and is overriden in each node
+         * @return string of generated code
+         */
         virtual std::string generateCode() {
             return {};
         }
     };
+
     struct Ident : Node {
         explicit Ident(const std::string &s) : Node(s) {}
 
@@ -168,7 +199,7 @@ namespace ast {
 
     struct Expression : Node {
         using spe = sp<Expression>;
-        std::variant<std::string, long long int, double, bool> value;
+        std::variant<std::string, long long int, double, bool> value; // this is the value of the expression, if it is a constant
         spe l = nullptr;
         spe r = nullptr;
 
@@ -243,11 +274,9 @@ namespace ast {
             if(r){
                 right=r->generateCode();
             }
-            // return left+ operation+right +";\n";
-            if (left + operation + right == "") {
+            if ((left + operation + right).empty()) {
                 return strValue;
             }
-            std::cout<<"\n-- l:" +left<<" ,n:"<<name<<" ,r:"<<right<<" ,o:"<<operation<<"----\n";
             return left + operation + right;
         };
     };
@@ -276,7 +305,7 @@ namespace ast {
             v->visit(*this);
         }
 
-        virtual std::string generateCode() override{
+        std::string generateCode() override{
             return " "+name+" ";
         };
     };
@@ -332,7 +361,9 @@ namespace ast {
             return result;
         };
     };
-
+    /**
+     * @brief This is the main class containing all the nodes
+     */
     struct Program : Node {
         std::vector<sp<Node>> nodes;
 
@@ -352,16 +383,15 @@ namespace ast {
         }
     };
 
+    /**
+     * @brief The node containting a list of nodes, usually is used inside loops, functions, etc.
+     */
     struct Block : Node {
         std::vector<sp<Node>> nodes;
 
         Block() { span = cur_span; }
 
         ~Block() override = default;
-
-        void addVariable(const sp<Node> &v);
-
-        void addStatement(const sp<Node> &s);
 
         void accept(Visitor *v) const override {
             v->visit(*this);
@@ -383,6 +413,7 @@ namespace ast {
             return "STATEMENT";
         };
     };
+
 
     struct ReturnStatement : Statement {
         sp<Expression> returned = nullptr;
@@ -672,7 +703,7 @@ namespace ast {
             for (const auto& n : returnStatements) {
                 returnStr+=n->generateCode();
             }
-            return type+" "+name+"("+params+"){\n"+bodyStr+returnStr+";}\n";
+            return type+" "+name+"("+params+"){ \n"+bodyStr+returnStr+";}\n";
         };
     };
 
@@ -697,7 +728,6 @@ namespace ast {
         }
 
         std::string generateCode() override{
-            "int myNumbers[] = {25, 50, 75, 100};" ;
             std::string sizeStr;
             if(size){
                 sizeStr=size->generateCode();
@@ -708,13 +738,4 @@ namespace ast {
 
     sp<Program> getProgram();
 
-    void dfs();
-
-    void show_dfs();
-
-    void sort_program();
-
-    void printStatement(const sp<Statement> &statement);
-
-    void printVariable(const sp<Variable> &var);
 }

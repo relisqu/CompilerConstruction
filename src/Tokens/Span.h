@@ -23,7 +23,7 @@ public:
 
     void MoveSpanToNewLine();
 
-    bool operator< (const Span &a);
+    bool operator< (const Span &a) const;
 
     operator std::string() const
     {

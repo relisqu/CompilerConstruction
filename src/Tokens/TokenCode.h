@@ -1,8 +1,7 @@
 #pragma once
 /**
- * Enumerator of all \b tokens
+ * Enumerator of all \b tokens needed for preprocessing and lexical analysis.
  */
-//TODO: Recheck tokens
 enum class TokenCode {
 
     //values

@@ -1,7 +1,6 @@
 #include "TokenMap.h"
-//TODO: Clean unused tokens
+
 void TokenMap::GenerateMap() {
-    //types
     TokenMap::tokenMap["integer"] = TokenCode::tkInt;
     TokenMap::tokenMap["real"] = TokenCode::tkReal;
     TokenMap::tokenMap["var"] = TokenCode::tkVar;
@@ -19,12 +18,7 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["not"] = TokenCode::tkBoolNot;
     TokenMap::tokenMap["true"] = TokenCode::tkTrue;
     TokenMap::tokenMap["false"] = TokenCode::tkFalse;
-    /*
-    //conditions
-    TokenMap::tokenMap["<"] = TokenCode::tkLess;
-    TokenMap::tokenMap[">"] = TokenCode::tkBigger;
-    TokenMap::tokenMap["="] = TokenCode::tkEquals;
-    */
+
     //operations
     TokenMap::tokenMap["+"] = TokenCode::tkPlus;
     TokenMap::tokenMap["-"] = TokenCode::tkMinus;
@@ -47,8 +41,6 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["break"] = TokenCode::tkBreak;
 
     //Other
-    // TokenMap::tokenMap[":"] = TokenCode::tkColon;
-    // TokenMap::tokenMap["."] = TokenCode::tkDot;
     TokenMap::tokenMap[","] = TokenCode::tkComma;
     TokenMap::tokenMap[";"] = TokenCode::tkSemiColon;
     TokenMap::tokenMap["\n"] = TokenCode::tkNewLine;
@@ -62,5 +54,4 @@ void TokenMap::GenerateMap() {
     TokenMap::tokenMap["{"] = TokenCode::tkCURLY_BRACKET_START;
     TokenMap::tokenMap["}"] = TokenCode::tkCURLY_BRACKET_END;
     TokenMap::tokenMap["\\"] = TokenCode::tkBackSlash;
-    // TokenMap::tokenMap["/"] = TokenCode::tkSlash;
 }

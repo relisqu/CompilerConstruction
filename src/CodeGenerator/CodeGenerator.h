@@ -1,6 +1,3 @@
-//
-// Created by justsomedude on 02.05.23.
-//
 
 #ifndef COMPILERCONSTRUCTION_CODEGENERATOR_H
 #define COMPILERCONSTRUCTION_CODEGENERATOR_H
@@ -13,18 +10,18 @@
 
 namespace ast {
 
+    /**
+     * @brief Class CodeGenerator is class which generates code from AST using visitor pattern defined in AST.h
+     * @see Visitor.h
+     * @see AST.h
+     */
     class CodeGenerator : public Visitor {
     public:
         std::vector<std::string> declarationStack;
         std::vector<std::string> returnStack;
 
-        void cutReturnStack(int targetSize) {
-            while (returnStack.size() > targetSize) {
-                returnStack.pop_back();
-            }
-        }
 
-        bool is_number(const std::string& s) {
+        static bool isNumber(const std::string& s) {
             try {
                 std::stoi(s);
             } catch (std::exception& e) {
@@ -74,6 +71,6 @@ namespace ast {
         CodeGenerator();
     };
 
-} // ast
+}
 
 #endif //COMPILERCONSTRUCTION_CODEGENERATOR_H
