@@ -1,0 +1,3 @@
+var MyArray : array [5] boolean;
+
+MyArray[1] := 3.21;

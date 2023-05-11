@@ -1,0 +1,9 @@
+routine pluss (a : integer) is
+    return a+1;
+end;
+
+routine plusss (a : integer) is
+    return pluss(b);
+end;
+
+plusss(1);

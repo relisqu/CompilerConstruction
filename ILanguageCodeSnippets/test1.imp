@@ -1,0 +1,9 @@
+routine Sum(arr : array [] integer) : integer is
+    var sum : integer is 0;
+    for i in 1..arr.size loop
+        sum := sum + arr[i]
+    end;
+    return sum;
+end;
+
+routine

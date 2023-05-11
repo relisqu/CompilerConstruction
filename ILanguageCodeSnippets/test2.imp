@@ -1,0 +1,6 @@
+
+var counter is 0;
+
+routine rout() is
+    counter := counter + 1;
+end;

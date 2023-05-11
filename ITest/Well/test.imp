@@ -1,0 +1,20 @@
+var counter is 0;
+
+while counter < 10 loop // simple while loop
+  counter := counter + 1;
+end;
+
+for i in 1 .. 10 loop // i starts at 1 and increments
+  counter := counter + i;
+end;
+
+for i in reverse 1 .. 10 loop // i starts at 10 and decrements
+  counter := counter + i;
+end;
+
+var counter : integer is 0
+var MyNumber1 : integer is 19;
+
+routine MyRoutine1 () is
+  counter := counter + 1;
+end;

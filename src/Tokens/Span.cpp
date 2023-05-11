@@ -1,22 +1,48 @@
-//
-// Created by kopko on 14.02.2023.
-//
-
 #include "Span.h"
 
 void Span::ClearSpanPosition() {
-    this->posEnd=0;
-    this->posBegin=0;
-    this->lineNum=0;
-}
-void Span::MoveSpanToNewLine() {
-    this->posEnd=0;
-    this->posBegin=0;
-    this->lineNum++;
+    posEnd = 0;
+    posBegin = 0;
+    lineNum = 0;
+    lineEndNum = 0;
 }
 
-Span::Span(int lineNum, int posBegin, int posEnd) {
-  this->lineNum=lineNum;
-  this->posBegin=posBegin;
-  this->posEnd=posEnd;
+void Span::MoveSpanToNewLine() {
+    posEnd = 0;
+    posBegin = 0;
+    ++lineNum;
+    ++lineEndNum;
+}
+
+Span::Span(Span span1, Span span2) {
+    if (span1.lineNum == span2.lineNum) {
+        lineNum = span1.lineNum;
+        lineEndNum = lineNum;
+        posBegin = std::min(span1.posBegin, span2.posBegin);
+        posEnd =   std::max(span1.posEnd,   span2.posEnd);
+    } else {
+        lineNum = std::min(span1.lineNum, span2.lineNum);
+        lineEndNum = std::max(span1.lineEndNum, span2.lineEndNum);
+        if (span1.lineNum < span2.lineNum) {
+            posBegin = span1.posBegin;
+        } else {
+            posBegin = span2.posBegin;
+        }
+
+        if (span1.lineEndNum > span2.lineEndNum) {
+            posEnd = span1.posEnd;
+        } else {
+            posEnd = span2.posEnd;
+        }
+    }
+}
+
+bool Span::operator< (const Span &a) const {
+    if (lineNum < a.lineNum) {
+        return true;
+    }
+    if (lineNum == a.lineNum) {
+        return posBegin < a.posBegin;
+    }
+    return false;
 }

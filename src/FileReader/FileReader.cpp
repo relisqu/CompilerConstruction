@@ -1,14 +1,14 @@
-//
-// Created by kopko on 18.02.2023.
-//
-
 #include <fstream>
-#include "FileReader.h"
 #include <iostream>
 #include <string>
 #include <sstream>
+/**
+ * Read file from specific folder
+ * @param fileName : Path of input file
+ * @return One line string with all text in file
+ */
 
-std::string FileReader::ReadFile(std::string fileName) {
+std::string static ReadFile(const std::string &fileName) {
     std::ifstream t(fileName);
     std::stringstream buffer;
     buffer << t.rdbuf();

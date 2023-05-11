@@ -1,75 +1,57 @@
-//
-// Created by kopko on 19.02.2023.
-//
-
 #include "TokenMap.h"
 
 void TokenMap::GenerateMap() {
-    //types
-    TokenMap::TokenMap["integer"] = TokenCode::tkInt;
-    TokenMap::TokenMap["real"] = TokenCode::tkReal;
-    TokenMap::TokenMap["var"] = TokenCode::tkVar;
-    TokenMap::TokenMap["boolean"] = TokenCode::tkBoolean;
-    TokenMap::TokenMap["string"] = TokenCode::tkString;
-    TokenMap::TokenMap["array"] = TokenCode::tkArray;
-    TokenMap::TokenMap["type"] = TokenCode::tkType;
-    TokenMap::TokenMap["record"] = TokenCode::tkRecord;
+    TokenMap::tokenMap["integer"] = TokenCode::tkInt;
+    TokenMap::tokenMap["real"] = TokenCode::tkReal;
+    TokenMap::tokenMap["var"] = TokenCode::tkVar;
+    TokenMap::tokenMap["boolean"] = TokenCode::tkBoolean;
+    TokenMap::tokenMap["string"] = TokenCode::tkString;
+    TokenMap::tokenMap["array"] = TokenCode::tkArray;
+    TokenMap::tokenMap["type"] = TokenCode::tkType;
+    TokenMap::tokenMap["record"] = TokenCode::tkRecord;
+    TokenMap::tokenMap["routine"] = TokenCode::tkRoutine;
 
     //booleans
-
-    TokenMap::TokenMap["and"] = TokenCode::tkBoolAnd;
-    TokenMap::TokenMap["or"] = TokenCode::tkBoolOr;
-    TokenMap::TokenMap["xor"] = TokenCode::tkBoolXor;
-    TokenMap::TokenMap["not"] = TokenCode::tkBoolNot;
-    TokenMap::TokenMap["true"] = TokenCode::tkTrue;
-    TokenMap::TokenMap["false"] = TokenCode::tkFalse;
-
-    //conditions
-
-    TokenMap::TokenMap["<"] = TokenCode::tkLess;
-    TokenMap::TokenMap[">"] = TokenCode::tkBigger;
-    TokenMap::TokenMap["="] = TokenCode::tkEquals;
-    TokenMap::TokenMap["false"] = TokenCode::tkFalse;
+    TokenMap::tokenMap["and"] = TokenCode::tkBoolAnd;
+    TokenMap::tokenMap["or"] = TokenCode::tkBoolOr;
+    TokenMap::tokenMap["xor"] = TokenCode::tkBoolXor;
+    TokenMap::tokenMap["not"] = TokenCode::tkBoolNot;
+    TokenMap::tokenMap["true"] = TokenCode::tkTrue;
+    TokenMap::tokenMap["false"] = TokenCode::tkFalse;
 
     //operations
-
-    TokenMap::TokenMap["+"] = TokenCode::tkPlus;
-    TokenMap::TokenMap["-"] = TokenCode::tkMinus;
-    TokenMap::TokenMap["*"] = TokenCode::tkMultiple;
-    TokenMap::TokenMap["%"] = TokenCode::tkMod;
-    TokenMap::TokenMap["/"] = TokenCode::tkDivide;
+    TokenMap::tokenMap["+"] = TokenCode::tkPlus;
+    TokenMap::tokenMap["-"] = TokenCode::tkMinus;
+    TokenMap::tokenMap["*"] = TokenCode::tkMultiple;
+    TokenMap::tokenMap["%"] = TokenCode::tkMod;
 
     //Cycles
-
-    TokenMap::TokenMap["is"] = TokenCode::tkIs;
-    TokenMap::TokenMap["if"] = TokenCode::tkIf;
-    TokenMap::TokenMap["then"] = TokenCode::tkThen;
-    TokenMap::TokenMap["else"] = TokenCode::tkElse;
-    TokenMap::TokenMap["end"] = TokenCode::tkEnd;
-    TokenMap::TokenMap["for"] = TokenCode::tkFor;
-    TokenMap::TokenMap["in"] = TokenCode::tkIn;
-    TokenMap::TokenMap["loop"] = TokenCode::tkLoop;
-    TokenMap::TokenMap["reverse"] = TokenCode::tkReverse;
-    TokenMap::TokenMap["while"] = TokenCode::tkWhile;
-    TokenMap::TokenMap["return"] = TokenCode::tkReturn;
-    TokenMap::TokenMap["continue"] = TokenCode::tkContinue;
-    TokenMap::TokenMap["break"] = TokenCode::tkBreak;
+    TokenMap::tokenMap["is"] = TokenCode::tkIs;
+    TokenMap::tokenMap["if"] = TokenCode::tkIf;
+    TokenMap::tokenMap["then"] = TokenCode::tkThen;
+    TokenMap::tokenMap["else"] = TokenCode::tkElse;
+    TokenMap::tokenMap["end"] = TokenCode::tkEnd;
+    TokenMap::tokenMap["for"] = TokenCode::tkFor;
+    TokenMap::tokenMap["in"] = TokenCode::tkIn;
+    TokenMap::tokenMap["loop"] = TokenCode::tkLoop;
+    TokenMap::tokenMap["reverse"] = TokenCode::tkReverse;
+    TokenMap::tokenMap["while"] = TokenCode::tkWhile;
+    TokenMap::tokenMap["return"] = TokenCode::tkReturn;
+    TokenMap::tokenMap["continue"] = TokenCode::tkContinue;
+    TokenMap::tokenMap["break"] = TokenCode::tkBreak;
 
     //Other
-
-    TokenMap::TokenMap[":"] = TokenCode::tkColon;
-    TokenMap::TokenMap["."] = TokenCode::tkDot;
-    TokenMap::TokenMap[","] = TokenCode::tkComma;
-    TokenMap::TokenMap[";"] = TokenCode::tkSemiColon;
-    TokenMap::TokenMap["\n"] = TokenCode::tkNewLine;
-    TokenMap::TokenMap["\""] = TokenCode::tkQuote;
-    TokenMap::TokenMap["["] = TokenCode::tkSQUARE_BRACKET_START;
-    TokenMap::TokenMap["]"] = TokenCode::tkSQUARE_BRACKET_END;
-    TokenMap::TokenMap["("] = TokenCode::tkROUND_BRACKET_START;
-    TokenMap::TokenMap[")"] = TokenCode::tkROUND_BRACKET_END;
-    TokenMap::TokenMap["{"] = TokenCode::tkCURLY_BRACKET_START;
-    TokenMap::TokenMap["}"] = TokenCode::tkCURLY_BRACKET_END;
-    TokenMap::TokenMap["\\"] = TokenCode::tkBackSlash;
-    TokenMap::TokenMap[" "] = TokenCode::tkSpace;
-
+    TokenMap::tokenMap[","] = TokenCode::tkComma;
+    TokenMap::tokenMap[";"] = TokenCode::tkSemiColon;
+    TokenMap::tokenMap["\n"] = TokenCode::tkNewLine;
+    TokenMap::tokenMap["\r"] = TokenCode::tkTabulation;
+    TokenMap::tokenMap[" "] = TokenCode::tkTabulation;
+    TokenMap::tokenMap["\""] = TokenCode::tkQuote;
+    TokenMap::tokenMap["["] = TokenCode::tkSQUARE_BRACKET_START;
+    TokenMap::tokenMap["]"] = TokenCode::tkSQUARE_BRACKET_END;
+    TokenMap::tokenMap["("] = TokenCode::tkROUND_BRACKET_START;
+    TokenMap::tokenMap[")"] = TokenCode::tkROUND_BRACKET_END;
+    TokenMap::tokenMap["{"] = TokenCode::tkCURLY_BRACKET_START;
+    TokenMap::tokenMap["}"] = TokenCode::tkCURLY_BRACKET_END;
+    TokenMap::tokenMap["\\"] = TokenCode::tkBackSlash;
 }

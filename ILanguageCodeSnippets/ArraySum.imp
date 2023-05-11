@@ -1,0 +1,11 @@
+var n is 12;
+
+
+var MyArray : array [n] integer;
+
+MyArray[1] := 3;
+
+
+routine HumanConstructor (age : integer, weight : real, gender : boolean) is
+        age:= 5;
+end;

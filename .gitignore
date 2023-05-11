@@ -63,3 +63,6 @@ CTestTestfile.cmake
 _deps
 
 build/*
+
+src/Parser/*.tab.cpp
+src/Parser/*.tab.hpp

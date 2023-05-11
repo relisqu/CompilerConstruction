@@ -3,9 +3,38 @@ project(CompilerConstruction)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(CompilerConstruction src/main.cpp src/Tokens/Span.h src/Tokens/Identifier.h src/Tokens/Integer.h src/Tokens/Real.h src/LexicalAnalysis/Parser.h src/LexicalAnalysis/Parser.cpp src/Tokens/Span.cpp "src/Tokens/Token.cpp" src/ErrorHandler.h src/Tokens/PreprocessedToken.cpp src/Tokens/PreprocessedToken.h src/main.cpp src/FileReader.cpp src/FileReader.h src/Tokens/Boolean.h src/Tokens/TokenCode.h src/Tokens/TokenMap.cpp src/Tokens/TokenMap.h)
 include_directories(src)
 
-#add_subdirectory(src)
+add_subdirectory(src)
 add_subdirectory(tst)
 add_subdirectory(lib/googletest)
+
+set(BINARY ${CMAKE_PROJECT_NAME})
+
+
+include(CTest)
+include(CPack)
+enable_testing()
+
+file(GLOB Ills "${CMAKE_CURRENT_SOURCE_DIR}/ITest/Ill/*.imp")
+file(GLOB Wells "${CMAKE_CURRENT_SOURCE_DIR}/ITest/Well/*.imp")
+
+foreach(file ${Ills})
+    STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" name ${file})
+    add_test(NAME ${name}
+            COMMAND ${BINARY}_run ${file})
+    set_tests_properties(${name} PROPERTIES WILL_FAIL TRUE)
+endforeach()
+
+foreach(file ${Wells})
+    STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" name ${file})
+    add_test(NAME ${name}
+            COMMAND ${BINARY}_run ${file})
+    set_tests_properties(${name} PROPERTIES WILL_FAIL FALSE)
+endforeach()
+
+add_executable(result cmake-build-debug/src/result.c)
+target_compile_options(result PRIVATE -std=c11)
+
+add_custom_command(TARGET result POST_BUILD COMMAND gcc -g ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug/src/result.c -o result)
+

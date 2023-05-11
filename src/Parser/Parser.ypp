@@ -1,0 +1,255 @@
+%require "3.2"
+%language "C++"
+%define api.value.type variant
+%define api.token.constructor
+%define parse.assert
+%define parse.error detailed
+
+%code requires
+{
+    #pragma once
+    #include <iostream>
+    #include <string>
+    #include "../AST/AST.h"
+    #define YYERROR_VERBOSE 1
+
+    using namespace ast;
+
+    namespace yy
+    {
+        class parser;
+    }
+}
+
+%code
+{
+    // Our program is defined here
+    sp<Program> ourProgram = std::make_shared<ast::Program>();
+    namespace yy
+    {
+        parser::symbol_type yylex();
+    }
+
+    extern yy::parser::symbol_type get_next_token();
+}
+%token tkConstInt tkConstReal tkConstBoolean
+%token tkInt tkReal tkVar tkBoolean tkString tkArray tkType tkRecord tkRoutine tkIdentifier
+%token tkBoolAnd tkBoolOr tkBoolXor tkBoolNot tkTrue tkFalse
+%token tkLess tkLessEquals tkGreater tkGreaterEquals tkEquals tkNotEquals
+%token tkPlus tkMinus tkMultiple tkMod tkDivide
+%token tkIs tkIf tkThen tkElse tkEnd tkFor tkIn tkLoop tkReverse tkDOT_DOT tkWhile tkReturn tkContinue tkBreak
+%token tkColon tkDot tkComma EOL tkCOLON_EQUALS tkNewLine tkQuote tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END tkROUND_BRACKET_START tkROUND_BRACKET_END tkCURLY_BRACKET_START tkCURLY_BRACKET_END tkBackSlash tkSpace tkTabulation
+
+%type <std::string> tkIdentifier
+%type <double> tkConstReal
+%type <int>  tkConstInt
+%type <bool> tkConstBoolean
+%type <sp<Type>> _type
+%type <sp<BuiltinType>> _irb_type
+%type <sp<Array>> _arr_type
+%type <sp<Record>> _rec_type
+%type <sp<Expression>> _expr
+%type <sp<Expression>> _primary
+%type <sp<Variable>> _var_dec
+%type <sp<Routine>> _routine_dec
+%type <sp<Block>> _body
+%type <sp<Statement>> _if
+%type <sp<Statement>> _while
+%type <sp<Statement>> _for
+%type <sp<Statement>> _statement
+%type <sp<ReturnStatement>> _return
+%type <sp<Assignment>> _assign
+%type <sp<Expression>> _getvar
+%type <sp<Expression>> _modval
+%type <sp<RoutineCall> > _routine
+%type <spv<Expression>> _args
+%type <sp<Variable>> _param_dec
+%type <spv<Variable>> _params
+%type <spv<Variable>> _var_dec_block
+%type <std::tuple<sp<Expression>, sp<Expression>, bool>> _range
+%type <sp<Record>> _record_dec
+
+%left tkBoolOr
+%left tkBoolXor
+%left tkBoolAnd
+%left tkEquals tkNotEquals
+%left tkGreater tkGreaterEquals tkLess tkLessEquals
+%left tkPlus tkMinus tkMultiple tkMod tkDivide
+
+
+%%
+
+program:
+| program _var_dec {  ourProgram->nodes.push_back($2);  }
+| program _record_dec { ourProgram->nodes.push_back($2); }
+| program _routine_dec { ourProgram->nodes.push_back($2); }
+| program _expr { ourProgram->nodes.push_back($2); }
+| program EOL
+;
+
+
+_var_dec : tkVar tkIdentifier tkColon _type {
+    $$ = std::make_shared<ast::Variable>($2, $4);
+}
+| tkVar tkIdentifier tkColon _type tkIs _expr {
+    auto temp = std::make_shared<ast::Variable>($2, $4);
+    temp->ident = std::make_shared<ast::Ident>($2);
+    temp->value = $6;
+    $$ = temp;
+}
+| tkVar tkIdentifier tkIs _expr {
+    auto temp = std::make_shared<ast::Variable>(std::string($2), $4);
+    $$ = temp;
+    }
+;
+
+_record_dec: tkType tkIdentifier tkIs tkRecord _var_dec_block tkEnd {
+    $$ = std::make_shared<Record>(std::string($2), $5);
+}
+
+_routine_dec: tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkIs _body tkEnd {
+$$ = std::make_shared<ast::Routine>($2, $4, $7, nullptr);
+}
+
+| tkRoutine tkIdentifier tkROUND_BRACKET_START _params tkROUND_BRACKET_END tkColon _type tkIs _body tkEnd {
+ $$ = std::make_shared<ast::Routine>($2, $4, $9, $7);
+}
+;
+
+_params: _param_dec { ($$).push_back($1); }
+| _params tkComma _param_dec { swap($1, $$);  ($$).push_back($3); }
+| {}
+;
+
+_param_dec: tkIdentifier tkColon _type {
+    $$ = std::make_shared<ast::Variable>($1, $3);
+}
+;
+
+_type: _irb_type {  $$ = $1; }
+| _arr_type { $$ = $1; }
+| _rec_type { $$ = $1; }
+| tkIdentifier { $$ = std::make_shared<ast::Type>($1); }
+;
+
+_irb_type: tkInt { $$ = std::make_shared<ast::BuiltinType>("integer"); }  //irb = integer, real, bool
+| tkReal {  $$ =  std::make_shared<ast::BuiltinType> ("real"); }
+| tkBoolean {   $$ =  std::make_shared<ast::BuiltinType> ("boolean"); }
+;
+
+_rec_type: tkRecord _var_dec_block tkEnd {  $$ = std::make_shared<ast::Record>("Record", $2); }
+;
+
+_arr_type: tkArray tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>(std::string("Array"), $5, $3); }
+| tkArray tkSQUARE_BRACKET_START tkSQUARE_BRACKET_END _type { $$ = std::make_shared<ast::Array>(std::string("Array"), $4); }
+;
+
+_body: { $$ = std::make_shared<ast::Block>(); }
+| _body _var_dec { ($1)->nodes.push_back($2); $$ = $1; }
+| _body _record_dec { ($1)->nodes.push_back($2); $$ = $1; }
+| _body _expr { ($1)->nodes.push_back($2); $$ = $1; }
+| _body EOL
+;
+
+_statement: _assign {$$ = $1;}
+| _routine {$$ = $1;}
+| _while {$$ = $1;}
+| _for {$$ = $1;}
+| _if {$$ = $1;}
+| _return {$$ = $1;}
+;
+
+_return: tkReturn EOL{   $$ = std::make_shared<ast::ReturnStatement>(nullptr);  }
+| tkReturn _expr {     $$ = std::make_shared<ast::ReturnStatement>($2);   }
+;
+
+_assign: _modval tkCOLON_EQUALS _expr { $$ = std::make_shared<ast::Assignment>($1, $3); }
+;
+
+_routine: tkIdentifier tkROUND_BRACKET_START _args tkROUND_BRACKET_END { $$ = std::make_shared<ast::RoutineCall>($1); ($$)->args = std::move($3); }
+;
+
+_while: tkWhile _expr tkLoop _body tkEnd { $$ = std::make_shared<ast::WhileLoop>($2, $4); }
+;
+
+_for: tkFor tkIdentifier _range tkLoop _body tkEnd { $$ = std::make_shared<ast::ForLoop>($2, $3, $5); }
+
+_range: tkIn _expr tkDOT_DOT _expr { $$ = std::make_tuple($2,$4, false);  }
+| tkIn tkReverse _expr tkDOT_DOT _expr { $$ = std::make_tuple($3,$5, true); }
+;
+
+_if: tkIf _expr tkThen _body tkEnd { $$ = std::make_shared<ast::IfStatement>($2, $4, nullptr); }
+| tkIf _expr tkThen _body EOL tkElse _body tkEnd { $$ = std::make_shared<ast::IfStatement>($2, $4, $7); }
+;
+
+_var_dec_block: {}
+| _var_dec_block _var_dec { swap($1,$$); ($$).push_back($2); }
+| _var_dec_block EOL { swap($1,$$); }
+;
+
+_expr: _expr tkPlus _expr { $$ = std::make_shared<ast::Expression>("+", $1, $3);}
+| _expr tkMinus _expr {  $$ = std::make_shared<ast::Expression>("-", $1, $3); }
+| _expr tkMultiple _expr { $$ = std::make_shared<ast::Expression>("*", $1, $3); }
+| _expr tkMod _expr { $$ = std::make_shared<ast::Expression>("%", $1, $3); }
+| _expr tkDivide _expr { $$ = std::make_shared<ast::Expression>("/", $1, $3); }
+| _expr tkLess _expr {  $$ = std::make_shared<ast::Expression>("<", $1, $3); }
+| _expr tkLessEquals _expr {  $$ = std::make_shared<ast::Expression>("<=", $1, $3); }
+| _expr tkGreater _expr {  $$ = std::make_shared<ast::Expression>(">", $1, $3); }
+| _expr tkGreaterEquals _expr {  $$ = std::make_shared<ast::Expression>(">=", $1, $3); }
+| _expr tkEquals _expr {  $$ = std::make_shared<ast::Expression>("=", $1, $3); }
+| _expr tkNotEquals _expr {  $$ = std::make_shared<ast::Expression>("/=", $1, $3); }
+| _expr tkBoolAnd _expr { $$ = std::make_shared<ast::Expression>("and", $1, $3); }
+| _expr tkBoolOr _expr { $$ = std::make_shared<ast::Expression>("or", $1, $3); }
+| _expr tkBoolXor _expr { $$ = std::make_shared<ast::Expression>("xor", $1, $3); }
+| tkROUND_BRACKET_START _expr tkROUND_BRACKET_END {  $$ = $2; }
+| _primary { $$ = $1;}
+;
+
+_args: {}
+| _expr { ($$).push_back($1); }
+| _args tkComma _expr { swap($$,$1); ($$).push_back($3); }
+;
+
+_primary: tkConstInt {   $$ = std::make_shared<ast::Expression>($1, false);  }
+| tkConstReal {$$ = std::make_shared<ast::Expression>($1); }
+| tkConstBoolean {$$ = std::make_shared<ast::Expression>($1); }
+| _modval {  $$ = $1;}
+| _routine { $$ = std::make_shared<ast::Expression>(($1)->name); }
+| _statement { $$ = $1; }
+;
+
+_getvar: tkIdentifier {$$ = std::make_shared<ast::Expression>($1);}
+| _getvar tkDot tkIdentifier {
+    if ($1 == nullptr) {
+        $$ = std::make_shared<ast::Expression>($3);
+    } else {
+        sp<ast::Expression> temp = std::make_shared<ast::Expression>($3);
+        $$ = std::make_shared<ast::Expression>(".", $1, temp);
+    }
+}
+| _getvar tkSQUARE_BRACKET_START _expr tkSQUARE_BRACKET_END {
+if ($1 == nullptr) {
+    $$ = $3;
+} else {
+    $$ = std::make_shared<ast::Expression>("[]", $1, $3);
+}
+}
+
+;
+
+
+_modval: _getvar {
+  $$ = $1;
+}
+;
+
+%%
+namespace yy
+{
+
+    void parser::error(const std::string& msg)
+    {
+        std::cout <<msg<<" at "<< std::string(ast::cur_span)<<"\n";
+        exit(-1);
+    }
+}

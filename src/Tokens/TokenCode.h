@@ -1,10 +1,13 @@
-//
-// Created by kopko on 19.02.2023.
-//
-
 #pragma once
+/**
+ * Enumerator of all \b tokens needed for preprocessing and lexical analysis.
+ */
+enum class TokenCode {
 
-enum class TokenCode{
+    //values
+    tkConstInt,
+    tkConstReal,
+    tkConstBoolean,
 
     //types
     tkInt,
@@ -15,6 +18,7 @@ enum class TokenCode{
     tkArray,
     tkType,
     tkRecord,
+    tkRoutine,
     tkIdentifier,
 
     //booleans
@@ -28,8 +32,8 @@ enum class TokenCode{
     //conditions
     tkLess,
     tkLessEquals,
-    tkBigger,
-    tkBiggerEquals,
+    tkGreater,
+    tkGreaterEquals,
     tkEquals,
     tkNotEquals,
 
@@ -71,5 +75,6 @@ enum class TokenCode{
     tkCURLY_BRACKET_START,
     tkCURLY_BRACKET_END,
     tkBackSlash,
-    tkSpace
+    //tkSlash,
+    tkSpace, tkTabulation
 };
