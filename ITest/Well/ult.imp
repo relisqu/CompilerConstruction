@@ -1,5 +1,9 @@
-var a is 10
-var b is a
-var c is b
-var d is b + c
-var e is (b > c)
+routine func1() is
+    return 1;
+end;
+
+var b is func1();
+
+routine func2() is
+    return b;
+end;

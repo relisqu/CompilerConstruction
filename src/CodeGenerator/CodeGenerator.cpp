@@ -651,13 +651,18 @@ namespace ast {
 
         }
 
-
+        bool needsToCheck= val.tag!=tagIdent &&  val.tag!=tagBool &&  val.tag!=tagReal;
         if(globalScope==1){ //here we decide if the variable stays global.
 
             declarationStack.push_back(resultCode);
+            if (!valueCode.empty()) {
             returnStack.push_back(resultCode.substr(resultCode.find_first_of(" \t")+1) + " = " + valueCode);
+            }
         }else{
-            resultCode += " = " + valueCode;
+            if (!valueCode.empty()) {
+                resultCode += " = " + valueCode;
+
+            }
             returnStack.push_back(resultCode);
         }
     }
