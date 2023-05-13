@@ -238,7 +238,7 @@ namespace ast {
         std::string resultCode;
         std::string lvalCode;
         std::string rvalCode;
-
+        bool needsToSplit=false;
         int startSize = contextStack.size();
         StoredType lval = ST_NULL;
         lval.setScope();
@@ -253,15 +253,16 @@ namespace ast {
         if (node.rValue) {
             node.rValue->accept(this);
 
+            needsToSplit=rval.tag!=tagBool && rval.tag!=tagInteger && rval.tag!=tagReal;
             rvalCode = returnStack.back();
             returnStack.pop_back();
         }
 
+        std::cout<<needsToSplit<<"\n";
 
         cutContextStack(startSize);
-
-        resultCode = lvalCode + " = " + rvalCode;
-        returnStack.push_back(resultCode);
+            resultCode = lvalCode + " = " + rvalCode;
+            returnStack.push_back(resultCode);
     }
 
     void CodeGenerator::visit(const Expression &node) {
@@ -419,6 +420,7 @@ namespace ast {
         if (isSizeOp) {
             resultCode = "(sizeof(" + leftCode + ") / sizeof(" + leftType.content[0].getType() + "))";
         }
+
         returnStack.push_back(resultCode);
     }
 
@@ -430,7 +432,6 @@ namespace ast {
             resultCode = returnStack.back();
             returnStack.pop_back();
         }
-
         returnStack.push_back(resultCode);
     }
 
@@ -646,15 +647,17 @@ namespace ast {
         resultCode = typeCode + " " + identCode + sizeCode;
 
         if (!valueCode.empty()) {
-            resultCode += " = " + valueCode;
+            std::cout<<resultCode<<"\n";
+
         }
 
 
-        if(globalScope==1 && !variableHasCompileTimeCallings){ //here we decide if the variable stays global.
+        if(globalScope==1){ //here we decide if the variable stays global.
 
             declarationStack.push_back(resultCode);
-            returnStack.emplace_back("");
+            returnStack.push_back(resultCode.substr(resultCode.find_first_of(" \t")+1) + " = " + valueCode);
         }else{
+            resultCode += " = " + valueCode;
             returnStack.push_back(resultCode);
         }
     }
