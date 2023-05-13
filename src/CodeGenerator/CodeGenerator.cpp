@@ -118,8 +118,8 @@ namespace ast {
                      result.ident +
                      "(" + parametersCode + ")" +
                      bodyCode;
-        declarationStack.push_back(resultCode);
-        returnStack.emplace_back("");
+        //declarationStack.push_back(resultCode);
+        returnStack.emplace_back(resultCode);
     }
 
     void CodeGenerator::visit(const Type &node) {
@@ -562,7 +562,7 @@ namespace ast {
         mainCode += "}\n";
         //declarations are needed for variables that are needed to be declared before main function
         for (const auto& n: declarationStack){
-            declarations+=n+";\n";
+            //declarations+=n+";\n";
         }
         
         decreaseScope();
@@ -652,8 +652,8 @@ namespace ast {
 
         if(globalScope==1 && !variableHasCompileTimeCallings){ //here we decide if the variable stays global.
 
-            declarationStack.push_back(resultCode);
-            returnStack.emplace_back("");
+            //declarationStack.push_back(resultCode);
+            returnStack.emplace_back(resultCode);
         }else{
             returnStack.push_back(resultCode);
         }
@@ -705,8 +705,8 @@ namespace ast {
 
         fieldsCode = "{\n" + fieldsCode + "}";
         resultCode = "struct " + result.typeName + fieldsCode;
-        declarationStack.push_back(resultCode);
-        returnStack.emplace_back("");
+        //declarationStack.push_back(resultCode);
+        returnStack.emplace_back(resultCode);
     }
 
     void CodeGenerator::visit(const Array &node) {
