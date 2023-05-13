@@ -10,7 +10,7 @@ var weight : real;
 var gender : boolean;
 end;
 
-var People : array [counter] Human;
+var People : array [4] Human;
 routine HumanConstructor (age : integer, weight : real, gender : boolean) is
         var Result : Human;
 Result.age := age;
