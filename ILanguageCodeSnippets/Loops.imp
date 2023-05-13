@@ -11,3 +11,5 @@ end;
 for i in reverse 1 .. 10 loop
 	counter := counter + i;
 end;
+
+return counter;

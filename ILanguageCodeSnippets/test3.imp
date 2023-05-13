@@ -1,0 +1,11 @@
+routine func1() is
+    return 1;
+end;
+
+var b is func1();
+
+routine func2() is
+    return b;
+end;
+
+return b;
